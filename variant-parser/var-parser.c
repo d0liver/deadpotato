@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "file-parser.h"
+#include "var-parser.h"
 
 static char *next_prop(FILE *file) {
 	char line[256], *res, *tmp;
@@ -67,7 +67,7 @@ struct Variant *init_variant (const char *fpath, struct ParseError **err) {
 		!(variant->centers = next_prop(file)) ||
 		!(variant->flags = next_prop(file))
 	) {
-		err_msg = "There was an error within the variant file.";
+		err_msg = "There was an error within the .var file.";
 		goto cleanup;
 	}
 
