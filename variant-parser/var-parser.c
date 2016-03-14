@@ -85,6 +85,8 @@ cleanup:
 
 void show_variant_info (struct Variant *variant) {
 	printf(
+		".var file info\n"
+		"==============\n"
 		"Version: %d\n"
 		"Name: %s\n"
 		"Map_file: %s\n"

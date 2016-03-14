@@ -4,7 +4,7 @@
 
 #include "err.h"
 #include "cnt-parser.h"
-#define MAX_COUNTRIES 20
+#include "parser-utils.h"
 
 void show_cnt_info (struct Cnt *cnt) {
 	int i;
@@ -49,26 +49,6 @@ void destroy_cnt(struct Cnt *cnt) {
 		destroy_country(cnt->countries[i]);
 
 	free(cnt->countries);
-}
-
-static void eat_whitespace(char **ptr) {
-	for(;**ptr == ' ' || **ptr == '\t'; ++*ptr);
-}
-
-static char *eat_word(char **ptr) {
-	const char *orig = *ptr;
-	char *word;
-	int word_len;
-
-	/* Advance to the next whitespace */
-	for (; **ptr != ' ' && **ptr != '\t'; ++*ptr);
-
-	word_len = *ptr - orig;
-	word = malloc(word_len);
-	memcpy(word, orig, word_len+1);
-	word[word_len] = '\0';
-
-	return word;
 }
 
 static struct Country *next_country(FILE *file, struct ParseError **err) {
