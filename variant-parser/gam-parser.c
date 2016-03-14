@@ -42,6 +42,8 @@ static void destroy_country_info(struct CountryInfo *cinf) {
 		free(cinf->units[i]);
 	}
 	free(cinf->units);
+
+	free(cinf);
 }
 
 static void destroy_dislodge(struct Dislodge *dislodge) {
@@ -214,8 +216,6 @@ struct Gam *init_gam(const char *fpath, struct ParseError **cerr) {
 	struct ParseError *err = NULL;
 
 	memset(gam, 0, sizeof(struct Gam));
-	/* We will shrink this later */
-	gam->country_infos = malloc(sizeof(struct CountryInfo *)*MAX_COUNTRIES);
 	file = fopen(fpath, "rb");
 	if (!file) {
 		err = init_parse_error("Could not open variant file (.cnt).");
@@ -250,6 +250,8 @@ struct Gam *init_gam(const char *fpath, struct ParseError **cerr) {
 	/* Eat the next line, supposed number of countries */
 	line_ptr = fgets(line, 256, file);
 
+	/* We will shrink this later */
+	gam->country_infos = malloc(sizeof(struct CountryInfo *)*MAX_COUNTRIES);
 	for (i = 0; i < MAX_COUNTRIES; ++i) {
 		gam->country_infos[i] = next_country_info(file, &err);
 		if (!gam->country_infos[i] && !err)
