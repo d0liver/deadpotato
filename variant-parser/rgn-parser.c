@@ -9,10 +9,14 @@
 void show_rgn_info (struct Rgn *rgn) {
 	int i, j;
 
+	printf(
+		".rgn file info\n"
+		"==============\n"
+	);
 	for (i = 0; i < rgn->num_regions; ++i)
 		for (j = 0; j < rgn->regions[i]->num_scanlines; ++j)
 			printf(
-				"Scanline x, y, len: %d, %d, %d",
+				"Scanline x, y, len: %d, %d, %d\n",
 				rgn->regions[i]->scanlines[j].x,
 				rgn->regions[i]->scanlines[j].y,
 				rgn->regions[i]->scanlines[j].len
@@ -36,21 +40,20 @@ void destroy_rgn(struct Rgn *rgn) {
 	free(rgn);
 }
 
-struct Coords *next_position(FILE *file, struct ParseError **cerr) {
-	char line[256], *line_ptr, *word;
+struct Coords *next_position(char *line_ptr, struct ParseError **cerr) {
+	char line[256], *word;
 	struct Coords *coords = malloc(sizeof(struct Coords));
-	struct ParseError *err;
+	struct ParseError *err = NULL;
 
-	line_ptr = fgets(line, 256, file);
 	if (!line_ptr) {
-		err = init_parse_error("Failed to parse position in .gam file.");
+		err = init_parse_error("Failed to parse position in .rgn file.");
 		goto cleanup;
 	}
 
 	/* Grab the first coord */
 	word = eat_until(&line_ptr, ',');
 	if (!word) {
-		err = init_parse_error("Failed to parse position in .gam file.");
+		err = init_parse_error("Failed to parse position in .rgn file.");
 		goto cleanup;
 	}
 	coords->x = atoi(word);
@@ -58,9 +61,11 @@ struct Coords *next_position(FILE *file, struct ParseError **cerr) {
 	/* Grab the second coord */
 	word = eat_word(&line_ptr);
 	if (!word) {
-		err = init_parse_error("Failed to parse position in .gam file.");
+		err = init_parse_error("Failed to parse position in .rgn file.");
 		goto cleanup;
 	}
+	/* Move past the comma */
+	++line_ptr;
 	coords->y = atoi(word);
 
 cleanup:
@@ -76,22 +81,25 @@ cleanup:
 struct Region *next_region(FILE *file, struct ParseError **cerr) {
 	int i;
 	char line[256], *line_ptr, *word;
-	struct ParseError *err;
+	struct ParseError *err = NULL;
 	struct Region *region = malloc(sizeof(struct Region));
 
 	memset(region, 0, sizeof(*region));
 	/* Get unit pos */
-	eat_comments(file);
-	if (!(region->unit_pos = next_position(file, &err)))
+	line_ptr = eat_comments(file, line);
+	if (!line_ptr)
+		/* EOF, finished parsing */
+		goto cleanup;
+	if (!(region->unit_pos = next_position(line_ptr, &err)))
 		goto cleanup;
 
 	/* Get name pos */
-	eat_comments(file);
-	if (!(region->name_pos = next_position(file, &err)))
+	line_ptr = eat_comments(file, line);
+	if (!(region->name_pos = next_position(line_ptr, &err)))
 		goto cleanup;
 
 	/* Get num scanlines */
-	eat_comments(file);
+	line_ptr = eat_comments(file, line);
 	word = eat_word(&line_ptr);
 	if (!word) {
 		err = init_parse_error("Failed to parse # of scan lines in .rgn file.");
@@ -121,6 +129,7 @@ struct Region *next_region(FILE *file, struct ParseError **cerr) {
 		}
 		region->scanlines[i].x = atoi(word);
 
+		eat_whitespace(&line_ptr);
 		word = eat_word(&line_ptr);
 		if (!word) {
 			err = init_parse_error("Improperly formatted scanline in .rgn.");
@@ -128,6 +137,7 @@ struct Region *next_region(FILE *file, struct ParseError **cerr) {
 		}
 		region->scanlines[i].y = atoi(word);
 
+		eat_whitespace(&line_ptr);
 		word = eat_word(&line_ptr);
 		if (!word) {
 			err = init_parse_error("Improperly formatted scanline in .rgn.");
@@ -156,7 +166,7 @@ struct Rgn *init_rgn(const char *fpath, struct ParseError **cerr) {
 	memset(rgn, 0, sizeof(struct Rgn));
 	file = fopen(fpath, "rb");
 	if (!file) {
-		err = init_parse_error("Could not open variant file (.gam).");
+		err = init_parse_error("Could not open variant file (.rgn).");
 		goto cleanup;
 	}
 	/* Trash the first line of the file. It's the file path */

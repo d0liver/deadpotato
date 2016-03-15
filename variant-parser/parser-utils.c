@@ -49,8 +49,12 @@ char *eat_until(char **ptr, char c) {
 	return word;
 }
 
-void eat_comments(FILE *file) {
-	char line[256], *line_ptr;
+/* Returns a pointer to the next line after the comments */
+char *eat_comments(FILE *file, char *line) {
+	char *line_ptr, *res;
 
 	while((line_ptr = fgets(line, 256, file)) && *line_ptr == '#');
+
+	/* Could be NULL */
+	return line_ptr;
 }

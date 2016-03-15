@@ -6,6 +6,7 @@
 #include "cnt-parser.h"
 #include "gam-parser.h"
 #include "map-parser.h"
+#include "rgn-parser.h"
 #include "err.h"
 
 int main (int argc, char **argv) {
@@ -13,6 +14,7 @@ int main (int argc, char **argv) {
 	struct Cnt *cnt;
 	struct Gam *gam;
 	struct Map *map;
+	struct Rgn *rgn;
 	struct ParseError *err = NULL;
 
 	if(variant = init_variant ("../variants/Middle Earth/midearth.var", &err))
@@ -41,6 +43,15 @@ int main (int argc, char **argv) {
 	else
 		goto map_fail;
 
+	if (rgn = init_rgn("../variants/Middle Earth/midearth.rgn", &err)) {
+		printf("\n");
+		show_rgn_info(rgn);
+	}
+	else
+		goto rgn_fail;
+
+	destroy_rgn(rgn);
+rgn_fail:
 	destroy_map(map);
 map_fail:
 	destroy_gam(gam);
