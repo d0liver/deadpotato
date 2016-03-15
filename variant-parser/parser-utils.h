@@ -8,4 +8,5 @@ void eat_whitespace(char **ptr);
 #define MAX_COUNTRIES 20
 #define MAX_SUPPLY_CENTERS 500
 #define DEADPOTATO_PARSER_UTILS_H
+#define MAX_SCANLINES 2000
 #endif

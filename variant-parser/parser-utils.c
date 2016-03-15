@@ -48,3 +48,9 @@ char *eat_until(char **ptr, char c) {
 
 	return word;
 }
+
+void eat_comments(FILE *file) {
+	char line[256], *line_ptr;
+
+	while((line_ptr = fgets(line, 256, file)) && *line_ptr == '#');
+}

@@ -7,7 +7,7 @@
 
 /* Resource management stuff */
 
-void destroy_space(struct Space *space) {
+static void destroy_space(struct Space *space) {
 	int i;
 
 	free(space->name);
@@ -20,7 +20,7 @@ void destroy_space(struct Space *space) {
 	free(space);
 }
 
-void destroy_adjacency(struct Adjacency *adj) {
+static void destroy_adjacency(struct Adjacency *adj) {
 	int i;
 
 	free(adj->region);
@@ -48,7 +48,7 @@ void destroy_map(struct Map *map) {
 
 /* Show info stuff */
 
-char *space_type(struct Space *space, char letter) {
+static char *space_type(struct Space *space, char letter) {
 	switch(letter) {
 		case 'l':
 			return "land";
@@ -94,7 +94,7 @@ void show_map_info(struct Map *map) {
 }
 
 /* Parser stuff */
-struct Space *next_space(FILE *file, struct ParseError **cerr) {
+static struct Space *next_space(FILE *file, struct ParseError **cerr) {
 	int i;
 	struct ParseError *err = NULL;
 	struct Space *space = malloc(sizeof(struct Space));
@@ -150,7 +150,7 @@ cleanup:
 	return space;
 }
 
-struct Adjacency *next_adjacency(FILE *file, struct ParseError **cerr) {
+static struct Adjacency *next_adjacency(FILE *file, struct ParseError **cerr) {
 	int i;
 	struct ParseError *err = NULL;
 	struct Adjacency *adjacency = malloc(sizeof(struct Adjacency));
