@@ -87,3 +87,4 @@ struct Unit {
 void show_gam_info();
 void destroy_gam(struct Gam *gam);
 struct Gam *init_gam(const char *fpath, struct ParseError **err);
+json_t *gam_json (struct Gam *gam);

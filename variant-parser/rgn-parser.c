@@ -208,7 +208,6 @@ struct Rgn *init_rgn(const char *fpath, struct ParseError **cerr) {
 	}
 	rgn->regions = realloc(rgn->regions, sizeof(struct Region *)*i);
 	rgn->num_regions = i;
-	printf("NUM REGIONS: %d\n", rgn->num_regions);
 
 cleanup:
 	if (file)

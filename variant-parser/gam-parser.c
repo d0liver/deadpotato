@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <jansson.h>
 
 #include "err.h"
 #include "gam-parser.h"
@@ -26,6 +27,52 @@ void show_gam_info (struct Gam *gam) {
 		gam->number_adjust,
 		gam->num_country_infos
 	);
+}
+
+json_t *gam_json (struct Gam *gam) {
+	int i, j;
+	json_t *res;
+
+	res = json_pack(
+		"{s:i, s:s, s:s, s:s, s:i}",
+		"version", gam->version,
+		"game name", gam->game_name,
+		"variant", gam->variant,
+		"season", gam->season,
+		"year", gam->year,
+		"num adjust", gam->number_adjust
+	);
+
+	json_t *country_infos = json_array();
+	/* Set the info for each country */
+	for (i = 0; i < gam->num_country_infos; ++i) {
+		json_t *units = json_array(), *supply_centers = json_array();
+		json_t *country_info = json_pack(
+			"{s:i}",
+			"adjustment", gam->country_infos[i]->adjustment
+		);
+
+		/* Add all of the supply centers to the country info */
+		for (j = 0; j < gam->country_infos[i]->num_supply_centers; ++j)
+			json_array_append_new(
+				supply_centers,
+				json_string(gam->country_infos[i]->supply_centers[j])
+			);
+
+		/* Add all of the units for each country */
+		for (j = 0; j < gam->country_infos[i]->num_units; ++j)
+			json_array_append_new(
+				units,
+				json_string(gam->country_infos[i]->units[j]->supply_center)
+			);
+		json_object_set_new(country_info, "units", units);
+		json_object_set_new(country_info, "supply_centers", supply_centers);
+		json_array_append_new(country_infos, country_info);
+	}
+	json_object_set_new(res, "country_infos", country_infos);
+
+	/* Nothing to clean up */
+	return res;
 }
 
 /* RESOURCE CLEANUP */
