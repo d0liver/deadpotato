@@ -28,5 +28,6 @@ struct ScanLine {
 void show_rgn_info (struct Rgn *rgn);
 void destroy_rgn(struct Rgn *rgn);
 struct Rgn *init_rgn(const char *fpath, struct ParseError **err);
+json_t *rgn_json(struct Rgn *rgn, struct Map *map);
 #define DEADPOTATO_RGN_FILE_PARSER_H
 #endif

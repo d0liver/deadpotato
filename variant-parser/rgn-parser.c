@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <jansson.h>
 
 #include "parser-utils.h"
 #include "err.h"
@@ -21,6 +22,31 @@ void show_rgn_info (struct Rgn *rgn) {
 				rgn->regions[i]->scanlines[j].y,
 				rgn->regions[i]->scanlines[j].len
 			);
+}
+
+json_t *rgn_json(struct Rgn *rgn, struct Map *map) {
+	int i, j;
+	json_t *res = json_object();
+
+	for (i = 0; i < rgn->num_regions; ++i) {
+		json_t *region_scanlines = json_array();
+		/* Each regions scanlines will be stored under the region's name */
+		char *rgn_name = map->spaces[i]->name;
+		for (j = 0; j < rgn->regions[i]->num_scanlines; ++j) {
+			json_t *scanline;
+			scanline = json_pack(
+				"{s:i, s:i, s:i}",
+				"x", rgn->regions[i]->scanlines[j].x,
+				"y", rgn->regions[i]->scanlines[j].y,
+				"len", rgn->regions[i]->scanlines[j].len
+			);
+			json_array_append_new(region_scanlines, scanline);
+		}
+		json_object_set_new(res, rgn_name, region_scanlines);
+	}
+
+	/* All of the references were stolen so there is nothing to cleanup here */
+	return res;
 }
 
 void destroy_region(struct Region *region) {
@@ -89,7 +115,7 @@ struct Region *next_region(FILE *file, struct ParseError **cerr) {
 	line_ptr = eat_comments(file, line);
 	if (!line_ptr)
 		/* EOF, finished parsing */
-		goto cleanup;
+		return NULL;
 	if (!(region->unit_pos = next_position(line_ptr, &err)))
 		goto cleanup;
 
@@ -175,13 +201,14 @@ struct Rgn *init_rgn(const char *fpath, struct ParseError **cerr) {
 	rgn->regions = malloc(sizeof(struct Region *)*MAX_SUPPLY_CENTERS);
 	for (i = 0; i < MAX_SUPPLY_CENTERS; ++i) {
 		rgn->regions[i] = next_region(file, &err);
-		if (!rgn->regions && !err)
+		if (!rgn->regions[i] && !err)
 			break;
 		else if (err)
 			goto cleanup;
 	}
 	rgn->regions = realloc(rgn->regions, sizeof(struct Region *)*i);
 	rgn->num_regions = i;
+	printf("NUM REGIONS: %d\n", rgn->num_regions);
 
 cleanup:
 	if (file)

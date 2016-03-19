@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <jansson.h>
 
 #include "var-parser.h"
 #include "cnt-parser.h"
@@ -17,35 +18,38 @@ int main (int argc, char **argv) {
 	struct Rgn *rgn;
 	struct ParseError *err = NULL;
 
-	if(variant = init_variant ("../variants/Middle Earth/midearth.var", &err))
-		show_variant_info(variant);
+	if(variant = init_variant ("../variants/Middle Earth/midearth.var", &err)) {
+		/* show_variant_info(variant); */
+	}
 	else
 		goto variant_fail;
 
 	if (cnt = init_cnt("../variants/Middle Earth/midearth.cnt", &err)) {
 		printf("\n");
-		show_cnt_info(cnt);
+		/* show_cnt_info(cnt); */
 	}
 	else
 		goto cnt_fail;
 
 	if (gam = init_gam("../variants/Middle Earth/midearth.gam", &err)) {
 		printf("\n");
-		show_gam_info(gam);
+		/* show_gam_info(gam); */
 	}
 	else
 		goto gam_fail;
 
 	if (map = init_map("../variants/Middle Earth/midearth.map", &err)) {
 		printf("\n");
-		show_map_info(map);
+		/* show_map_info(map); */
 	}
 	else
 		goto map_fail;
 
 	if (rgn = init_rgn("../variants/Middle Earth/midearth.rgn", &err)) {
+		json_t *rgn_j = rgn_json(rgn, map);
+
 		printf("\n");
-		show_rgn_info(rgn);
+		printf("Region json: %s", json_dumps(rgn_j, JSON_INDENT(4)));
 	}
 	else
 		goto rgn_fail;
