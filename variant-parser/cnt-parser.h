@@ -43,5 +43,6 @@ struct Country {
 void show_cnt_info (struct Cnt *cnt);
 void destroy_cnt(struct Cnt *cnt);
 struct Cnt *init_cnt(const char *fpath, struct ParseError **err);
+json_t *cnt_json (struct Cnt *cnt);
 #define DEADPOTATO_CNT_FILE_PARSER_H
 #endif

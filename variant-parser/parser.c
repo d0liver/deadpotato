@@ -25,6 +25,8 @@ int main (int argc, char **argv) {
 		goto variant_fail;
 
 	if (cnt = init_cnt("../variants/Middle Earth/midearth.cnt", &err)) {
+		json_t *cnt_j = cnt_json(cnt);
+		printf("Cnt JSON: %s\n", json_dumps(cnt_j, JSON_INDENT(4)));
 		/* printf("\n"); */
 		/* show_cnt_info(cnt); */
 	}
@@ -32,9 +34,9 @@ int main (int argc, char **argv) {
 		goto cnt_fail;
 
 	if (gam = init_gam("../variants/Middle Earth/midearth.gam", &err)) {
-		json_t *gam_j = gam_json(gam);
+		/* json_t *gam_j = gam_json(gam); */
 		/* printf("\n"); */
-		printf("%s\n", json_dumps(gam_j, JSON_INDENT(4)));
+		/* printf("%s\n", json_dumps(gam_j, JSON_INDENT(4))); */
 		/* show_gam_info(gam); */
 	}
 	else
@@ -48,7 +50,7 @@ int main (int argc, char **argv) {
 		goto map_fail;
 
 	if (rgn = init_rgn("../variants/Middle Earth/midearth.rgn", &err)) {
-		json_t *rgn_j = rgn_json(rgn, map);
+		/* json_t *rgn_j = rgn_json(rgn, map); */
 
 	/* 	printf("\n"); */
 	/* 	printf("Region json: %s", json_dumps(rgn_j, JSON_INDENT(4))); */

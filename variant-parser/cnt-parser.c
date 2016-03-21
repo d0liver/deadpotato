@@ -1,10 +1,38 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <jansson.h>
 
 #include "err.h"
 #include "cnt-parser.h"
 #include "parser-utils.h"
+
+json_t *cnt_json (struct Cnt *cnt) {
+	int i;
+	json_t *res, *countries;
+
+	res = json_pack(
+		"{s:i}",
+		"version", cnt->version
+	);
+
+	countries = json_array();
+	for (i = 0; i < cnt->num_countries; ++i) {
+		json_t *country;
+		country = json_pack(
+			"{s:s, s:s, s:s, s:s, s:s}",
+			"name", cnt->countries[i]->name,
+			"adjective", cnt->countries[i]->adjective,
+			"capital_initial", cnt->countries[i]->capital_initial,
+			"pattern", cnt->countries[i]->pattern,
+			"color", cnt->countries[i]->color
+		);
+		json_array_append_new(countries, country);
+	}
+	json_object_set_new(res, "countries", countries);
+
+	return res;
+}
 
 void show_cnt_info (struct Cnt *cnt) {
 	int i;
