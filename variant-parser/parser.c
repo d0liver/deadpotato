@@ -25,8 +25,8 @@ int main (int argc, char **argv) {
 		goto variant_fail;
 
 	if (cnt = init_cnt("../variants/Middle Earth/midearth.cnt", &err)) {
-		json_t *cnt_j = cnt_json(cnt);
-		printf("Cnt JSON: %s\n", json_dumps(cnt_j, JSON_INDENT(4)));
+		/* json_t *cnt_j = cnt_json(cnt); */
+		/* printf("Cnt JSON: %s\n", json_dumps(cnt_j, JSON_INDENT(4))); */
 		/* printf("\n"); */
 		/* show_cnt_info(cnt); */
 	}
@@ -43,7 +43,9 @@ int main (int argc, char **argv) {
 		goto gam_fail;
 
 	if (map = init_map("../variants/Middle Earth/midearth.map", &err)) {
+		json_t *map_j = map_json(map);
 		/* printf("\n"); */
+		printf("%s\n", json_dumps(map_j, JSON_INDENT(4)));
 		/* show_map_info(map); */
 	}
 	else

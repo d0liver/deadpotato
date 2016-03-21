@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <jansson.h>
 
 #include "map-parser.h"
 #include "parser-utils.h"
@@ -66,6 +67,67 @@ static char *space_type(struct Space *space, char letter) {
 			return "capital";
 			break;
 	}
+}
+
+json_t *map_json(struct Map *map) {
+	int i, j;
+	json_t *res = json_object();
+	json_t *spaces = json_array();
+	json_t *adjacencies = json_array();
+
+	for (i = 0; i < map->num_spaces; ++i) {
+		json_t *space;
+		json_t *types = json_array();
+		json_t *abbreviations = json_array();
+
+		space = json_pack(
+			"{s:s}",
+			"name", map->spaces[i]->name
+		);
+
+		for (j = 0; j < map->spaces[i]->num_letters; ++j)
+			json_array_append_new(
+				types,
+				json_string(
+					space_type(
+						map->spaces[i],
+						map->spaces[i]->letters[j]
+					)
+				)
+			);
+		json_object_set_new(space, "types", types);
+
+		for (j = 0; j < map->spaces[i]->num_abbreviations; ++j)
+			json_array_append_new(
+				abbreviations,
+				json_string(map->spaces[i]->abbreviations[j])
+			);
+		json_object_set_new(
+			space, "abbreviations",
+			abbreviations
+		);
+		json_array_append_new(spaces, space);
+	}
+
+	for (i = 0; i < map->num_adjacencies; ++i) {
+		json_t *adjacency, *adjacent_regions = json_array();
+		adjacency = json_pack(
+			"{s:s}",
+			map->adjacencies[i]->region,
+			map->adjacencies[i]->type
+		);
+		for (j = 0; j < map->adjacencies[i]->num_adjacent_regions; ++j)
+			json_array_append_new(
+				adjacent_regions,
+				json_string(map->adjacencies[i]->adjacent_regions[j])
+			);
+		json_object_set_new(adjacency, "adjacent_regions", adjacent_regions);
+		json_array_append_new(adjacencies, adjacency);
+	}
+	json_object_set_new(res, "adjacencies", adjacencies);
+	json_object_set_new(res, "spaces", spaces);
+
+	return res;
 }
 
 void show_map_info(struct Map *map) {

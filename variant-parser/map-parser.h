@@ -102,5 +102,6 @@ struct Adjacency {
 void show_map_info (struct Map *map);
 void destroy_map(struct Map *map);
 struct Map *init_map(const char *fpath, struct ParseError **err);
+json_t *map_json(struct Map *map);
 #define DEADPOTATO_MAP_FILE_PARSER_H
 #endif
