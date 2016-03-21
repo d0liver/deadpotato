@@ -9,8 +9,10 @@ window.onload = function () {
     var diagonal_lines_texture =
         diagonalLinesTexture(map_img.offsetWidth, map_img.offsetHeight, 20);
     var map = Map(ctx, scanlines, diagonal_lines_texture);
+    var gam_info = GameInfo(scanlines, cnt, map, varr);
+    map.showRegions(gam_info.countryRegions());
 
-    window.onmousemove = function (e) {
-        map.showRegion(e);
-    };
+    // window.onmousemove = function (e) {
+    //     map.showRegion(e);
+    // };
 };

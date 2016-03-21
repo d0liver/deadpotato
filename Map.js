@@ -1,4 +1,4 @@
-var Map = function (ctx, scanlines, texture) {
+var Map = function (ctx, scanlines, gam_info, texture) {
     var self = {};
     var selected_region = null;
 
@@ -31,12 +31,6 @@ var Map = function (ctx, scanlines, texture) {
     };
 
     self.clearRegions = function (e) {
-    };
-
-    self.showRegion = function (e) {
-        var over_region = self.evtRegion(e);
-        if (over_region)
-            showRegion(over_region);
     };
 
     /* Show a particular region */
