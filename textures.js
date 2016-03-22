@@ -1,18 +1,35 @@
-var diagonalLinesTexture = function (width, height) {
-    /* TODO: Make this use an angle rather than a fixed offset */
-    var i;
-    var diagonal_lines = document.createElement("canvas");
-    diagonal_lines.width = width;
-    diagonal_lines.height = height;
-    var ctx = diagonal_lines.getContext("2d");
-    ctx.strokeStyle="#0000ff";
+var TextureBuilder = function () {
+    var self = {};
 
-    for (i = -400; i < width; i += 4) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i + 400, height);
-        ctx.stroke();
-    }
+    var colors = {
+        forest: "#228b22",
+        charcoal: "#36454f",
+        red: "red",
+        brown: "brown",
+        teal: "teal",
+        blue: "blue",
+        orange: "orange",
+        navy: "#000080"
+    };
 
-    return diagonal_lines;
+    self.diagonalLines = function (width, height) {
+        /* TODO: Make this use an angle rather than a fixed offset */
+        var i;
+        var diagonal_lines = document.createElement("canvas");
+        diagonal_lines.width = width;
+        diagonal_lines.height = height;
+        var ctx = diagonal_lines.getContext("2d");
+        ctx.strokeStyle="#0000ff";
+
+        for (i = -400; i < width; i += 4) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i + 400, height);
+            ctx.stroke();
+        }
+
+        return diagonal_lines;
+    };
+
+    return self;
 };

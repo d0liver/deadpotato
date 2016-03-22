@@ -6,8 +6,12 @@ window.onload = function () {
     canvas.height = map_img.offsetHeight;
 
     var ctx = document.getElementById("map").getContext('2d');
+    var texture_builder = TextureBuilder();
     var diagonal_lines_texture =
-        diagonalLinesTexture(map_img.offsetWidth, map_img.offsetHeight, 20);
+        texture_builder.diagonalLines(
+            map_img.offsetWidth,
+            map_img.offsetHeight
+        );
     console.log("Map: ", map_data);
     var gam_info = GameInfo(scanlines, cnt, map_data, varr);
     var map = Map(ctx, scanlines, gam_info, diagonal_lines_texture);
