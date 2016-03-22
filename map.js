@@ -1,4 +1,4 @@
-var map = {
+var map_data = {
     "country_infos": [
         {
             "adjustment": 0,

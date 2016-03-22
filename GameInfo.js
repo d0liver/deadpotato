@@ -33,18 +33,21 @@ var GameInfo = function (scanlines, cnt, map, varr) {
         return regions;
     };
 
-    self.countryRegions = function () {
+    self.countrySupplyCenters = function () {
         var i, j;
-        var regions = {};
+        var supply_centers = {}, supply_center_abbrs, country;
 
         for (i = 0; i < cnt.countries.length; ++i) {
-            var country_regions = map.country_infos[i];
-            var country = cnt.countries[i].name;
-            for (j = 0; j < country_regions.length; ++j)
-                showRegion(self.regionName(country_regions[j]));
+            supply_center_abbrs = map.country_infos[i].supply_centers;
+            country = cnt.countries[i].name;
+            supply_centers[country] = [];
+            for (j = 0; j < supply_center_abbrs.length; ++j) {
+                var region_name = self.regionName(supply_center_abbrs[j]);
+                supply_centers[country].push(region_name);
+            }
         }
 
-        return regions;
+        return supply_centers;
     };
 
     /* Iterate the info from the .var file and get the region name
@@ -54,8 +57,11 @@ var GameInfo = function (scanlines, cnt, map, varr) {
         var i, j;
 
         for (i = 0; i < varr.spaces.length; ++i)
-            for (j = 0; j < varr.spaces[i].abbreviations[j].length; ++j)
-                if (varr.spaces[i].abbreviations[j] == region_abbr)
+            for (j = 0; j < varr.spaces[i].abbreviations.length; ++j)
+                if (
+                    varr.spaces[i].abbreviations[j].toLowerCase() ==
+                    region_abbr.toLowerCase()
+                )
                     return varr.spaces[i].name;
     };
 

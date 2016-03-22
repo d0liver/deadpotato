@@ -5,7 +5,7 @@ var diagonalLinesTexture = function (width, height) {
     diagonal_lines.width = width;
     diagonal_lines.height = height;
     var ctx = diagonal_lines.getContext("2d");
-    ctx.strokeStyle="#ff0000";
+    ctx.strokeStyle="#0000ff";
 
     for (i = -400; i < width; i += 4) {
         ctx.beginPath();
