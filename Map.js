@@ -1,4 +1,4 @@
-var Map = function (ctx, scanlines, gam_info, texture) {
+var Map = function (ctx, gam_info, region_textures) {
     var self = {};
     var selected_region = null;
 
@@ -10,6 +10,7 @@ var Map = function (ctx, scanlines, gam_info, texture) {
         var i, j;
         var x = e.pageX;
         var y = e.pageY;
+        var scanlines = gam_info.scanlines();
 
         /* Search through the scanlines and figure out if we're on one of
          * them. If so, return the name of that region. */
@@ -26,21 +27,15 @@ var Map = function (ctx, scanlines, gam_info, texture) {
 
     /* Draw all of the regions from all of the countries on the map */
     self.showRegions = function () {
-        var i, j;
+        var j;
         var supply_centers = gam_info.countrySupplyCenters();
-        console.log("Supply centers: ", supply_centers);
 
         j = 0;
         for (country in supply_centers) {
-            for (i = 0; i < supply_centers[country].length; ++i)
-                showRegion(
-                    supply_centers[country][i],
-                    cnt.countries[j].color
-                );
+            for (var i = 0; i < supply_centers[country].length; ++i)
+                region_textures.draw(ctx, supply_centers[country][i]);
             ++j;
         }
-
-        textureRegions();
     };
 
     self.select = function (e) {
@@ -50,40 +45,6 @@ var Map = function (ctx, scanlines, gam_info, texture) {
     };
 
     self.clearRegions = function (e) {
-    };
-
-    /* After we have drawn all of our regions, we will fill them in with the
-     * correct texture */
-    var textureRegions = function () {
-        ctx.globalCompositeOperation = 'source-in';
-        ctx.drawImage(texture, 0, 0);
-    };
-
-    /* Show a particular region */
-    var showRegion = function (region_name, color) {
-        var i;
-
-        console.log("Color: ", color);
-        ctx.save();
-        // ctx.strokeStyle="#107c1c";
-        ctx.strokeStyle="#000000";
-        /* Go through and draw all of the scanlines */
-        var region_scanlines = scanlines[region_name];
-
-        /* TODO: Is this efficient? */
-        /* We draw out a solid shape for our texture. Using this, we can then draw
-         * our texture over the top of it */
-        for (i = 0; i < region_scanlines.length; i++) {
-            ctx.beginPath();
-            ctx.moveTo(region_scanlines[i].x, region_scanlines[i].y);
-            ctx.lineTo(
-                region_scanlines[i].x + region_scanlines[i].len,
-                region_scanlines[i].y
-            );
-            ctx.stroke();
-        }
-
-        ctx.restore();
     };
 
     init();

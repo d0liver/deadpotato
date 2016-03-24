@@ -14,7 +14,9 @@ window.onload = function () {
         );
     console.log("Map: ", map_data);
     var gam_info = GameInfo(scanlines, cnt, map_data, varr);
-    var map = Map(ctx, scanlines, gam_info, diagonal_lines_texture);
+    var texture_builder = TextureBuilder(); 
+    var region_textures = RegionTexture(gam_info, texture_builder);
+    var map = Map(ctx, gam_info, region_textures);
     map.showRegions();
 
     // window.onmousemove = function (e) {

@@ -12,14 +12,14 @@ var TextureBuilder = function () {
         navy: "#000080"
     };
 
-    self.diagonalLines = function (width, height) {
+    self.texture = function (width, height, color) {
         /* TODO: Make this use an angle rather than a fixed offset */
         var i;
         var diagonal_lines = document.createElement("canvas");
         diagonal_lines.width = width;
         diagonal_lines.height = height;
         var ctx = diagonal_lines.getContext("2d");
-        ctx.strokeStyle="#0000ff";
+        ctx.strokeStyle = color;
 
         for (i = -400; i < width; i += 4) {
             ctx.beginPath();

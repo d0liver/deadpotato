@@ -23,6 +23,10 @@ var GameInfo = function (scanlines, cnt, map, varr) {
         }
     };
 
+    self.scanlines = function () {
+        return scanlines;
+    };
+
     self.regions = function () {
         var i;
         var regions = [];
