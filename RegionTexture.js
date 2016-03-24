@@ -13,14 +13,14 @@ var RegionTexture = function (gam_info, texture_builder) {
     /* This must be called before the caller actually tries to get any textures
      * from us */
     self.build = function () {
-        var scanlines = gam_info.scanlines();
+        var rgns = gam_info.rgns();
         textures = {};
 
-        for (region in scanlines) {
-            var bnds = bounds(scanlines[region]);
+        for (region in rgns) {
+            var bnds = bounds(rgns[region].scanlines);
             textures[region] =  {
                 img: buildRegionTexture(
-                    scanlines[region],
+                    rgns[region].scanlines,
                     bnds,
                     gam_info.regionColor(region)
                 ),

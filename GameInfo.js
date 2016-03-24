@@ -2,10 +2,10 @@
  * game. A lot of the info references other info and that's not something we
  * want to have to deal with at this level.
  * cnt = The info from the .cnt file
+ * gam = The info from the .gam file
  * map = The info from the .map file
- * varr = The info from the .var file
  */
-var GameInfo = function (scanlines, cnt, map, varr) {
+var GameInfo = function (rgns, cnt, gam, map) {
     var regions_info = [];
     var self = {};
 
@@ -23,8 +23,8 @@ var GameInfo = function (scanlines, cnt, map, varr) {
         }
     };
 
-    self.scanlines = function () {
-        return scanlines;
+    self.rgns = function () {
+        return rgns;
     };
 
     self.regionColor = function (region_name) {
@@ -50,8 +50,8 @@ var GameInfo = function (scanlines, cnt, map, varr) {
         var i;
         var regions = [];
 
-        for (i = 0; i < varr.spaces.length; ++i)
-            regions.push(varr.spaces[i].name);
+        for (i = 0; i < map.spaces.length; ++i)
+            regions.push(map.spaces[i].name);
 
         return regions;
     };
@@ -61,7 +61,7 @@ var GameInfo = function (scanlines, cnt, map, varr) {
         var supply_centers = {}, supply_center_abbrs, country;
 
         for (i = 0; i < cnt.countries.length; ++i) {
-            supply_center_abbrs = map.country_infos[i].supply_centers;
+            supply_center_abbrs = gam.country_infos[i].supply_centers;
             country = cnt.countries[i].name;
             supply_centers[country] = [];
             for (j = 0; j < supply_center_abbrs.length; ++j) {
@@ -79,17 +79,26 @@ var GameInfo = function (scanlines, cnt, map, varr) {
     self.regionName = function (region_abbr) {
         var i, j;
 
-        for (i = 0; i < varr.spaces.length; ++i)
-            for (j = 0; j < varr.spaces[i].abbreviations.length; ++j)
+        for (i = 0; i < map.spaces.length; ++i)
+            for (j = 0; j < map.spaces[i].abbreviations.length; ++j)
                 if (
-                    varr.spaces[i].abbreviations[j].toLowerCase() ==
+                    map.spaces[i].abbreviations[j].toLowerCase() ==
                     region_abbr.toLowerCase()
                 )
-                    return varr.spaces[i].name;
+                    return map.spaces[i].name;
     };
 
     self.regionScanLines = function (region_abbr) {
         return scanlines[self.regionName(region_abbr)];
+    };
+
+    self.unitPos = function (region_name) {
+        console.log("Pos: ", rgns[region_name].unit_pos);
+        return rgns[region_name].unit_pos;
+    };
+
+    self.namePos = function (region_name) {
+        return rgns[region_name.toLowerCase()].name_pos;
     };
 
     init();

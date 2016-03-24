@@ -29,6 +29,8 @@ json_t *rgn_json(struct Rgn *rgn, struct Map *map) {
 	json_t *res = json_object();
 
 	for (i = 0; i < rgn->num_regions; ++i) {
+		json_t *region = json_object();
+		json_t *unit_pos, *name_pos;
 		json_t *region_scanlines = json_array();
 		/* Each regions scanlines will be stored under the region's name */
 		char *rgn_name = map->spaces[i]->name;
@@ -42,7 +44,20 @@ json_t *rgn_json(struct Rgn *rgn, struct Map *map) {
 			);
 			json_array_append_new(region_scanlines, scanline);
 		}
-		json_object_set_new(res, rgn_name, region_scanlines);
+		unit_pos = json_pack(
+			"{s:i, s:i}",
+			"x", rgn->regions[i]->unit_pos->x,
+			"y", rgn->regions[i]->unit_pos->y
+		);
+		name_pos = json_pack(
+			"{s:i, s:i}",
+			"x", rgn->regions[i]->name_pos->x,
+			"y", rgn->regions[i]->name_pos->y
+		);
+		json_object_set_new(region, "unit_pos", unit_pos);
+		json_object_set_new(region, "name_pos", name_pos);
+		json_object_set_new(region, "scanlines", region_scanlines);
+		json_object_set_new(res, rgn_name, region);
 	}
 
 	/* All of the references were stolen so there is nothing to cleanup here */
@@ -84,14 +99,15 @@ struct Coords *next_position(char *line_ptr, struct ParseError **cerr) {
 	}
 	coords->x = atoi(word);
 
+	/* Move past the comma */
+	++line_ptr;
+
 	/* Grab the second coord */
 	word = eat_word(&line_ptr);
 	if (!word) {
 		err = init_parse_error("Failed to parse position in .rgn file.");
 		goto cleanup;
 	}
-	/* Move past the comma */
-	++line_ptr;
 	coords->y = atoi(word);
 
 cleanup:
