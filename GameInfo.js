@@ -27,6 +27,25 @@ var GameInfo = function (scanlines, cnt, map, varr) {
         return scanlines;
     };
 
+    self.regionColor = function (region_name) {
+        var supply_centers = self.countrySupplyCenters();
+        var country_idx = 0;
+
+        for (country in supply_centers) {
+            for (var i = 0; i < supply_centers[country].length; ++i)
+                if (
+                    supply_centers[country][i].toLowerCase() ==
+                    region_name.toLowerCase()
+                )
+                    return cnt.countries[country_idx].color.toLowerCase();
+
+            ++country_idx;
+        }
+
+        /* Use red as the default */
+        return "red";
+    };
+
     self.regions = function () {
         var i;
         var regions = [];

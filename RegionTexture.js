@@ -14,21 +14,25 @@ var RegionTexture = function (gam_info, texture_builder) {
      * from us */
     self.build = function () {
         var scanlines = gam_info.scanlines();
+        textures = {};
 
         for (region in scanlines) {
-            var bounds = bounds(scanlines[region]);
+            var bnds = bounds(scanlines[region]);
             textures[region] =  {
                 img: buildRegionTexture(
                     scanlines[region],
-                    bounds
+                    bnds,
+                    gam_info.regionColor(region)
                 ),
-                bounds: bounds
+                bounds: bnds
             };
         }
     };
 
     /* Draw the texture for the region on the given canvas context */
     self.draw = function(ctx, region_name) {
+        if (!textures)
+            throw new Error("Textures were referenced before being built.");
         var texture = textures[region_name];
 
         ctx.drawImage(
@@ -38,39 +42,42 @@ var RegionTexture = function (gam_info, texture_builder) {
         );
     };
 
-    var buildRegionTexture = function (scanlines, bounds) {
+    var buildRegionTexture = function (scanlines, bnds, color) {
         var canvas = document.createElement("canvas");
-        var ctx = canvas.ctx;
-        canvas.width = dims.width;
-        canvas.height = dims.height;
+        var ctx = canvas.getContext('2d');
+        canvas.width = bnds.x.max - bnds.x.min;
+        canvas.height = bnds.y.max - bnds.y.min;
 
         ctx.strokeStyle = "#000000";
-        /* First, draw the region onto the canvas in black. This is so that we
-         * can source-in the texture next */
-        fillRegion(ctx, scanlines, bounds);
+        /* First, draw the region onto the canvas in black. This is so that
+         * we can source-in the texture next */
+        fillRegion(ctx, scanlines, bnds);
 
         ctx.globalCompositeOperation = 'source-in';
         /* Next, draw the texture into the canvas */
         ctx.drawImage(
             texture_builder.texture(
                 ctx.canvas.width,
-                ctx.canvas.height
-            )
+                ctx.canvas.height,
+                color
+            ), 0, 0
         );
+
+        return canvas;
     };
 
     /* Given the scanlines for a region and the bounds of the scanlines, just
      * draw them on the canvas. We don't change any of the settings on the
      * context here, we let the caller set them. */
-    var fillRegion = function (ctx, scanlines, bounds) {
+    var fillRegion = function (ctx, scanlines, bnds) {
         var i;
 
         for (var i = 0; i < scanlines.length; ++i) {
             /* Translate the scanline to one that's relative to the canvas */
             var rel_scanline = {
-                x1: scanlines[i].x - bounds.x.min,
-                x2: scanlines[i].x - bounds.x.min + scanlines[i].len,
-                y: scanlines[i].y - bounds.y.min,
+                x1: scanlines[i].x - bnds.x.min,
+                x2: scanlines[i].x - bnds.x.min + scanlines[i].len,
+                y: scanlines[i].y - bnds.y.min,
                 len: scanlines[i].len
             };
             ctx.beginPath();
@@ -85,17 +92,19 @@ var RegionTexture = function (gam_info, texture_builder) {
     var bounds = function (scanlines) {
         var i;
         /* We will use these to store the min and max for x and y */
-        var x = {}, y = {};
+        var x = {min: Infinity, max: -1}, y = {min: Infinity, max: -1};
 
-        for (i = 0; i < scanlines.length; ++i)
+        for (i = 0; i < scanlines.length; ++i) {
             if (scanlines[i].x < x.min)
                 x.min = scanlines[i].x;
             else if (scanlines[i].x + scanlines[i].len > x.max)
                 x.max = scanlines[i].x + scanlines[i].len;
-            else if (scanlines[i].y < y.min)
+
+            if (scanlines[i].y < y.min)
                 y.min = scanlines[i].y;
             else if (scanlines[i].y > y.max)
                 y.max = scanlines[i].y;
+        }
 
         return {
             x: x,

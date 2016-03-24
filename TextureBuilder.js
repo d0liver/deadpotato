@@ -13,22 +13,21 @@ var TextureBuilder = function () {
     };
 
     self.texture = function (width, height, color) {
-        /* TODO: Make this use an angle rather than a fixed offset */
         var i;
-        var diagonal_lines = document.createElement("canvas");
-        diagonal_lines.width = width;
-        diagonal_lines.height = height;
-        var ctx = diagonal_lines.getContext("2d");
-        ctx.strokeStyle = color;
+        var canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext("2d");
+        ctx.strokeStyle = colors[color];
 
-        for (i = -400; i < width; i += 4) {
+        for (i = 0; i < height; i += 4) {
             ctx.beginPath();
-            ctx.moveTo(i, 0);
-            ctx.lineTo(i + 400, height);
+            ctx.moveTo(0, i);
+            ctx.lineTo(width, i);
             ctx.stroke();
         }
 
-        return diagonal_lines;
+        return canvas;
     };
 
     return self;
