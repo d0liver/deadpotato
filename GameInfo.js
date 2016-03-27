@@ -93,7 +93,6 @@ var GameInfo = function (rgns, cnt, gam, map) {
     };
 
     self.unitPos = function (region_name) {
-        console.log("Pos: ", rgns[region_name].unit_pos);
         return rgns[region_name].unit_pos;
     };
 
