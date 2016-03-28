@@ -34,10 +34,10 @@ var GameInfo = function (rgns, cnt, gam, map) {
         for (country in supply_centers) {
             for (var i = 0; i < supply_centers[country].length; ++i)
                 if (
-                    supply_centers[country][i].toLowerCase() ==
-                    region_name.toLowerCase()
+                    supply_centers[country][i] ==
+                    region_name
                 )
-                    return cnt.countries[country_idx].color.toLowerCase();
+                    return cnt.countries[country_idx].color;
 
             ++country_idx;
         }
@@ -82,14 +82,17 @@ var GameInfo = function (rgns, cnt, gam, map) {
         for (i = 0; i < map.spaces.length; ++i)
             for (j = 0; j < map.spaces[i].abbreviations.length; ++j)
                 if (
-                    map.spaces[i].abbreviations[j].toLowerCase() ==
-                    region_abbr.toLowerCase()
+                    map.spaces[i].abbreviations[j] ==
+                    region_abbr
                 )
                     return map.spaces[i].name;
     };
 
-    self.regionScanLines = function (region_abbr) {
-        return scanlines[self.regionName(region_abbr)];
+    self.regionScanLines = function (region, not_abbr) {
+        if (!not_abbr)
+            return scanlines[self.regionName(region)];
+        else
+            return scanlines[region];
     };
 
     self.unitPos = function (region_name) {
@@ -97,7 +100,7 @@ var GameInfo = function (rgns, cnt, gam, map) {
     };
 
     self.namePos = function (region_name) {
-        return rgns[region_name.toLowerCase()].name_pos;
+        return rgns[region_name].name_pos;
     };
 
     init();

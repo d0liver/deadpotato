@@ -1,4 +1,7 @@
-var Map = function (ctx, gam_info, region_textures) {
+var Map = function (
+        ctx, select_ctx,
+        gam_info, region_textures
+) {
     var self = {};
     var selected_region = null;
 
@@ -10,12 +13,13 @@ var Map = function (ctx, gam_info, region_textures) {
         var i, j;
         var x = e.pageX;
         var y = e.pageY;
-        var rgn = gam_info.rgns();
+        var rgns = gam_info.rgns();
 
         /* Search through the scanlines and figure out if we're on one of
          * them. If so, return the name of that region. */
-        for (region in scanlines) {
-            for (j = 0; j < scanlines[region].length; ++j) {
+        for (region in rgns) {
+            var scanlines = gam_info.regionScanLines(region);
+            for (j = 0; j < scanlines.length; ++j) {
                 var scanlines = rgns[region].scanlines[j];
                 if (
                     y == scanlines[j].y &&
@@ -24,6 +28,17 @@ var Map = function (ctx, gam_info, region_textures) {
                 )
                     return region;
             }
+        }
+    };
+
+    self.selectRegion = function (e) {
+        var sel_canvas = select_ctx.canvas;
+        var selected_region = self.evtRegion(e);
+
+        /* We will blacken the selected region */
+        if (selected_region) {
+            select_ctx.clearRect(0, 0, sel_canvas.width, sel_canvas.height);
+            var scanlines = gam_info.regionScanLines(selected_region);
         }
     };
 
