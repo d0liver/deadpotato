@@ -17,16 +17,16 @@ var Map = function (
 
         /* Search through the scanlines and figure out if we're on one of
          * them. If so, return the name of that region. */
-        for (region in rgns) {
-            var scanlines = gam_info.regionScanLines(region);
-            for (j = 0; j < scanlines.length; ++j) {
-                var scanlines = rgns[region].scanlines[j];
+        for (region in regions) {
+            var scanlines = region.scanlines;
+            for (j = 0; j < scanlines[region].length; ++j) {
+                var scanlines = scanlines[j];
                 if (
                     y == scanlines[j].y &&
                     x > scanlines[j].x &&
                     x < scanlines[j].x +scanlines[j].len
                 )
-                    return region;
+                    return region.name;
             }
         }
     };
@@ -92,10 +92,13 @@ var Map = function (
         ctx.fill();
     };
 
+    var selectRegion = function (region) {
+        console.log("Selected region: ", region);
+    };
+
     self.select = function (e) {
-        if (!selected_region)
-            selected_region = self.evtRegion(e);
-        showRegion(selected_region);
+        selected_region = self.evtRegion(e);
+        selectRegion(selected_region);
     };
 
     self.clearRegions = function (e) {

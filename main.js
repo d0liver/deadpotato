@@ -1,12 +1,12 @@
-window.onload = function () {
+$(document).ready(function () {
     fixData();
-    var map_img = document.getElementById("map-image");
-    var canvas = document.getElementById("map");
+    var map_img = $("#map-image")[0];
+    var canvas = $("#map")[0];
     canvas.width = map_img.offsetWidth;
     canvas.height = map_img.offsetHeight;
 
-    var ctx = document.getElementById("map").getContext('2d');
-    var select_ctx = document.getElementById("map_select").getContext('2d');
+    var ctx = $("#map")[0].getContext('2d');
+    var select_ctx = $("#map_select")[0].getContext('2d');
     var texture_builder = TextureBuilder();
     var gam_info = GameInfo(rgns, cnt, gam, map_data);
     var texture_builder = TextureBuilder(); 
@@ -17,10 +17,8 @@ window.onload = function () {
     /* Test arrow drawing functionality */
     map.arrow("brown lands", "wilderness");
 
-    window.onclick = function (e) {
-        map.selectRegion(e);
-    };
-};
+    $("#map").click(map.select);
+});
 
 /* We have to iterate a bunch of the data that we received and change the
  * naming conventions because they're inconsistent (we make everything lower
@@ -56,9 +54,4 @@ var fixData = function () {
 
         return country_info;
     });
-
-    console.log("Regions: ", rgns);
-    console.log("Map: ", map_data);
-    console.log("Gam: ", gam);
-    console.log("Cnt: ", cnt);
 };
