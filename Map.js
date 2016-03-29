@@ -6,9 +6,11 @@ var Map = function (
     var selected_region = null;
 
     var init = function () {
+        $(select_ctx.canvas).click(self.select);
     };
 
-    /* Get the region that the event is over or null if it's not over a region */
+    /* Get the region that the event is over or null if it's not over a
+     * region */
     self.evtRegion = function (e) {
         var i, j;
         var x = e.pageX;
@@ -36,7 +38,6 @@ var Map = function (
 
         var canvas = select_ctx.canvas;
 
-        select_ctx.clearRect(0, 0, canvas.width, canvas.height);
         var scanlines = gam_info.regionScanLines(region_name, true);
 
         ctx.strokeStyle = "#000000";
@@ -84,11 +85,11 @@ var Map = function (
         ctx.rotate(angle);
         ctx.beginPath();
         /* Bottom left corner */
-        ctx.moveTo(-scale, 0);
+        ctx.moveTo(-scale, 2*scale);
         /* Bottom right corner */
-        ctx.lineTo(scale, 0);
+        ctx.lineTo(scale, 2*scale);
         /* Top corner */
-        ctx.lineTo(0, 2*-scale);
+        ctx.lineTo(0, 0);
         ctx.closePath();
         ctx.fill();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -99,8 +100,20 @@ var Map = function (
     };
 
     self.select = function (e) {
+        var canvas = select_ctx.canvas;
+        var first_select = selected_region;
         selected_region = self.evtRegion(e);
-        self.darkenRegion(selected_region);
+
+        if (!first_select)
+        /* This is the first region selected, we darken it and wait for the
+         * user to select a second region */
+            self.darkenRegion(selected_region);
+        else {
+            /* Draw the arrow, reset the selector and clear the darkened region */
+            self.arrow(first_select, selected_region);
+            selected_region = null;
+            select_ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
     };
 
     self.clearRegions = function (e) {

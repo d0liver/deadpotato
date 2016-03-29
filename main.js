@@ -20,8 +20,6 @@ $(document).ready(function () {
     map.showRegions();
     /* Test arrow drawing functionality */
     map.arrow("brown lands", "wilderness");
-
-    $("#map_select").click(map.select);
 });
 
 /* We have to iterate a bunch of the data that we received and change the
