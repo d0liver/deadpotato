@@ -17,28 +17,34 @@ var Map = function (
 
         /* Search through the scanlines and figure out if we're on one of
          * them. If so, return the name of that region. */
-        for (region in regions) {
-            var scanlines = region.scanlines;
-            for (j = 0; j < scanlines[region].length; ++j) {
-                var scanlines = scanlines[j];
+        for (region in rgns) {
+            var scanlines = rgns[region].scanlines;
+            for (j = 0; j < scanlines.length; ++j) {
                 if (
                     y == scanlines[j].y &&
                     x > scanlines[j].x &&
                     x < scanlines[j].x +scanlines[j].len
                 )
-                    return region.name;
+                    return region;
             }
         }
     };
 
-    self.selectRegion = function (e) {
-        var sel_canvas = select_ctx.canvas;
-        var selected_region = self.evtRegion(e);
+    self.darkenRegion = function (region_name) {
 
-        /* We will blacken the selected region */
-        if (selected_region) {
-            select_ctx.clearRect(0, 0, sel_canvas.width, sel_canvas.height);
-            var scanlines = gam_info.regionScanLines(selected_region);
+        if (!region_name) return;
+
+        var canvas = select_ctx.canvas;
+
+        select_ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var scanlines = gam_info.regionScanLines(region_name, true);
+
+        ctx.strokeStyle = "#000000";
+        select_ctx.beginPath();
+        for (var i = 0; i < scanlines.length; ++i) {
+            select_ctx.moveTo(scanlines[i].x, scanlines[i].y);
+            select_ctx.lineTo(scanlines[i].x + scanlines[i].len, scanlines[i].y);
+            select_ctx.stroke();
         }
     };
 
@@ -92,13 +98,9 @@ var Map = function (
         ctx.fill();
     };
 
-    var selectRegion = function (region) {
-        console.log("Selected region: ", region);
-    };
-
     self.select = function (e) {
         selected_region = self.evtRegion(e);
-        selectRegion(selected_region);
+        self.darkenRegion(selected_region);
     };
 
     self.clearRegions = function (e) {

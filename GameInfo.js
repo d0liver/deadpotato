@@ -89,10 +89,8 @@ var GameInfo = function (rgns, cnt, gam, map) {
     };
 
     self.regionScanLines = function (region, not_abbr) {
-        if (!not_abbr)
-            return scanlines[self.regionName(region)];
-        else
-            return scanlines[region];
+            return not_abbr?
+                rgns[region].scanlines:rgns[self.regionName(region)].scanlines;
     };
 
     self.unitPos = function (region_name) {

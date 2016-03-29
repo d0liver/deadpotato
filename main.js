@@ -5,6 +5,10 @@ $(document).ready(function () {
     canvas.width = map_img.offsetWidth;
     canvas.height = map_img.offsetHeight;
 
+    canvas = $("#map_select")[0];
+    canvas.width = map_img.offsetWidth;
+    canvas.height = map_img.offsetHeight;
+
     var ctx = $("#map")[0].getContext('2d');
     var select_ctx = $("#map_select")[0].getContext('2d');
     var texture_builder = TextureBuilder();
@@ -17,7 +21,7 @@ $(document).ready(function () {
     /* Test arrow drawing functionality */
     map.arrow("brown lands", "wilderness");
 
-    $("#map").click(map.select);
+    $("#map_select").click(map.select);
 });
 
 /* We have to iterate a bunch of the data that we received and change the
