@@ -27,6 +27,20 @@ var GameInfo = function (rgns, cnt, gam, map) {
         return rgns;
     };
 
+    self.country = function (region_name) {
+        var cnt_idx = _.findIndex(gam.country_infos, function (country_info) {
+            /* If we find this region as one of the units for a country then we
+             * know that unit belongs to this country so we return true */
+            var found = !!_.find(country_info.units, function (unit) {
+                return self.regionName(unit) == region_name;
+            });
+
+            return found;
+        });
+
+        return cnt.countries[cnt_idx];
+    };
+
     self.regionColor = function (region_name) {
         var supply_centers = self.countrySupplyCenters();
         var country_idx = 0;

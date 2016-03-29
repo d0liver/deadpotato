@@ -17,9 +17,9 @@ $(document).ready(function () {
     var region_textures = RegionTexture(gam_info, texture_builder);
     region_textures.build();
     var map = Map(ctx, select_ctx, gam_info, region_textures);
+    /* Set our country. The map will use this to limit our selects, etc. */
+    map.setCountry("Elves");
     map.showRegions();
-    /* Test arrow drawing functionality */
-    map.arrow("brown lands", "wilderness");
 });
 
 /* We have to iterate a bunch of the data that we received and change the

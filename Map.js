@@ -4,9 +4,15 @@ var Map = function (
 ) {
     var self = {};
     var selected_region = null;
+    /* The country of the current player */
+    var country = null;
 
     var init = function () {
         $(select_ctx.canvas).click(self.select);
+    };
+
+    self.setCountry = function (c) {
+        country = c;
     };
 
     /* Get the region that the event is over or null if it's not over a
@@ -55,7 +61,7 @@ var Map = function (
         var supply_centers = gam_info.countrySupplyCenters();
 
         j = 0;
-        for (country in supply_centers) {
+        for (var country in supply_centers) {
             for (var i = 0; i < supply_centers[country].length; ++i)
                 region_textures.draw(ctx, supply_centers[country][i]);
             ++j;
@@ -101,16 +107,29 @@ var Map = function (
 
     self.select = function (e) {
         var canvas = select_ctx.canvas;
-        var first_select = selected_region;
-        selected_region = self.evtRegion(e);
+        var new_select = self.evtRegion(e);
+        var sel_country;
 
-        if (!first_select)
+        /* Was a valid first region selected? */
+        if (
+            !selected_region && (
+                !country ||
+                (
+                    (sel_country = gam_info.country(new_select)) &&
+                    sel_country.name == country
+                )
+            )
+        ) {
+            selected_region = new_select;
         /* This is the first region selected, we darken it and wait for the
          * user to select a second region */
-            self.darkenRegion(selected_region);
-        else {
-            /* Draw the arrow, reset the selector and clear the darkened region */
-            self.arrow(first_select, selected_region);
+            self.darkenRegion(new_select);
+        }
+        /* Is this the second region? (Could be an invalid first region) */
+        else if (selected_region) {
+            /* Draw the arrow, reset the selector and clear the darkened
+             * region */
+            self.arrow(selected_region, new_select);
             selected_region = null;
             select_ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
