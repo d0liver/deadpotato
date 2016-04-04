@@ -1,4 +1,13 @@
-$(document).ready(function () {
+Q($(document).ready()).then(function () {
+    var myFu = function () {
+        var def = Q.defer();
+        setTimeout(function () {
+            def.resolve("Hello!");
+        }, 1000);
+
+        return def.promise;
+    };
+
     fixData();
     var map_img = $("#map-image")[0];
     var canvas = $("#map")[0];
