@@ -1,13 +1,4 @@
-Q($(document).ready()).then(function () {
-    var myFu = function () {
-        var def = Q.defer();
-        setTimeout(function () {
-            def.resolve("Hello!");
-        }, 1000);
-
-        return def.promise;
-    };
-
+$(document).ready(function () {
     fixData();
     var map_img = $("#map-image")[0];
     var canvas = $("#map")[0];
@@ -65,4 +56,14 @@ var fixData = function () {
 
         return country_info;
     });
+};
+
+var relCoords = function (done) {
+   return function (e) {
+       var offset = $(this).offset(); 
+       e.pageX = e.pageX - offset.left;
+       e.pageY = e.pageY - offset.top;
+
+       done(e);
+   };
 };

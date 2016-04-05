@@ -1,0 +1,55 @@
+body {
+    font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.board {
+	margin: 0 auto;
+	width: 1150px;
+	position: relative;
+}
+
+#map, #map_select {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#map_select {
+	opacity: 0.2;
+}
+
+nav {
+	width: 1150px;
+	margin: 0 auto 2em auto;
+	display: block;
+	background: #eee;
+	text-align: center;
+	border-radius: 5px;
+	height: 40px;
+	line-height: 30px;
+}
+
+nav ul {
+	list-style: none;
+	margin: 0 auto;
+	width: 1150px;
+	padding: 0;
+}
+
+nav li {
+	float: left;
+	display: inline;
+	margin: 0;
+}
+
+nav a:link, nav a:visited {
+	display: inline-block;
+	height: 30px;
+	padding: 5px 1.5em;
+	text-decoration: none;
+}
+
+nav a:hover, nav a:active {
+	background: white;
+	text-shadow: none !important;
+}

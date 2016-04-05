@@ -8,7 +8,7 @@ var Map = function (
     var country = null;
 
     var init = function () {
-        $(select_ctx.canvas).click(self.select);
+        $(select_ctx.canvas).click(relCoords(self.select));
     };
 
     self.setCountry = function (c) {

@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>Variant Map</title>
+		<link rel="stylesheet" href="master.css"/>
 		<script src="underscore.min.js"></script>
 		<script src="jquery-1.12.2.min.js"></script>
 		<script src="RegionTexture.js"></script>
@@ -13,7 +14,21 @@
 		<script src="GameInfo.js"></script>
 		<script src="main.js"></script>
 	</head>
-	<img src="variants/Middle Earth/midearth.bmp" id="map-image" style="position: absolute; top: 0px; left: 0px;">
-	<canvas id="map" width="1000" height="1000" style='position: absolute; top: 0px; left: 0px; opacity: 1'></canvas>
-	<canvas id="map_select" width="1000" height="1000" style='position: absolute; top: 0px; left: 0px; opacity: 0.2'></canvas>
+	<body>
+		<nav>
+			<ul>
+				<li><a href="/games">Games</a></li>
+				<li><a href="/games">My Stats</a></li>
+				<li><a href="/games">Account</a></li>
+			</ul>
+		</nav>
+		<div class="board">
+			<img
+				src="variants/Middle Earth/midearth.bmp"
+				id="map-image"
+			/>
+			<canvas id="map"></canvas>
+			<canvas id="map_select"></canvas>
+		</div>
+	</body>
 </html>
