@@ -44,8 +44,18 @@ var Icons = function (ctx, gam_info) {
             var icon_canvas = document.createElement("canvas");
             var icon_ctx = icon_canvas.getContext('2d');
             icon_canvas.height = 150;
-            icon_canvas.width = icon_canvas.height*ratio;
-            icon_canvas.style.border = "solid black 1px";
+            icon_canvas.width = 150;
+
+            var dest_width, dest_height;
+            /* Force the canvas to fit in a 150 by 150 icon */
+            if (bbox_width > bbox_height) {
+                dest_width = 150;
+                dest_height = 150/ratio;
+            }
+            else {
+                dest_height = 150;
+                dest_width = 150*ratio;
+            }
 
             icon_ctx.drawImage(
                 ctx.canvas,
@@ -55,8 +65,8 @@ var Icons = function (ctx, gam_info) {
                 bbox_height,
                 0,
                 0,
-                icon_canvas.width,
-                icon_canvas.height
+                dest_width,
+                dest_height
             );
             icons.push({canvas: icon_canvas, country: country});
         }

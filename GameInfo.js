@@ -27,6 +27,10 @@ var GameInfo = function (rgns, cnt, gam, map) {
         return rgns;
     };
 
+    self.countries = function () {
+        return cnt.countries;
+    };
+
     self.country = function (region_name) {
         var cnt_idx = _.findIndex(gam.country_infos, function (country_info) {
             /* If we find this region as one of the units for a country then we

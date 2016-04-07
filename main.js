@@ -1,19 +1,21 @@
 $(document).ready(function () {
     fixData();
+    var dims = {width: 1150, height: 847};
     var map_img = $("#map-image")[0];
     var canvas = $("#map")[0];
-    canvas.width = map_img.offsetWidth;
-    canvas.height = map_img.offsetHeight;
+    canvas.width = dims.width;
+    canvas.height = dims.height;
 
     canvas = $("#map_select")[0];
-    canvas.width = map_img.offsetWidth;
-    canvas.height = map_img.offsetHeight;
+    canvas.width = dims.width;
+    canvas.height = dims.height;
 
     var ctx = $("#map")[0].getContext('2d');
+    var color_map = ColorMap();
     var select_ctx = $("#map_select")[0].getContext('2d');
     var texture_builder = TextureBuilder();
     var gam_info = GameInfo(rgns, cnt, gam, map_data);
-    var texture_builder = TextureBuilder(); 
+    var texture_builder = TextureBuilder(color_map); 
     var region_textures = RegionTexture(gam_info, texture_builder);
     region_textures.build();
     var map = Map(ctx, select_ctx, gam_info, region_textures);
@@ -21,7 +23,7 @@ $(document).ready(function () {
     /* Set our country. The map will use this to limit our selects, etc. */
     map.setCountry("Elves");
     map.showRegions();
-    icons.init();
+    // icons.init();
     $("#say_hello").submit(function (e) {
         e.preventDefault();
         var lstatus = $("#login_status");
@@ -36,17 +38,44 @@ $(document).ready(function () {
         );
     });
 
-    showIcons(icons.icons());
+    showInteractions(gam_info, color_map);
 });
 
-var showIcons = function (icons) {
-   for (var i = 0; i < icons.length; ++i)
+var darken = function (css_hex, pct_amount) {
+   /* Remove the leading # */
+   css_hex = css_hex.slice(1);
+   var result = "";
+
+   for (i = 1; i <= 3; ++i) {
+      var this_num = parseInt(css_hex.slice(0, 2), 16);
+      var amount = this_num*(pct_amount/100) & ~0;
+      this_num = Math.max(0, this_num - amount);
+      var hex = this_num.toString(16);
+      result += (hex.length == 1)? "0"+hex:hex;
+      /* Shrink the string for the next iteration */
+      css_hex = css_hex.slice(2);
+   }
+
+   return "#"+result;
+};
+
+var showInteractions = function (gam_info, color_map) {
+   var countries = gam_info.countries();
+
+   for (var i = 0; i < countries.length; ++i) {
+      var color = darken(color_map.map(countries[i].color.toLowerCase()), 50);
       $(".interactions ul").append(
-         "<li><span class='label'>"+
-            icons[i].country+
-         "</span>"+
-         "<img class='icon' src='"+icons[i].canvas.toDataURL()+"'/></li>"
+         "<li style='border-color: "+color+
+         "; border-bottom: solid black 1px;'>"+
+         "<span style='color: "+
+            color+
+         "' class='label'>"+
+            countries[i].name+
+         "</span>"
+         // "<img class='icon' src='"+icons[i].canvas.toDataURL()+"'/></li>"
+         // "<img class='chat' src='chat-empty.svg'/></li>"
       );
+   }
 };
 
 /* We have to iterate a bunch of the data that we received and change the

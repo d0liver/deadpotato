@@ -58,23 +58,40 @@ body {
 
 /* Start of specific styles */
 html {
-	background: url("free-paper-texture-6.jpg");
 }
 
 .interactions {
+	background: url("free-paper-texture-6.jpg");
 	width: 430px;
 	float: right;
 }
 
 .interactions li {
-	border: solid black 1px;
+	border-right: solid black 20px;
 	display: block;
 	height: 5em;
 }
 
-.interactions li .icon {
+.interactions li:first-child {
+	border-top: solid black 1px;
+}
+
+.interactions li .light {
+	box-sizing: border-box;
+	border: solid black 3px;
+	width: 30px;
+	height: 30px;
+	margin-top: 25px;
+	margin-right: 25px;
 	float: right;
-	height: 5em;
+	border-radius: 15px;
+}
+
+.interactions li .icon, .interactions li .chat {
+	box-sizing: border-box;
+	padding: 5px;
+	float: right;
+	height: 100%;
 }
 
 .interactions li span.label {

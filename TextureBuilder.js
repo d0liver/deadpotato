@@ -1,16 +1,5 @@
-var TextureBuilder = function () {
+var TextureBuilder = function (color_map) {
     var self = {};
-
-    var colors = {
-        forest: "#228b22",
-        charcoal: "#36454f",
-        red: "red",
-        brown: "brown",
-        teal: "teal",
-        blue: "blue",
-        orange: "orange",
-        navy: "#000080"
-    };
 
     self.texture = function (width, height, color) {
         var i;
@@ -18,7 +7,7 @@ var TextureBuilder = function () {
         canvas.width = width;
         canvas.height = height;
         var ctx = canvas.getContext("2d");
-        ctx.strokeStyle = colors[color];
+        ctx.strokeStyle = color_map.map(color);
 
         for (i = 0; i < height; i += 4) {
             ctx.beginPath();
