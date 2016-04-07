@@ -17,19 +17,46 @@ $(document).ready(function () {
     var region_textures = RegionTexture(gam_info, texture_builder);
     region_textures.build();
     var map = Map(ctx, select_ctx, gam_info, region_textures);
+    var icons = Icons(ctx, gam_info);
     /* Set our country. The map will use this to limit our selects, etc. */
     map.setCountry("Elves");
     map.showRegions();
+    icons.init();
+    $("#say_hello").submit(function (e) {
+        e.preventDefault();
+        var lstatus = $("#login_status");
+        lstatus.text('Logging in...');
+        $.post('/login',
+            {
+                username: $("#say_hello input[name=username]").value(),
+                password: $("#say_hello input[name=password]").value()
+            },
+            function () {
+            }
+        );
+    });
+
+    showIcons(icons.icons());
 });
+
+var showIcons = function (icons) {
+   for (var i = 0; i < icons.length; ++i)
+      $(".interactions ul").append(
+         "<li><span class='label'>"+
+            icons[i].country+
+         "</span>"+
+         "<img class='icon' src='"+icons[i].canvas.toDataURL()+"'/></li>"
+      );
+};
 
 /* We have to iterate a bunch of the data that we received and change the
  * naming conventions because they're inconsistent (we make everything lower
  * case) */
 var fixData = function () {
     cnt.countries = _.map(cnt.countries, function (country) {
-        country.color = country.color.toLowerCase();
+       country.color = country.color.toLowerCase();
 
-        return country;
+       return country;
     });
 
     map_data.spaces = _.map(map_data.spaces, function (space) {

@@ -2,8 +2,13 @@
 	<head>
 		<title>Variant Map</title>
 		<link rel="stylesheet" href="master.css"/>
-		<script src="underscore.min.js"></script>
+		<link rel="stylesheet" href="jquery.modal.css" type="text/css" media="screen" />
+		<!-- Third party stuff -->
 		<script src="jquery-1.12.2.min.js"></script>
+		<script src="jquery.modal.min.js"></script>
+		<script src="underscore.min.js"></script>
+		<!-- In house stuff -->
+		<script src="Icons.js"></script>
 		<script src="RegionTexture.js"></script>
 		<script src="TextureBuilder.js"></script>
 		<script src="rgn.js"></script>
@@ -15,20 +20,42 @@
 		<script src="main.js"></script>
 	</head>
 	<body>
-		<nav>
-			<ul>
-				<li><a href="/games">Games</a></li>
-				<li><a href="/games">My Stats</a></li>
-				<li><a href="/games">Account</a></li>
-			</ul>
-		</nav>
-		<div class="board">
-			<img
-				src="variants/Middle Earth/midearth.bmp"
-				id="map-image"
-			/>
-			<canvas id="map"></canvas>
-			<canvas id="map_select"></canvas>
+			<form class="login_form modal" id="say_hello">
+				<p>
+					<label>Username:</label>
+					<input type="text" name="username">
+				</p>
+				<p>
+					<label>Password:</label>
+					<input type="password" name="password">
+				</p>
+				<p>
+					<input type="submit" name="Submit">
+					<span class="login_status" id="login_status"></span>
+				</p>
+			</form>
+			<nav>
+				<ul>
+					<li><img src="deadpotato.png"/></li>
+					<li><a href="/" class="active">Home</a></li>
+					<li><a href="/games">Games</a></li>
+					<li><a href="/games">My Stats</a></li>
+					<li><a href="/games">Account</a></li>
+				</ul>
+			</nav>
+		<div class="container">
+			<div class="interactions">
+				<ul>
+				</ul>
+			</div>
+			<div class="board">
+				<img
+					src="variants/Middle Earth/midearth.bmp"
+					id="map-image"
+				/>
+				<canvas id="map"></canvas>
+				<canvas id="map_select"></canvas>
+			</div>
 		</div>
 	</body>
 </html>
