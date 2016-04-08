@@ -58,6 +58,8 @@ body {
 
 /* Start of specific styles */
 html {
+	/* background: url("grad.png"); */
+	background-size: cover;
 }
 
 .interactions {
@@ -68,6 +70,7 @@ html {
 
 .interactions li {
 	border-right: solid black 20px;
+	border-bottom: solid black 1px;
 	display: block;
 	height: 5em;
 }
