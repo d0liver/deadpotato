@@ -106,7 +106,11 @@ var showInteractions = function (gam_info, color_map) {
          ");'>"+
          "<span style='color: white;' class='label'>"+
             countries[i].name+
-         "</span>"
+         "</span>"+
+         "<span class='interaction-icon'><i class='fa fa-envelope'></i></span>"+
+         "<span class='interaction-icon'><i class='fa fa-flag'></i></span>"+
+         "<span class='interaction-icon'><i class='fa fa-gears'></i></span>"
+         // "<span class='notify-icon'><i class='fa fa-gavel'></i></span>"
          // "<img class='icon' src='"+icons[i].canvas.toDataURL()+"'/></li>"
          // "<img class='chat' src='chat-empty.svg'/></li>"
       );

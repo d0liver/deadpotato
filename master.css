@@ -98,6 +98,7 @@ html {
 }
 
 .interactions li span.label {
+	float: left;
 	font-family: league-script;
 	font-size: 30px;
 	margin-left: 15px;
@@ -126,6 +127,26 @@ html {
 	padding: 5px;
 	/* border-radius: 5px; */
 	position: relative;
+}
+
+.interaction-icon, .notify-icon {
+	float: right;
+	margin-right: 10px;
+}
+
+.interaction-icon:nth-child(2), .notify-icon:nth-child(5) {
+	margin-right: 20px;
+}
+
+.notify-icon > i, .interaction-icon > i {
+	background: url("icon_circle.png");
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	width: 40px;
+	text-align: center;
+	color: rgba(220, 220, 220, 0.5);
+	font-size: 20px;
+	line-height: 80px;
 }
 
 #map, #map_select {
