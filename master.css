@@ -58,13 +58,13 @@ body {
 
 /* Start of specific styles */
 html {
+	background: url("free-paper-texture-6.jpg");
 	/* background: url("grad.png"); */
 	background-size: cover;
 }
 
 .interactions {
-	background: url("free-paper-texture-6.jpg");
-	width: 430px;
+	width: 440px;
 	float: right;
 }
 
@@ -120,17 +120,18 @@ html {
 
 .board {
 	float: left;
-	background-color: #5A240D;
+	background-color: black;
 	margin: 0 auto;
 	width: 1150px;
-	padding: 10px;
+	padding: 5px;
+	/* border-radius: 5px; */
 	position: relative;
 }
 
 #map, #map_select {
 	position: absolute;
-	top: 10px;
-	left: 10px;
+	top: 5px;
+	left: 5px;
 }
 
 #map_select {
