@@ -64,8 +64,9 @@ html {
 }
 
 .interactions {
-	width: 440px;
-	float: right;
+	background: url("free-paper-texture-6.jpg");
+	width: 415px;
+	float: left;
 }
 
 .interactions li {
