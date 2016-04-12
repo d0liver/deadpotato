@@ -1,26 +1,27 @@
 <html>
 	<head>
 		<title>Dead Potato</title>
-		<link rel="stylesheet" href="master.css"/>
-		<link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css"/>
-		<link rel="stylesheet" href="jquery.modal.css" type="text/css" media="screen" />
-		<link rel="shortcut icon" href="deadpotato.png" /> 
+		<link rel="stylesheet" href="/css/master.css"/>
+		<link rel="stylesheet" href="css/font-awesome.min.css"/>
+		<link rel="stylesheet" href="/css/jquery.modal.css" type="text/css" media="screen" />
+		<link rel="shortcut icon" href="/images/deadpotato.png" /> 
 		<!-- Third party stuff -->
-		<script src="jquery-1.12.2.min.js"></script>
-		<script src="jquery.modal.min.js"></script>
-		<script src="underscore.min.js"></script>
+		<script src="/socket.io-client/socket.io.js"></script>
+		<script src="/js/jquery-1.12.2.min.js"></script>
+		<script src="/js/jquery.modal.min.js"></script>
+		<script src="/js/underscore.min.js"></script>
 		<!-- In house stuff -->
-		<script src="ColorMap.js"></script>
-		<script src="Icons.js"></script>
-		<script src="RegionTexture.js"></script>
-		<script src="TextureBuilder.js"></script>
-		<script src="rgn.js"></script>
-		<script src="cnt.js"></script>
-		<script src="gam.js"></script>
-		<script src="Map.js"></script>
-		<script src="map.js"></script>
-		<script src="GameInfo.js"></script>
-		<script src="main.js"></script>
+		<script src="/js/ColorMap.js"></script>
+		<script src="/js/Icons.js"></script>
+		<script src="/js/RegionTexture.js"></script>
+		<script src="/js/TextureBuilder.js"></script>
+		<script src="/js/rgn.js"></script>
+		<script src="/js/cnt.js"></script>
+		<script src="/js/gam.js"></script>
+		<script src="/js/Map.js"></script>
+		<script src="/js/map.js"></script>
+		<script src="/js/GameInfo.js"></script>
+		<script src="/js/main.js"></script>
 	</head>
 	<body>
 			<form class="login_form modal" id="say_hello">
@@ -39,7 +40,7 @@
 			</form>
 			<nav>
 				<ul>
-					<li><img src="deadpotato.png"/></li>
+					<li><img src="/images/deadpotato.png"/></li>
 					<li><a href="/" class="active">Home</a></li>
 					<li><a href="/games">Games</a></li>
 					<li><a href="/games">Stats</a></li>
@@ -51,7 +52,7 @@
 		<div class="container">
 			<div class="board">
 				<img
-					src="variants/Middle Earth/midearth.bmp"
+					src="/Middle Earth/midearth.bmp"
 					id="map-image"
 				/>
 				<canvas id="map"></canvas>

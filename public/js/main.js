@@ -39,7 +39,37 @@ $(document).ready(function () {
     });
 
     showInteractions(gam_info, color_map);
+    authenticate();
 });
+
+function connect_socket (token) {
+   var socket = io('', {
+      query: 'token=' + token
+   });
+
+   socket.on('connect', function () {
+      console.log('Connected...');
+      socket.emit('chat', "Hello World!");
+   }).on('disconnect', function () {
+      console.log('Disconnected...');
+   });
+
+   socket.on('chat', function (msg) {
+      console.log("Full circle!: ", msg);
+   });
+}
+
+var authenticate = function () {
+   var credentials = {
+      username: "David",
+      password: "Foo!"
+   };
+
+   $.post('/login').
+   done(function (result) {
+      connect_socket(result.token);
+   });
+};
 
 var darken = function (css_hex, pct_amount) {
    if (pct_amount < 0)

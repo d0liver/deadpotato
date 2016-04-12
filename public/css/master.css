@@ -53,18 +53,17 @@ body {
 
 @font-face {
   font-family: league-script;
-  src: url("League-Gothic/LeagueGothic-Regular.otf");
+  src: url("/fonts/League-Gothic/LeagueGothic-Regular.otf");
 }
 
 /* Start of specific styles */
 html {
-	background: url("free-paper-texture-6.jpg");
+	background: url("/images/free-paper-texture-6.jpg");
 	/* background: url("grad.png"); */
 	background-size: cover;
 }
 
 .interactions {
-	background: url("free-paper-texture-6.jpg");
 	width: 415px;
 	float: left;
 }
@@ -140,7 +139,7 @@ html {
 }
 
 .notify-icon > i, .interaction-icon > i {
-	background: url("icon_circle.png");
+	background: url("/images/icon_circle.png");
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
 	width: 40px;
