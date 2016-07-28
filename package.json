@@ -1,0 +1,32 @@
+{
+  "name": "deadpotato",
+  "version": "1.0.0",
+  "description": "Deadpotato online gaming web app.",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "jsonwebtoken": "^5.7.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "socket.io": "^1.4.5",
+    "socketio-jwt": "^4.3.4",
+    "mongodb": "^2.1.16",
+    "http": "^0.0.0",
+    "express-passport": "^0.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/d0liver/deadpotato.git"
+  },
+  "keywords": [],
+  "author": "David Oliver",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/d0liver/deadpotato#readme"
+}
