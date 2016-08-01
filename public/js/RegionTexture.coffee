@@ -16,7 +16,7 @@ window.RegionTexture = (gam_info, texture_builder) ->
 		rgns = gam_info.rgns()
 		textures = {}
 
-		for region in rgns
+		for region of rgns
 			bnds = bounds rgns[region].scanlines
 			textures[region] = 
 				img: buildRegionTexture \
@@ -40,8 +40,8 @@ window.RegionTexture = (gam_info, texture_builder) ->
 	buildRegionTexture = (scanlines, bnds, color) ->
 		canvas = document.createElement "canvas"
 		ctx = canvas.getContext '2d'
-		canvas.width = bnds.x.max - bnds.x.min
-		canvas.height = bnds.y.max - bnds.y.min
+		canvas.width = bnds[0].max - bnds[1].min
+		canvas.height = bnds[0].max - bnds[1].min
 
 		ctx.strokeStyle = "#000000"
 		# First, draw the region onto the canvas in black. This is so that
@@ -50,12 +50,9 @@ window.RegionTexture = (gam_info, texture_builder) ->
 
 		ctx.globalCompositeOperation = 'source-in'
 		# Next, draw the texture into the canvas
-		ctx.drawImage \
-			texture_builder.texture \
-				ctx.canvas.width,
-				ctx.canvas.height,
-				color
-			, 0, 0
+		texture = texture_builder.texture \
+			ctx.canvas.width, ctx.canvas.height, color
+		ctx.drawImage texture, 0, 0
 
 		canvas
 
@@ -83,14 +80,14 @@ window.RegionTexture = (gam_info, texture_builder) ->
 	# of the smallest rectangle that encloses them
 	bounds = (scanlines) ->
 		# We will use these to store the min and max for x and y
-		x = y = min: Infinity, max: -1
+		x = JSON.parse(JSON.stringify(y = min: Infinity, max: -1))
 
-		for [x, y, len] in scanlines
-			x.min = Math.min x.min, x
-			x.max = Math.max x + len, x.max
+		for {x: sx, y: sy, len: slen} in scanlines
+			x.min = Math.min x.min, sx
+			x.max = Math.max sx + slen, x.max
 
-			y.min = Math.min y, y.min
-			y.max = Math.max y, y.max
+			y.min = Math.min sy, y.min
+			y.max = Math.max sy, y.max
 
 		[x, y]
 

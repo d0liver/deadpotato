@@ -37,7 +37,7 @@ MongoClient.connect db_uri, (err, db) ->
 		# in socket.io 1.0
 		console.log 'hello! ', socket.decoded_token.name
 
-	app.get "/", fetchRoot
+	app.get "/*", fetchRoot
 	app.post "/login", postLogin
 
 	passport.use \

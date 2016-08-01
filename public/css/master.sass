@@ -1,0 +1,210 @@
+@import 'reset'
+
+body
+	font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+
+@font-face
+	font-family: league-script
+	src: url("/fonts/League-Gothic/LeagueGothic-Regular.otf")
+
+// Start of specific styles
+html
+	background: url("/images/free-paper-texture-6.jpg")
+	/* background: url("grad.png"); */
+	background-size: cover
+
+.upload-container
+	margin: 0 auto
+	width: 90%
+	padding: 50px
+	border-radius: 10px
+	background-color: white
+	border: solid #1D3B55 1px
+
+	h1
+		font-family: league-script
+		color: #1D3B55
+		// -webkit-text-stroke: 2px #bbb
+		font-weight: 500
+		// text-align: center
+		font-size: 60px
+
+	.choose-file, .file-display
+		margin: 20px 0
+
+	.choose-file
+		background-color: #1D3B55
+		border: solid #1D3B55 1px
+		border-radius: 0 5px 5px 0
+		border-left: solid #bbb 1px
+		color: white
+		padding: 7px 13px
+		text-decoration: none
+		display: inline-block
+		vertical-align: middle
+
+	.file-display
+		color: #888
+		background-color: white
+		display: inline-block
+		height: 1em
+		padding: 7px 0
+		padding-left: 10px
+		overflow: hidden
+		border-radius: 5px 0 0 5px
+		border: solid #bbb 1px
+		border-right: none
+		float: left
+		width: 80%
+
+.interactions
+	width: 415px
+	float: left
+
+.interactions li
+	border-right: solid black 20px
+	border-bottom: solid black 1px
+	display: block
+	height: 5em
+
+.interactions li:first-child
+	border-top: solid black 1px
+
+.interactions li .light
+	box-sizing: border-box
+	border: solid black 3px
+	width: 30px
+	height: 30px
+	margin-top: 25px
+	margin-right: 25px
+	float: right
+	border-radius: 15px
+
+.interactions li .icon, .interactions li .chat
+	box-sizing: border-box
+	padding: 5px
+	float: right
+	height: 100%
+
+.interactions li span.label
+	float: left
+	font-family: league-script
+	font-size: 30px
+	margin-left: 15px
+	line-height: 80px
+
+.container
+	margin: 0 auto
+	width: 100%
+	min-width: 960px
+
+.container:after
+	content: "."
+	display: block
+	clear: both
+	visibility: hidden
+	height: 0
+	font-size: 0
+
+.board
+	float: left
+	background-color: black
+	margin: 0 auto
+	width: 1150px
+	padding: 5px
+	position: relative
+
+.interaction-icon, .notify-icon
+	float: right
+	margin-right: 10px
+
+.interaction-icon:nth-child(2), .notify-icon:nth-child(5)
+	margin-right: 20px
+
+.notify-icon > i, .interaction-icon > i
+	background: url("/images/icon_circle.png")
+	background-position: 50% 50%
+	background-repeat: no-repeat
+	width: 40px
+	text-align: center
+	color: rgba(220, 220, 220, 0.5)
+	font-size: 20px
+	line-height: 80px
+
+#map, #map_select
+	position: absolute
+	top: 5px
+	left: 5px
+
+#map_select
+	opacity: 0.2
+
+nav
+	background-color: #1D3B55
+	width: 100%
+	margin: 0px auto 0.5em auto
+	display: block
+	text-align: center
+	height: 80px
+	line-height: 70px
+
+nav ul
+	list-style: none
+	margin: 0 auto
+	width: 1150px
+	padding: 0
+
+nav img
+	height: 70px
+	margin-right: 20px
+
+nav li
+	float: left
+	display: inline
+	margin: 0
+
+nav a:link, nav a:visited
+	border-left: solid #2F4F69 1px
+	font-family: league-script
+	font-size: 30px
+	color: #d3d3d3
+	display: inline-block
+	padding: 5px 1.5em
+	text-decoration: none
+
+nav a.active, nav a:active, nav a:hover
+	background-color: #467422
+	border-left: solid #60903C 1px
+
+.login_form label
+	float: left
+	font-weight: bold
+	color: #333
+	font-size: 13px
+	width: 110px
+	line-height: 22px
+
+.login_form input[type="text"],
+.login_form input[type="password"]
+	font: normal 12px/18px "Lucida Grande", Verdana
+	padding: 3px
+	border: 1px solid #ddd
+	width: 200px
+
+.login_form p
+	border-bottom: solid #ddd 1px
+	padding: 20px 30px
+	margin: 0
+
+.login_form p:nth-last-child(2)
+	border: none
+
+.login_form.modal
+	padding: 0
+
+body .modal
+	display: none
+
+.login_status
+	float: right
+	color: red

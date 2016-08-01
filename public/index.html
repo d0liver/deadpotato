@@ -6,21 +6,31 @@
 		<link rel="stylesheet" href="/css/jquery.modal.css" type="text/css" media="screen" />
 		<link rel="shortcut icon" href="/images/deadpotato.png" /> 
 		<!-- Third party stuff -->
+		<script src="/js/handlebars-v4.0.5.js"></script>
 		<script src="/socket.io-client/socket.io.js"></script>
 		<script src="/js/jquery-1.12.2.min.js"></script>
 		<script src="/js/jquery.modal.min.js"></script>
 		<script src="/js/underscore.min.js"></script>
+		<script src="/js/aviator.js"></script>
+		<!-- Zip JS. Order seems to be important here. -->
+		<!-- <script src="/js/zlib&#45;asm/codecs.js"></script> -->
+		<script src="/js/zip.js"></script>
+		<script src="/js/inflate.js"></script>
+		<!-- <script src="/js/deflate.js"></script> -->
+		<!-- <script src="/js/z&#45;worker.js"></script> -->
+		<!-- <script src="/js/zip&#45;ext.js"></script> -->
+		<!-- <script src="/js/zip&#45;fs.js"></script> -->
+		<!-- <script src="/js/pako/codecs.js"></script> -->
 		<!-- In house stuff -->
 		<script src="/js/ColorMap.js"></script>
 		<script src="/js/Icons.js"></script>
 		<script src="/js/RegionTexture.js"></script>
 		<script src="/js/TextureBuilder.js"></script>
-		<script src="/js/rgn.js"></script>
-		<script src="/js/cnt.js"></script>
-		<script src="/js/gam.js"></script>
+		<!-- Data files -->
 		<script src="/js/Map.js"></script>
-		<script src="/js/map.js"></script>
 		<script src="/js/GameInfo.js"></script>
+		<script src="/js/UploadVariant.js"></script>
+		<script src="/js/RouteHandler.js"></script>
 		<script src="/js/main.js"></script>
 	</head>
 	<body>
@@ -42,26 +52,15 @@
 				<ul>
 					<li><img src="/images/deadpotato.png"/></li>
 					<li><a href="/" class="active">Home</a></li>
-					<li><a href="/games">Games</a></li>
+					<li><a href="/board">Board</a></li>
 					<li><a href="/games">Stats</a></li>
 					<li><a href="/games">Account</a></li>
 					<li><a href="/games">About</a></li>
 					<li><a href="/games">Help</a></li>
+					<li><a class="navigate" href="/upload-variant">Upload Variant</a></li>
 				</ul>
 			</nav>
 		<div class="container">
-			<div class="board">
-				<img
-					src="/Middle Earth/midearth.bmp"
-					id="map-image"
-				/>
-				<canvas id="map"></canvas>
-				<canvas id="map_select"></canvas>
-			</div>
-			<div class="interactions">
-				<ul>
-				</ul>
-			</div>
 		</div>
 	</body>
 </html>
