@@ -1,7 +1,13 @@
 $(document).ready () ->
-	rh = RouteHandler()
-	upload = UploadVariant()
+	upload_variant = UploadVariant cnt, gam, map, rgn
+	rh = RouteHandler upload_variant
 	Aviator.setRoutes
+		'/create':
+			target: rh
+			'/': 'create'
+		'/games':
+			target: rh
+			'/': 'games'
 		'/board':
 			target: rh
 			'/': 'board'
@@ -10,6 +16,16 @@ $(document).ready () ->
 			'/': 'uploadVariant'
 
 	Aviator.dispatch()
+
+	$("nav .nav-link").each ->
+		fade_in = 0
+		$menu = $(this).parent().find ".menu"
+		$(this).click (e) ->
+			e.preventDefault()
+			# method = ["fadeIn", "fadeOut"][fade_in++ & 1]
+			$menu.fadeIn 300
+		$(this).parent().find(".menu").mouseleave -> $menu.fadeOut 300
+
 	# dims = width: 1150, height: 847
 	# map_img = $("#map-image")[0]
 	# canvas = $("#map")[0]

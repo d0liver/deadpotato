@@ -1,26 +1,23 @@
 <html>
 	<head>
 		<title>Dead Potato</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
 		<link rel="stylesheet" href="/css/master.css"/>
 		<link rel="stylesheet" href="css/font-awesome.min.css"/>
-		<link rel="stylesheet" href="/css/jquery.modal.css" type="text/css" media="screen" />
 		<link rel="shortcut icon" href="/images/deadpotato.png" /> 
 		<!-- Third party stuff -->
-		<script src="/js/handlebars-v4.0.5.js"></script>
-		<script src="/socket.io-client/socket.io.js"></script>
-		<script src="/js/jquery-1.12.2.min.js"></script>
-		<script src="/js/jquery.modal.min.js"></script>
-		<script src="/js/underscore.min.js"></script>
+		<script src="/js/q.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+		<script src="/js/rgn.js"></script>
+		<script src="/js/map.js"></script>
+		<script src="/js/gam.js"></script>
+		<script src="/js/cnt.js"></script>
 		<script src="/js/aviator.js"></script>
-		<!-- Zip JS. Order seems to be important here. -->
-		<!-- <script src="/js/zlib&#45;asm/codecs.js"></script> -->
 		<script src="/js/zip.js"></script>
 		<script src="/js/inflate.js"></script>
-		<!-- <script src="/js/deflate.js"></script> -->
-		<!-- <script src="/js/z&#45;worker.js"></script> -->
-		<!-- <script src="/js/zip&#45;ext.js"></script> -->
-		<!-- <script src="/js/zip&#45;fs.js"></script> -->
-		<!-- <script src="/js/pako/codecs.js"></script> -->
 		<!-- In house stuff -->
 		<script src="/js/ColorMap.js"></script>
 		<script src="/js/Icons.js"></script>
@@ -49,15 +46,34 @@
 				</p>
 			</form>
 			<nav>
-				<ul>
-					<li><img src="/images/deadpotato.png"/></li>
-					<li><a href="/" class="active">Home</a></li>
-					<li><a href="/board">Board</a></li>
-					<li><a href="/games">Stats</a></li>
-					<li><a href="/games">Account</a></li>
-					<li><a href="/games">About</a></li>
-					<li><a href="/games">Help</a></li>
-					<li><a class="navigate" href="/upload-variant">Upload Variant</a></li>
+				<ul class="links">
+					<li>
+						<a href="/" class="navigate">
+							<img class="logo" src="/images/deadpotato.png"/>
+						</a>
+					</li>
+					<li>
+						<a class="navigate nav-link" href="#">Games</a>
+						<ul class="menu hidden">
+							<li>
+								<a href="/games" class="navigate">
+									My Games
+								</a>
+							</li>
+							<li>
+								<a href="/create" class="navigate">
+									Create
+								</a>
+							</li>
+							<li>
+								<a href="/create" class="navigate">Chissel</a>
+							</li>
+						</ul>
+					</li>
+					<li><a href="/stats" class="navigate nav-link">Stats</a></li>
+					<li><a href="/accounts" class="navigate nav-link">Account</a></li>
+					<li><a href="/about" class="navigate nav-link">About</a></li>
+					<li><a href="/help" class="navigate nav-link">Help</a></li>
 				</ul>
 			</nav>
 		<div class="container">

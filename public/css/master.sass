@@ -1,17 +1,96 @@
 @import 'reset'
+$default-font: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+
+$deep-blue: #1D3B55
+$nav-font-color: #d3d3d3
+$nav-border-color: #2F4F69
+$nav-active-color: #467422
+$nav-active-border-color: #60903C
+
+@mixin appearance($val)
+	-webkit-appearance: $val
+	-moz-appearance: $val
+	appearance: $val
+
+*
+	box-sizing: border-box
 
 body
-	font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+	font-family: $default-font
 
 @font-face
 	font-family: league-script
 	src: url("/fonts/League-Gothic/LeagueGothic-Regular.otf")
 
-// Start of specific styles
-html
+.board-bg
 	background: url("/images/free-paper-texture-6.jpg")
-	/* background: url("grad.png"); */
 	background-size: cover
+
+h1
+	font-family: league-script
+	color: black
+	font-weight: 500
+	font-size: 60px
+	margin-bottom: 20px
+
+h3
+	font-weight: bold
+
+$game-padding: 20px
+$info-margin-left: 20px
+$info-margin-right: 10px
+$games-container-width: 1000px
+$games-container-half: ($games-container-width - $info-margin-left - $info-margin-right)/2
+
+.create-game
+	label
+		font-weight: bold
+		padding: 8px 0
+
+	.new-variant
+		background-color: #33C3F0
+		border: solid #33C3F0 1px
+		color: white
+		margin-left: -30px
+		font-size: 11px
+		font-weight: 600
+		text-align: center
+		border-radius: 5px
+		text-decoration: none
+		display: block
+		text-transform: uppercase
+		line-height: 36px
+
+.game
+	margin: 40px 0 30px 0
+	padding-bottom: 40px
+	border-bottom: solid #aaa 1px
+
+	&:after
+		display: block
+		content: " "
+		clear: both
+
+	.info
+		float: left
+		margin-left: $info-margin-left
+		margin-right: 10px
+		width: $games-container-half
+
+		.countries
+			&
+				margin-top: 15px
+
+			li
+				color: white
+				font-weight: bold
+				padding: 10px
+				background: linear-gradient(90deg, rgb(0,0,0), rgb(255, 0, 0))
+
+.map
+	border: solid black 2px
+	float: right
+	width: $games-container-half
 
 .upload-container
 	margin: 0 auto
@@ -20,14 +99,6 @@ html
 	border-radius: 10px
 	background-color: white
 	border: solid #1D3B55 1px
-
-	h1
-		font-family: league-script
-		color: #1D3B55
-		// -webkit-text-stroke: 2px #bbb
-		font-weight: 500
-		// text-align: center
-		font-size: 60px
 
 	.choose-file, .file-display
 		margin: 20px 0
@@ -61,50 +132,54 @@ html
 	width: 415px
 	float: left
 
-.interactions li
-	border-right: solid black 20px
-	border-bottom: solid black 1px
-	display: block
-	height: 5em
+	li
+		border-right: solid black 20px
+		border-bottom: solid black 1px
+		display: block
+		height: 5em
 
-.interactions li:first-child
-	border-top: solid black 1px
+	li:first-child
+		border-top: solid black 1px
 
-.interactions li .light
-	box-sizing: border-box
-	border: solid black 3px
-	width: 30px
-	height: 30px
-	margin-top: 25px
-	margin-right: 25px
-	float: right
-	border-radius: 15px
+	li .light
+		box-sizing: border-box
+		border: solid black 3px
+		width: 30px
+		height: 30px
+		margin-top: 25px
+		margin-right: 25px
+		float: right
+		border-radius: 15px
 
-.interactions li .icon, .interactions li .chat
-	box-sizing: border-box
-	padding: 5px
-	float: right
-	height: 100%
+	li .icon, li .chat
+		box-sizing: border-box
+		padding: 5px
+		float: right
+		height: 100%
 
-.interactions li span.label
-	float: left
-	font-family: league-script
-	font-size: 30px
-	margin-left: 15px
-	line-height: 80px
+	li span.label
+		float: left
+		font-family: league-script
+		font-size: 30px
+		margin-left: 15px
+		line-height: 80px
 
 .container
 	margin: 0 auto
 	width: 100%
 	min-width: 960px
 
-.container:after
-	content: "."
-	display: block
-	clear: both
-	visibility: hidden
-	height: 0
-	font-size: 0
+	&:after
+		content: "."
+		display: block
+		clear: both
+		visibility: hidden
+		height: 0
+		font-size: 0
+
+	&.text-content
+		width: $games-container-width
+		margin: 0 auto
 
 .board
 	float: left
@@ -140,7 +215,7 @@ html
 	opacity: 0.2
 
 nav
-	background-color: #1D3B55
+	background-color: $deep-blue
 	width: 100%
 	margin: 0px auto 0.5em auto
 	display: block
@@ -148,62 +223,103 @@ nav
 	height: 80px
 	line-height: 70px
 
-nav ul
-	list-style: none
-	margin: 0 auto
-	width: 1150px
-	padding: 0
+	.menu
+		margin: 0
+		border-radius: 5px
+		overflow: hidden
+		margin-top: 3px
+		z-index: 99
+		position: absolute
+		width: 300px
 
-nav img
-	height: 70px
-	margin-right: 20px
+		> li
+			height: 30px
+			line-height: 30px
+			text-align: center
+			background-color: $deep-blue
+			border-bottom: solid $nav-border-color 1px
 
-nav li
-	float: left
-	display: inline
-	margin: 0
+			> a
+				font-weight: 600
+				display: block
+				text-decoration: none
+				color: $nav-font-color
 
-nav a:link, nav a:visited
-	border-left: solid #2F4F69 1px
-	font-family: league-script
-	font-size: 30px
-	color: #d3d3d3
-	display: inline-block
-	padding: 5px 1.5em
-	text-decoration: none
+			> a:hover
+				background-color: $nav-active-color
 
-nav a.active, nav a:active, nav a:hover
-	background-color: #467422
-	border-left: solid #60903C 1px
+			&:first-child > a
+				border-top: solid $nav-border-color 1px
 
-.login_form label
-	float: left
-	font-weight: bold
-	color: #333
-	font-size: 13px
-	width: 110px
-	line-height: 22px
+			&:last-child > a
+				border-bottom: solid $nav-border-color 1px
 
-.login_form input[type="text"],
-.login_form input[type="password"]
-	font: normal 12px/18px "Lucida Grande", Verdana
-	padding: 3px
-	border: 1px solid #ddd
-	width: 200px
+		&.hidden
+			display: none
 
-.login_form p
-	border-bottom: solid #ddd 1px
-	padding: 20px 30px
-	margin: 0
+		&.visible
+			display: block
 
-.login_form p:nth-last-child(2)
-	border: none
+	.links
+		list-style: none
+		margin: 0 auto
+		width: 1150px
+		padding: 0
 
-.login_form.modal
-	padding: 0
+	.logo
+		height: 70px
+		margin-right: 20px
 
-body .modal
-	display: none
+	.links > li
+		float: left
+		display: inline
+		margin: 0
+		// Set a positioning context for the dropdowns
+		position: relative
+
+	.nav-link:link, .nav-link:visited
+		border-left: solid $nav-border-color 1px
+		font-family: league-script
+		font-size: 30px
+		color: $nav-font-color
+		display: inline-block
+		padding: 5px 1.5em
+		text-decoration: none
+
+	.nav-link.active, .nav-link:active, .nav-link:hover
+		background-color: $nav-active-color
+		border-left: solid $nav-active-border-color 1px
+
+.login_form
+
+	label
+		float: left
+		font-weight: bold
+		color: #333
+		font-size: 13px
+		width: 110px
+		line-height: 22px
+
+	input[type="text"], input[type="password"]
+		font: normal 12px/18px "Lucida Grande", Verdana
+		padding: 3px
+		border: 1px solid #ddd
+		width: 200px
+
+	p
+		border-bottom: solid #ddd 1px
+		padding: 20px 30px
+		margin: 0
+
+	p:nth-last-child(2)
+		border: none
+
+	&.modal
+		padding: 0
+
+body
+	.modal
+		display: none
 
 .login_status
 	float: right

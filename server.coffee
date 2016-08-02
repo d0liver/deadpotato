@@ -12,7 +12,6 @@ db_uri = "mongodb://localhost:27017/deadpotato"
 MongoClient = require('mongodb').MongoClient
 jwtSecret = "flabber"
 
-# app.set 'view engine', 'jade'
 app.use session
 	secret: 'lumbering jack'
 	resave: true
@@ -38,6 +37,7 @@ MongoClient.connect db_uri, (err, db) ->
 		console.log 'hello! ', socket.decoded_token.name
 
 	app.get "/*", fetchRoot
+	app.post "/save-game", save.bind null, db
 	app.post "/login", postLogin
 
 	passport.use \
@@ -54,10 +54,16 @@ MongoClient.connect db_uri, (err, db) ->
 
 	http.listen 3000, () -> console.log 'listening on http://localhost:3000'
 
-fetchRoot = (err, res) ->
+save = (db, req, res) ->
+	{title, variant} = req.body
+	db.collection("games").insertOne
+		title: title
+		variant: variant
+
+fetchRoot = (req, res) ->
 	res.sendFile __dirname + "/public/index.html"
 
-postLogin = (err, res) ->
+postLogin = (req, res) ->
 	# TODO: validate the actual user user
 	profile =
 		name: 'David Oliver',
