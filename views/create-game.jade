@@ -1,0 +1,12 @@
+form.create-game
+	.row
+		.six.columns
+			label(for='title') Game Title
+			input#title.u-full-width(type='text', name='title')
+		.five.columns
+			label(for='which-variant') Variant
+			select#which-variant.u-full-width(name='variant')
+		.one.columns
+			label  
+			a.new-variant(href='#') Upload
+	input.button-primary(type='submit', value='Post')

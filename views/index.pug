@@ -1,0 +1,49 @@
+html
+	head
+		title Dead Potato
+		//FOSS CDN Hosted
+		link(rel="stylesheet" href="/master.css")
+		link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.8.0/jquery.modal.min.css")
+		link(rel="shortcut icon" href="/images/deadpotato.png")
+		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css')
+
+		link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" )
+		link(rel="stylesheet" href="/master.css")
+		script(src="https://use.fontawesome.com/e62ba4047d.js")
+		script(src="/bundle.js")
+	body
+		form#say_hello.login_form.modal
+			p
+				label Username:
+				input(type='text', name='username')
+			p
+				label Password:
+				input(type='password', name='password')
+			p
+				input(type='submit', name='Submit')
+				span#login_status.login_status
+		nav
+			ul.links
+				li
+					a.navigate(href='/')
+						img.logo(src='/images/deadpotato.png')
+				li
+					a.navigate.nav-link(href='#') Games
+					ul.menu.hidden
+						li
+							a.navigate(href='/games')
+								| My Games
+						li
+							a.navigate(href='/create')
+								| Create
+						li
+							a.navigate(href='/create') Chissel
+				li
+					a.navigate.nav-link(href='/stats') Stats
+				li
+					a.navigate.nav-link(href='/accounts') Account
+				li
+					a.navigate.nav-link(href='/about') About
+				li
+					a.navigate.nav-link(href='/help') Help
+		.container
