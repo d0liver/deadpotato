@@ -44,6 +44,12 @@ MongoClient.connect DB_URI, (err, db) ->
 	app.get '/', (req, res, next) ->
 		res.render 'index'
 
+	app.get '/create', (req, res, next) ->
+		res.render 'index'
+
+	app.get '/games', (req, res, next) ->
+		res.render 'index'
+
 	app.post "/save-game", save.bind null, db
 	app.post "/login", postLogin
 
