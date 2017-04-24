@@ -5,7 +5,13 @@ Router = ->
 	formats = {}
 	self = {}
 
-	self.get = (fmt) -> _.assign formats, fmt
+	self.get = (args...) ->
+		# We can accept an object or separate route and function like express
+		# does.
+		fmt = if args.length is 1 then args[0]
+		else "#{args[0]}": args[1]
+
+		Object.assign formats, fmt
 
 	# See if we can match our
 	self.route = ->

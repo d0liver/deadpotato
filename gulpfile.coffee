@@ -39,10 +39,11 @@ gulp.task 'dev-bundle', ->
 		extensions: ['.coffee']
 
 	b = browserify opts
-	b.transform require "coffeeify", {bare: true, header: false}
-	b.transform require 'jadeify'
-	b.on 'log', log
-	b.on 'update', bundle
+		.transform require "coffeeify", {bare: true, header: false}
+		.transform "babelify", presets: ["es2015"]
+		.transform require 'jadeify'
+		.on 'log', log
+		.on 'update', bundle
 	bundle()
 
 gulp.task 'compile-client', ->
@@ -51,9 +52,10 @@ gulp.task 'compile-client', ->
 		extensions: ['.coffee']
 
 	prod_b = browserify opts
-	prod_b.transform require "coffeeify", {bare: true, header: false}
-	prod_b.transform require 'jadeify'
-	prod_b.on 'log', log
+		.transform require "coffeeify", {bare: true, header: false}
+		.transform "babelify", presets: ["es2015"]
+		.transform require 'jadeify'
+		.on 'log', log
 
 	prod_b.bundle()
 	.on 'error', log
