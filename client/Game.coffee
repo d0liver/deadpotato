@@ -1,8 +1,4 @@
 h   = require 'virtual-dom/h'
-cnt = require "./cnt"
-gam = require "./gam"
-map = require "./map"
-rgn = require "./rgn"
 
 color_map =
 	forest: "#228b22"

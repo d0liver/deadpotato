@@ -14,6 +14,7 @@ RouteHandler   = require './RouteHandler'
 Router         = require './Router'
 TextureBuilder = require './TextureBuilder'
 UploadVariant  = require './UploadVariant'
+View           = require './View'
 
 # Templates
 CreateGame     = require './CreateGame'
@@ -24,31 +25,22 @@ $(document).ready () ->
 	$container = $ '.container'
 	# upload_variant = UploadVariant cnt, gam, map, rgn
 	router = Router()
+	view = View $container
 
 	router.get '/create', ->
-		tree = CreateGame()
-		root = createElement tree
-		$container.append root
+		view.display CreateGame()
 
 	router.get '/games', ->
-		tree = Games
+		view.display Games
 			title: "This is a Test Game"
 			variant: "LOTR"
 			img: "/variants/midearth.bmp"
 			countries: ['foo', 'bar', 'baz']
 
-		root = createElement tree
-		console.log "ROOT: ", root
-		$container.append root
-
 	router.get '/game', ->
-		tree = Game img: '/variants/middle-earth/midearth.bmp'
-		root = createElement tree
-		$container.append root
+		view.display Game img: '/variants/middle-earth/midearth.bmp'
 
 	router.get '/upload-variant', ->
-		tree = UploadVariant().tree()
-		root = createElement tree
-		$container.append root
+		UploadVariant(view).display()
 
 	router.route()

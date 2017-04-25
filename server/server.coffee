@@ -19,6 +19,7 @@ session    = require 'express-session'
 {graphqlExpress} = require 'graphql-server-express'
 SchemaBuilder    = require './SchemaBuilder'
 
+NODE_ENV = process.env.NODE_ENV
 DB_URI = "mongodb://localhost:27017/deadpotato"
 app    = express()
 http   = Server app
@@ -33,7 +34,7 @@ app.use session
 app.use passport.initialize()
 app.use passport.session()
 app.use bodyParser.urlencoded extended: true
-app.use bodyParser.json()
+app.use bodyParser.json limit: '2mb'
 app.use express.static "public"
 
 MongoClient.connect DB_URI, (err, db) ->
@@ -43,7 +44,7 @@ MongoClient.connect DB_URI, (err, db) ->
 		res.render 'index'
 
 	app.use '/graphql', graphqlExpress (req) ->
-		obj = schema: SchemaBuilder {db, user: req.user}
+		obj = schema: SchemaBuilder db
 		if NODE_ENV is 'production'
 			_.extendOwn obj, 
 				formatError: -> 'An internal error occurred.' 
