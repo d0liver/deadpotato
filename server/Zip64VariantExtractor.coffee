@@ -7,17 +7,12 @@ Zip64VariantExtractor = (variant) ->
 	zip = new Zip variant, base64: true, checkCRC32: true
 	files = zip.files
 
-	self.image = ->
+	# Iterator that allows the caller to extract files iteratively based on the
+	# caller supplied filter.
+	self.extract = (filter) ->
 		# Find the variant image file
-		for fname of files
-			{ext, name, base} = path.parse fname
-
-			# Use the .bmp file that doesn't end with 'bw' (for black and
-			# white) or -borders which is a special file used for scanline
-			# generation (I think) in RP. There should only be one such .bmp.
-			if not /(bw|\-borders)$/.test(name) and ext is '.bmp'
-				return Buffer.from files[fname].asArrayBuffer()
-		return
+		for fname of files when new_name = filter fname
+			yield name: new_name, buff: Buffer.from files[fname].asArrayBuffer()
 
 	# Get the data files by their extension, e.g. extractor.file '.rgn'
 	self.file = (target_ext) ->

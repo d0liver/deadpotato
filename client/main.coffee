@@ -6,15 +6,11 @@ diff           = require 'virtual-dom/diff'
 patch          = require 'virtual-dom/patch'
 
 # Our stuff
-GameInfo       = require './GameInfo'
-Icons          = require './Icons'
-Map            = require './Map'
-RegionTexture  = require './RegionTexture'
-RouteHandler   = require './RouteHandler'
-Router         = require './Router'
-TextureBuilder = require './TextureBuilder'
-UploadVariant  = require './UploadVariant'
-View           = require './View'
+Icons         = require './Icons'
+Map           = require './Map'
+Router        = require './Router'
+UploadVariant = require './UploadVariant'
+View          = require './View'
 
 # Templates
 CreateGame     = require './CreateGame'
@@ -27,18 +23,14 @@ $(document).ready () ->
 	router = Router()
 	view = View $container
 
-	router.get '/create', ->
-		view.display CreateGame()
+	router.get '/new-game', ->
+		CreateGame view
 
 	router.get '/games', ->
-		view.display Games
-			title: "This is a Test Game"
-			variant: "LOTR"
-			img: "/variants/midearth.bmp"
-			countries: ['foo', 'bar', 'baz']
+		Games view
 
-	router.get '/game', ->
-		view.display Game img: '/variants/middle-earth/midearth.bmp'
+	router.get '/game/:_id', ({_id}) ->
+		Game _id, view
 
 	router.get '/upload-variant', ->
 		UploadVariant(view).display()

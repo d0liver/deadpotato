@@ -1,22 +1,23 @@
-# We use the scanlines provided to draw a box around each of the countries and
-# get a little icon for their area
+VariantUtils = require '../lib/VariantUtils'
 
-Icons = (ctx, gam_info) ->
+Icons = (ctx, variant_data) ->
+	vutils = VariantUtils variant_data
 	# An array of canvases with the icons drawn on them
 	icons = []
 
-	supply_centers = gam_info.countrySupplyCenters()
-	rgns = gam_info.rgns()
+	{countries, regions} = variant_data
 
-	for country in supply_centers
+	for country in variant_data.countries
 		bounds =
 			x_min: Infinity
 			y_min: Infinity
 			x_max: -1
 			y_max: -1
 
-		for center in supply_centers
-			for scanline in gam_info.regionScanLines center, true
+		supply_centers = regions[region] for region in country.supply_centers
+
+		for {scanlines} in supply_centers
+			for scanline in scanlines
 				bounds.x_min = Math.min bounds.x_min, scanline.x
 				bounds.x_max = Math.max bounds.x_max, scanline.x
 				bounds.y_min = Math.min bounds.y_min, scanline.y
@@ -50,8 +51,8 @@ Icons = (ctx, gam_info) ->
 			dest_width,
 			dest_height
 
-		icons.push canvas: icon_canvas, country: country
+		icons.push canvas: icon_canvas, country: cname
 
-	self = icons: () -> icons
+	self = icons: -> icons
 
 module.exports = Icons

@@ -13,7 +13,7 @@ session    = require 'express-session'
 {MongoClient} = require 'mongodb'
 
 # Passport
-{Strategy: LocalStrategy} = require "passport-local"
+GoogleAuth = require './GoogleAuth'
 
 # GraphQL
 {graphqlExpress} = require 'graphql-server-express'
@@ -37,6 +37,14 @@ app.use bodyParser.urlencoded extended: true
 app.use bodyParser.json limit: '2mb'
 app.use express.static "public"
 
+app.use (req, res, next) ->
+	if req.isAuthenticated()
+		res.locals.user = req.user
+
+	next()
+
+GoogleAuth app, passport
+
 MongoClient.connect DB_URI, (err, db) ->
 
 	# All of the routing is done on the front end.
@@ -44,7 +52,7 @@ MongoClient.connect DB_URI, (err, db) ->
 		res.render 'index'
 
 	app.use '/graphql', graphqlExpress (req) ->
-		obj = schema: SchemaBuilder db
+		obj = schema: SchemaBuilder db, req.user
 		if NODE_ENV is 'production'
 			_.extendOwn obj, 
 				formatError: -> 'An internal error occurred.' 

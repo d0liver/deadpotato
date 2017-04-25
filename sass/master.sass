@@ -26,12 +26,15 @@ body
 	background: url("/images/free-paper-texture-6.jpg")
 	background-size: cover
 
-h1
+h1, h2
 	font-family: league-script
 	color: black
 	font-weight: 500
 	font-size: 60px
 	margin-bottom: 20px
+
+h2
+	font-size: 45px
 
 h3
 	font-weight: bold
@@ -324,3 +327,49 @@ body
 .login_status
 	float: right
 	color: red
+
+.submit-orders
+	margin: 10px 0
+	width: 1150px
+
+canvas
+	//Chrome/Safari
+	-webkit-user-select: none
+	-moz-user-select: none
+	-ms-user-select: none
+	-o-user-select: none;
+	user-select: none;
+
+.games-list li
+	border: solid #a0a0a0 1px
+	padding: 20px
+	display: block
+
+.games-list li:after
+	content: " "
+	display: table
+	clear: both
+
+.games-list-title
+	display: inline-block
+	margin-left: 132px
+
+.countries-list-title
+	display: block
+	margin-bottom: 10px
+	font-weight: bold
+
+.join-game
+	margin-top: 100px
+	padding: 15px
+	border-radius: 5px
+	color: white
+	font-weight: bold
+	background-color: $deep-blue
+	display: block
+	text-align: center
+	width: 415px
+
+.join-game:hover
+	color: white
+	cursor: pointer

@@ -1,14 +1,72 @@
-h = require 'virtual-dom/h'
+h             = require 'virtual-dom/h'
+co            = require 'co'
+gqlQuery      = require './gqlQuery'
+$             = require 'jquery'
+VariantImages = require './VariantImages'
 
-module.exports = ({title, variant, img, countries}) ->
-	h '.game', [
-		h 'h1.title', title
-		h 'ul.info', [
-			h 'h3.variant', variant
-			h 'ul.countries', [
-				# One of these is generated for each country
-				h 'li.country', country for country in countries
-			]
+Games = (view) ->
+	self = {}
+	init = co.wrap ->
+		{data: {games}} = yield gqlQuery """
+			{
+				games {
+					_id
+					title
+					players {
+						country
+					}
+					variant {
+						slug
+						countries {
+							name
+						}
+					}
+				}
+			}
+		"""
+		self.display games
+
+		$('.root').on 'click', '#join-game', (e) ->
+			country = $('#select-country').val()
+			_id = $('#_id').val()
+			gqlQuery """
+				mutation joinGame($country: String!, $game: ObjectID!) {
+					joinGame(country: $country, game: $game)
+				}
+			""", {game: _id, country}
+			window.location.replace "/game/#{_id}"
+
+	self.display = (games) ->
+		view.display h '.root', [
+			h 'ul.games-list',
+				for game in games
+					console.log "Game: ", game
+					h 'li', [
+						h 'h2.games-list-title', game.title
+						h 'img.map', src: VariantImages(game.variant.slug).map()
+						h 'p', [
+							h 'strong.countries-list-title', 'Countries'
+							do ->
+								str = ""
+								for {name} in game.variant.countries
+									comma = ("," if str isnt '') ? ''
+									str = "#{str}#{comma} #{name}"
+
+								return str
+						]
+						h 'strong.countries-list-title', style: 'margin-top: 20px', 'Select Country'
+						h 'select', id: 'select-country', do ->
+							game.variant.players ?= []
+							player_countries = (player.country for player in game.variant.players)
+							for {name} in game.variant.countries when \
+							name not in player_countries
+								h 'option', name
+						h 'input#_id', type: 'hidden', value: game._id
+						h 'a.join-game', id: 'join-game', 'Join Game'
+					]
 		]
-		h 'img.map', src: img
-	]
+
+	init()
+	return self
+
+module.exports = Games

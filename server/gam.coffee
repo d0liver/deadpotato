@@ -1,26 +1,23 @@
-gam = (lines, abbr_map, countries) ->
-	regions = {}
-	mapAbbr = (abbr) -> abbr_map[abbr.toLowerCase()]
+gam = (lines, variant_data) ->
+	mapAbbr = (abbr) -> variant_data.abbr_map[abbr.toLowerCase()]
+	unit_type_map = A: 'Army', F: 'Fleet'
 
 	# Skip the first line - it's just the version number
 	lines.splice 0, 1
-	[game_name, variant, season_year] = lines.splice 0, 3
+	[game_name, name, season_year] = lines.splice 0, 3
 	[num_adjust, num_countries] = lines.splice(0, 2).map parseInt
 
-	for country in countries
+	for country in variant_data.countries
 		adjustment = parseInt lines.splice 0, 1
 		[centers, units] = lines.splice(0, 2).map (line) -> line.split /\s+/ 
 
-		for center in centers
-			regions[mapAbbr center] = country: country.name
+		country.supply_centers = (mapAbbr center for center in centers)
 
-		while ([type, region] = units.splice(0, 2)).length
-			regions[mapAbbr region].unit = type 
+		country.units = while ([type, region] = units.splice(0, 2)).length
+			type: unit_type_map[type], region: mapAbbr region
 
-	regions: regions
-	game_name: game_name
-	variant: variant
-	season_year: season_year
+	Object.assign variant_data, {game_name, name, season_year}
+	return
 
 	# There could be relevant info after this but stuff after this line
 	# shouldn't be used for _new_ variants so maybe we will add the remaining
