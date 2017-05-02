@@ -1,4 +1,4 @@
-Engine = ({countries, regions}, player_country_name) ->
+Engine = ({countries, regions}, player_country_name, resolver) ->
 	console.log "Player country name: ", player_country_name
 	self = {}
 	# Orders are keyed by their acting unit for easier/faster lookup (e.g. the
@@ -56,6 +56,8 @@ Engine = ({countries, regions}, player_country_name) ->
 		for {units} in countries
 			for unit in units when unit.region is rname
 				return unit
+
+	self.resolve = -> resolver.resolve()
 
 	return self
 
