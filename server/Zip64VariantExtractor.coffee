@@ -1,18 +1,27 @@
-Zip  = require 'node-zip'
-path = require 'path'
+Zip     = require 'node-zip'
+path    = require 'path'
+Vinyl   = require 'vinyl'
+through = require 'through2'
 
-Zip64VariantExtractor = (variant) ->
+Zip64VariantExtractor = (b64) ->
 	self = {}
 
-	zip = new Zip variant, base64: true, checkCRC32: true
+	zip = new Zip b64, base64: true, checkCRC32: true
 	files = zip.files
 
-	# Iterator that allows the caller to extract files iteratively based on the
-	# caller supplied filter.
+	# Supplies a stream of file vinyls (like gulp.src) to be consumed.
 	self.extract = ->
-		# Find the variant image file
-		for fname of files
-			yield name: fname, buff: Buffer.from files[fname].asArrayBuffer()
+		stream = through.obj()
+		for fname,file of files
+			stream.write new Vinyl
+				cwd: '/'
+				base: '/'
+				path: '/'+fname
+				contents: Buffer.from file.asArrayBuffer()
+
+		stream.end()
+
+		return stream
 
 	# Get the data files by their extension, e.g. extractor.file '.rgn'
 	self.file = (regex) ->

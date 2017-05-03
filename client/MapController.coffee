@@ -21,6 +21,7 @@ MapController = (engine, map, {countries, regions}) ->
 			regions[center].color = country.color
 
 		for unit in country.units
+			console.log "Unit region: ", unit.region
 			regions[unit.region].icon = unit.type
 
 	# Once modifications have been done (above) we add all regions.

@@ -1,28 +1,40 @@
 # File parsers
-cnt      = require "./cnt"
-gam      = require "./gam"
-map      = require "./map"
-rgn      = require "./rgn"
-slug     = require 'slug'
-LineFeed = require './LineFeed'
+cnt                     = require "./cnt"
+gam                     = require "./gam"
+map                     = require "./map"
+rgn                     = require "./rgn"
+slug                    = require 'slug'
+LineFeed                = require './LineFeed'
+{VariantParseException} = require './Exceptions'
+through                 = require 'through2'
+Q                       = require 'q'
 
 # Extractor is some strategy for pulling the variant files in a way that's
 # convenient for us to use. The point of doing this is so that the variant
 # parser logic conflated with and bloated by every possible means of variant
 # extraction (even though it's entirely possible there is only ever going to be
 # one, i.e. from a zip file).
-Variant = (extractor) ->
-	self = {}
+parseVariant = (stream) ->
+	variant_data = {}
+	files = {}
 
-	self.parse = ->
-		variant_data = {}
+	def = Q.defer()
 
+	# Gather up the files that we need from the incoming vinyl stream and then
+	# parse them in the correct order.
+	stream.on 'data', (file) ->
+		ext = file.relative.split('.')[-1..-1][0]
+		if ext in ['cnt', 'map', 'rgn', 'gam']
+			files[ext] = file.contents
+	.on 'end', ->
 		# Make sure the type order below is correct. In particular, the .gam
 		# file uses the abbreviations map from the .map file and countries from
 		# the .cnt file.
 		for name,parse of {cnt, map, rgn, gam}
-			file = extractor.file ///\.#{name}$///
-			parse LineFeed(file), variant_data
+			if not files[name]?
+				return def.reject new VariantParseException(".#{name} file was not found.")
+			else
+				parse LineFeed(files[name].toString('utf8')), variant_data
 
 		# The regions object (scanlines, adjacencies, etc.) isnt't really
 		# useful except for when we're actually displaying a map so it doesn't
@@ -34,26 +46,14 @@ Variant = (extractor) ->
 		# we could end up needing other stuff as map_data in the future.
 		variant_data.map_data = JSON.stringify {regions: variant_data.regions}
 
-		# TODO: Storing the slug is probably unnecessary and should be removed.
-		variant_data.slug = slug variant_data.name, lower: true
-
 		# Delete abbr_map also since parsed data doesn't use abbreviations
 		# ever.
 		delete variant_data.abbr_map; delete variant_data.regions
 
+		variant_data.slug = slug variant_data.name, lower: true
 
-		# The full list of keys on variant info is:
-		# season_year
-		# name (of the variant)
-		# countries
-		# map_data (abbreviations map and )
-		# slug
+		def.resolve variant_data
 
-		return variant_data
+	return def.promise
 
-	self.expects = (ext) ->
-		return ext in expected_extensions
-
-	return self
-
-module.exports = Variant
+module.exports = parseVariant

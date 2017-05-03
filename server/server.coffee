@@ -19,6 +19,8 @@ GoogleAuth = require './GoogleAuth'
 {graphqlExpress} = require 'graphql-server-express'
 SchemaBuilder    = require './SchemaBuilder'
 
+{UserException} = require './Exceptions'
+
 NODE_ENV = process.env.NODE_ENV
 DB_URI = "mongodb://localhost:27017/deadpotato"
 app    = express()
@@ -53,9 +55,7 @@ MongoClient.connect DB_URI, (err, db) ->
 
 	app.use '/graphql', graphqlExpress (req) ->
 		obj = schema: SchemaBuilder db, req.user
-		if NODE_ENV is 'production'
-			_.extendOwn obj, 
-				formatError: -> 'An internal error occurred.' 
+
 		return obj
 
 	ser_deser = (user, done) -> done null, user

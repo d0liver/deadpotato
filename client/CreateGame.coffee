@@ -8,9 +8,9 @@ CreateGame = (view)->
 
 	init = ->
 		co ->
-			{data: {variants}} = yield gqlQuery """
+			{data: {listVariants: variants}} = yield gqlQuery """
 				{
-					variants {
+					listVariants {
 						_id
 						name
 					}
@@ -21,11 +21,9 @@ CreateGame = (view)->
 			$('.create-game').on 'submit', (e) ->
 				e.preventDefault()
 				title = $('#title').val(); variant = $('#which-variant').val()
-				console.log "Title: ", title, "variant: ", variant
 				createGame {title, variant}
 
 	createGame = co.wrap (game) ->
-		console.log "Saving game:", {game}
 		{data: createGame: _id} = yield gqlQuery """
 			mutation createGame($game: GameArg) {
 				createGame(game: $game)
@@ -35,6 +33,7 @@ CreateGame = (view)->
 
 
 	self.display = (variants) ->
+		console.log "Variants: ", variants
 		view.display h 'form.create-game', [
 			h '.row', [
 				h '.six.columns', [

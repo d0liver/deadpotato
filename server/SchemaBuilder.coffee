@@ -4,14 +4,16 @@
 Q                      = require 'q'
 co                     = require 'co'
 AWS                    = require 'aws-sdk'
-Variant                = require './Variant'
-Zip64VariantExtractor  = require './Zip64VariantExtractor'
-VariantAssetExtractor  = require './VariantAssetExtractor'
 schema                 = require './schema'
+through                = require 'through2'
+Game                   = require './Game'
+VariantModel           = require './VariantModel'
+{UserException}        = require './Exceptions'
 
-SchemaBuilder = (db, user) ->
+SchemaBuilder = (db, user, S3) ->
+	game      = Game db.collection 'games'
+	variantm  = VariantModel db.collection('variants'), S3
 	variants = db.collection 'variants'
-	game = Game(db.collection('games'))
 
 	MongoObjectID = new GraphQLScalarType
 		name: 'ObjectID',
@@ -25,20 +27,39 @@ SchemaBuilder = (db, user) ->
 	resolvers =
 		ObjectID: MongoObjectID
 		Mutation:
-			'variant.create': (obj, {variant}) -> variantm.create variant
-			'game.create': (obj, {game}) -> game.create(game)
-			'game.join': (obj, {game: _id, country}) -> game.join _id, country
+			'createVariant': (obj, {variant: b64}) -> variantm.create(b64)
+
+
+			'createGame': (obj, {game: data}) -> game.create(data)
+			'joinGame': (obj, {game: _id, country}) -> game.join _id, country
 
 		Query:
-			'variant.find': (obj, {slug}) -> variantm.find(slug)
-			'variant.list': variantm.list
-			game: (obj, {_id}) -> game.find(_id)
-			'game.list': game.list()
+			'findVariant': (obj, {slug}) -> variantm.find(slug)
+			'listVariants': variantm.list
+			'findGame': (obj, {_id}) -> game.find(_id)
+
+			'listGames': game.list
 
 		Game:
-			variant: co.wrap ({variant: _id}) ->
-				yield variants.findOne {_id}
+			variant: ({variant: _id}) ->
+				console.log "Variant ID: ", _id
+				co ->
+					result = yield variants.findOne {_id}
 
+	# Wrap each of our resolvers with error handling logic (format an
+	# appropriate response)
+	for type,val of resolvers when val not instanceof GraphQLScalarType
+		for name,fu of resolvers[type]
+			do (fu) ->
+				resolvers[type][name] = co.wrap (args...) ->
+					try
+						return yield fu(args...)
+					catch err
+						console.log err
+						if err instanceof UserException
+							throw err
+						else
+							throw new Error('Internal server error.')
 
 	return makeExecutableSchema {typeDefs: schema, resolvers}
 

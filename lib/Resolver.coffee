@@ -113,6 +113,5 @@ handleCycle = ->
 
 # resolve = cycleGuard resolve, handleCycle
 
-console.log "Fire Away!"
 adjudicate test_orders
 console.log "Test orders: ", test_orders

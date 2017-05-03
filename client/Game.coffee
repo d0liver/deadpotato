@@ -39,9 +39,9 @@ Game = (_id, view) ->
 
 	init = ->
 		co ->
-			{data: {game}} = yield Q gqlQuery """
-				query gameInfo($_id: ObjectID!) {
-					game(_id: $_id) {
+			{data: {findGame: game}} = yield Q gqlQuery """
+				query findGame($_id: ObjectID!) {
+					findGame(_id: $_id) {
 						_id
 						title
 						player_country

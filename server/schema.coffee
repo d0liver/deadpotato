@@ -44,15 +44,15 @@ module.exports = """
 	}
 
 	type Query {
-		variant(slug: String!): Variant
-		variants: [Variant]
-		game(_id: ObjectID!): Game
-		games: [Game]
+		findVariant(slug: String!): Variant
+		listVariants: [Variant]
+		findGame(_id: ObjectID!): Game
+		listGames: [Game]
 	}
 
 	type Mutation {
-		createVariant(variant: String!): ObjectID!
-		createGame(game: GameArg): ObjectID!
+		createVariant(variant: String!): ObjectID
+		createGame(game: GameArg): ObjectID
 		joinGame(country: String!, game: ObjectID!): String
 	}
 """

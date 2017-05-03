@@ -9,7 +9,7 @@ Games = (view) ->
 	init = co.wrap ->
 		{data: {games}} = yield gqlQuery """
 			{
-				games {
+				listGames {
 					_id
 					title
 					players {
@@ -35,7 +35,6 @@ Games = (view) ->
 				joinGame(country: $country, game: $game)
 			}
 		""", {game: _id, country}
-		console.log "Query was: ", {game: _id, country}
 		# window.location.replace "/game/#{_id}"
 
 	self.display = (games) ->
