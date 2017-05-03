@@ -1,20 +1,28 @@
-rgn = (lines, variant_data) ->
+rgn = (lfeed, variant_data) ->
 	{regions} = variant_data
 	# Skip the first line, it's just there for info
-	lines[0..0] = []
-	# First, we filter out all of the comments in the file
-	lines = lines.filter (line) -> not /^\s*\#/.test line
+	lfeed.next()
+
+	parsePos = (line) ->
+		if /(\d+),(\d+)/.test line
+			line.split(',').map (i) -> parseInt i
 
 	# Parse out the scanlines for each region
 	for rname,region of regions
-		[unit_pos, name_pos] = lines.splice(0, 2).map (l) -> l.split(",").map (i) -> parseInt i
-		num_scanlines = parseInt lines.splice(0, 1)[0]
-		scanlines = for i in [0...num_scanlines]
+		unit_pos = parsePos(lfeed.next().value)
+		name_pos = parsePos(line = lfeed.next().value)
+		# TODO: This is a bit sloppy but it's necessary since the name_pos
+		# doesn't exist for coasts. Will need to come up with something better.
+		if name_pos
+			line = lfeed.next().value
+		num_scanlines = parseInt(line)
+		scanlines = for i in [1..num_scanlines]
 			patt = /(\d+) (\d+) (\d+)/
+			line = lfeed.next().value
 			# We can't pass parseInt to the map directly because the second
 			# argument to it is normally the radix (and we will end up passing
 			# it as the index)
-			[x, y, len] = lines.splice(0, 1)[0].match(patt)[1..].map (i) -> parseInt i
+			[x, y, len] = line.match(patt)[1..].map (i) -> parseInt i
 			x: x, y: y, len: len
 		Object.assign region, {scanlines, unit_pos, name_pos}
 

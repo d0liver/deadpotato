@@ -1,15 +1,15 @@
-gam = (lines, variant_data) ->
+gam = (lfeed, variant_data) ->
 	mapAbbr = (abbr) -> variant_data.abbr_map[abbr.toLowerCase()]
 	unit_type_map = A: 'Army', F: 'Fleet'
 
 	# Skip the first line - it's just the version number
-	lines.splice 0, 1
-	[game_name, name, season_year] = lines.splice 0, 3
-	[num_adjust, num_countries] = lines.splice(0, 2).map parseInt
+	lfeed.next()
+	[game_name, name, season_year] = (lfeed.next().value for i in [1..3])
+	[num_adjust, num_countries] = (parseInt(lfeed.next().value) for i in [1..2])
 
 	for country in variant_data.countries
-		adjustment = parseInt lines.splice 0, 1
-		[centers, units] = lines.splice(0, 2).map (line) -> line.split /\s+/ 
+		adjustment = parseInt(lfeed.next().value)
+		[centers, units] = (lfeed.next().value.split(/\s+/) for i in [1..2])
 
 		country.supply_centers = (mapAbbr center for center in centers)
 

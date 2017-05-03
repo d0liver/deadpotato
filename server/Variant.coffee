@@ -1,9 +1,10 @@
 # File parsers
-cnt  = require "./cnt"
-gam  = require "./gam"
-map  = require "./map"
-rgn  = require "./rgn"
-slug = require 'slug'
+cnt      = require "./cnt"
+gam      = require "./gam"
+map      = require "./map"
+rgn      = require "./rgn"
+slug     = require 'slug'
+LineFeed = require './LineFeed'
 
 # Extractor is some strategy for pulling the variant files in a way that's
 # convenient for us to use. The point of doing this is so that the variant
@@ -20,8 +21,8 @@ Variant = (extractor) ->
 		# file uses the abbreviations map from the .map file and countries from
 		# the .cnt file.
 		for name,parse of {cnt, map, rgn, gam}
-			file = extractor.file ".#{name}"
-			parse file, variant_data
+			file = extractor.file ///\.#{name}$///
+			parse LineFeed(file), variant_data
 
 		# The regions object (scanlines, adjacencies, etc.) isnt't really
 		# useful except for when we're actually displaying a map so it doesn't

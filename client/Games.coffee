@@ -26,15 +26,17 @@ Games = (view) ->
 		"""
 		self.display games
 
-		$('.root').on 'click', '#join-game', (e) ->
-			country = $('#select-country').val()
-			_id = $('#_id').val()
-			gqlQuery """
-				mutation joinGame($country: String!, $game: ObjectID!) {
-					joinGame(country: $country, game: $game)
-				}
-			""", {game: _id, country}
-			window.location.replace "/game/#{_id}"
+	joinGame = ->
+		$this = $(this)
+		country = $this.siblings('#select-country').val()
+		_id = $this.siblings('#_id').val()
+		gqlQuery """
+			mutation joinGame($country: String!, $game: ObjectID!) {
+				joinGame(country: $country, game: $game)
+			}
+		""", {game: _id, country}
+		console.log "Query was: ", {game: _id, country}
+		# window.location.replace "/game/#{_id}"
 
 	self.display = (games) ->
 		view.display h '.root', [
@@ -62,7 +64,7 @@ Games = (view) ->
 							name not in player_countries
 								h 'option', name
 						h 'input#_id', type: 'hidden', value: game._id
-						h 'a.join-game', id: 'join-game', 'Join Game'
+						h 'a.join-game', id: 'join-game', onclick: joinGame, 'Join Game'
 					]
 		]
 

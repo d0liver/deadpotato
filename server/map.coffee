@@ -1,4 +1,4 @@
-map = (lines, variant_data) ->
+map = (lfeed, variant_data) ->
 	regions = {}
 	abbr_map = {}
 	l = (str) -> str.toLowerCase()
@@ -18,7 +18,9 @@ map = (lines, variant_data) ->
 			return 'Land'
 
 	sectionIter = (m) ->
-		m line while (line = lines.splice(0, 1)[0])?.length and line isnt "-1"
+		for line from lfeed
+			break if line is '-1'
+			m(line)
 
 	sectionIter (line) ->
 		[..., name, letters, abbrs] = line.match /([^,]+),\s+(\w+) (.+)$/

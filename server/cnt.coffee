@@ -1,8 +1,8 @@
-cnt = (lines, variant_data) ->
+cnt = (lfeed, variant_data) ->
 	# Skip the first line - it's just the version number
-	lines = lines[1..]
+	lfeed.next()
 
-	variant_data.countries = for line in lines[1..]
+	variant_data.countries = for line from lfeed
 		[name, adjective, capital_initial, pattern, color] = line.split " "
 		{name, adjective, pattern, color: color.toLowerCase()}
 

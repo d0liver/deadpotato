@@ -7,7 +7,7 @@ Engine                   = require '../lib/Engine'
 Icons                    = require './Icons'
 Map                      = require './Map'
 MapController            = require './MapController'
-MapIcon                  = require './MapIcon'
+MapIcon                  = require '../lib/MapIcon'
 RegionTexture            = require './RegionTexture'
 HorizLinesTextureBuilder = require './HorizLinesTextureBuilder'
 

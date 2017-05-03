@@ -1,11 +1,14 @@
 Q = require 'q'
+{capitalize} = require '../lib/utils'
 
 MapIcon = (slug, color, type) ->
 	self = {}
 
 	self.uri = ->
 		S3_BUCKET = "https://s3.us-east-2.amazonaws.com/deadpotato/"
-		"#{S3_BUCKET}#{slug}/#{capitalize color.name()}#{type}.ico"
+		"#{S3_BUCKET}#{self.relativeUri()}"
+
+	self.relativeUri = -> "#{slug}/#{self.name()}.ico"
 
 	self.img = ->
 		img = new Image()
@@ -15,9 +18,7 @@ MapIcon = (slug, color, type) ->
 
 		return d.promise
 
-	# TODO: This should really be somewhere else
-	capitalize = (word) ->
-		word = "#{word[0].toUpperCase()}#{word[1..]}"
+	self.name = -> "#{capitalize(color.name())}#{type}"
 
 	return self
 
