@@ -36,6 +36,7 @@ showInteractions = (gam_info, color_map) ->
 
 Game = (_id, view) ->
 	self = {}
+	console.log "Initializing game..."
 
 	init = ->
 		co ->

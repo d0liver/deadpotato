@@ -1,7 +1,18 @@
+{VariantParseException} = require './Exceptions'
+
 map = (lfeed, variant_data) ->
 	regions = {}
 	abbr_map = {}
 	l = (str) -> str.toLowerCase()
+
+	coastName = (abbr) ->
+		map = 
+			nc: 'North'
+			sc: 'South'
+			ec: 'East'
+			wc: 'West'
+
+		return map[abbr]
 
 	region_type_map = (letters) ->
 		m = 
@@ -18,8 +29,10 @@ map = (lfeed, variant_data) ->
 			return 'Land'
 
 	sectionIter = (m) ->
-		for line from lfeed
+		while line = lfeed.next().value
 			break if line is '-1'
+			# Advance to the next line so that we can read the next entry
+			# on the next call.
 			m(line)
 
 	sectionIter (line) ->
@@ -38,14 +51,31 @@ map = (lfeed, variant_data) ->
 		///
 
 		region = regions[abbr_map[l abbr]]
-
-		adjacencies =
-			for adj in adj_abbrs.split(/\s+/).filter((i) -> not /^\s+$/.test i)
-				type: adj_type
-				region: abbr_map[l adj]
-
 		region.adjacencies ?= []
-		region.adjacencies.push adjacencies...
+		region.coasts ?= {}
+
+		for adj in adj_abbrs.split(/\s+/).filter((i) -> not /^\s+$/.test i)
+			adj = l(adj)
+
+			result =
+				type: adj_type
+				region: abbr_map[adj]
+
+			# Regions that are adjacent to a coast are designated by
+			# region/(nc|sc|ec|wc).
+			if '/' in adj
+				[adj, coast] = adj.split '/'
+				if coast in ['nc', 'sc', 'ec', 'wc']
+					result.coast = coastName(coast)
+				else
+					msg = "Invalid coastal adjacency type: #{coast}"
+					throw new VariantParseException(msg)
+
+			if adj_type in ['nc', 'sc', 'ec', 'wc']
+				coast = (region.coasts[coastName(adj_type)] ?= adjacencies: [])
+				coast.adjacencies.push result
+			else
+				region.adjacencies.push result
 
 		return
 
