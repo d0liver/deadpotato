@@ -67,6 +67,7 @@ Game = (_id, view) ->
 							name
 							season_year
 							slug
+							assets
 						}
 					}
 				}
@@ -92,7 +93,7 @@ Game = (_id, view) ->
 		# creation in the controller (it's better to have the business logic
 		# for the regions there).
 		engine = Engine variant_data, player_country
-		map = Map ctx, MapIcon.bind null, variant_data.slug
+		map = Map ctx, MapIcon.bind null, variant_data.slug, variant_data.assets
 		map_controller = MapController engine, map, variant_data
 
 	display = (variant_data) ->

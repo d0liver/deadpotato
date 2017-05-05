@@ -24,6 +24,7 @@ module.exports = """
 		map_data: String!
 		season_year: String!
 		slug: String!
+		assets: [String]!
 	}
 
 	type Player {

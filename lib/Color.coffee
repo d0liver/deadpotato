@@ -3,14 +3,24 @@ Color = (str) ->
 	self = {}
 	rgba = null; value = null
 	map =
-		forest: "#228b22"
-		charcoal: "#36454f"
-		red: "#ff0000"
-		brown: "#f4a460"
-		teal: "#008080"
+		black: "#000000"
 		blue: "#0000ff"
-		orange: "#ffa500"
+		brown: "#f4a460"
+		charcoal: "#36454f"
+		crimson: "#800000"
+		cyan: "#00ffff"
+		forest: "#228b22"
+		green: "#00ff00"
+		magenta: "#ff00ff"
 		navy: "#000080"
+		olive: "#808000"
+		orange: "#ffa500"
+		purple: "#800080"
+		red: "#ff0000"
+		tan: "#d2b48c"
+		teal: "#008080"
+		white: "#ffffff"
+		yellow: "#ffff00"
 
 	init = ->
 		rgba = colorsToArray if str[0] is '#'
