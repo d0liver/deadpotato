@@ -60,6 +60,7 @@ Game = (_id, view) ->
 								units {
 									type
 									region
+									coast
 								}
 							}
 							map_data

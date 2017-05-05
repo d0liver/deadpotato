@@ -1,3 +1,5 @@
+{coastName} = require '../lib/parseUtils'
+
 gam = (lfeed, variant_data) ->
 	mapAbbr = (abbr) -> variant_data.abbr_map[abbr.toLowerCase()]
 	unit_type_map = A: 'Army', F: 'Fleet'
@@ -13,8 +15,19 @@ gam = (lfeed, variant_data) ->
 
 		country.supply_centers = (mapAbbr center for center in centers)
 
-		country.units = while ([type, region] = units.splice(0, 2)).length
-			type: unit_type_map[type], region: mapAbbr region
+		country.units = []
+		while ([type, region] = units.splice(0, 2)).length
+			result = type: unit_type_map[type]
+			# Starting units that are on a coast are represented like this:
+			# StP(sc). So, we have to parse out the coast name if there is one.
+			if '(' in region
+				[region, coast_abbr] = region.split '('
+				# Remove the trailing paren from the coast abbreviation
+				coast_abbr = coast_abbr[0...-1]
+				result.coast = coastName(coast_abbr)
+
+			result.region = mapAbbr(region)
+			country.units.push(result)
 
 	Object.assign variant_data, {game_name, name, season_year}
 	return

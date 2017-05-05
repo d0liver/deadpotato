@@ -1,18 +1,10 @@
 {VariantParseException} = require './Exceptions'
+{coastName} = require '../lib/parseUtils'
 
 map = (lfeed, variant_data) ->
 	regions = {}
 	abbr_map = {}
 	l = (str) -> str.toLowerCase()
-
-	coastName = (abbr) ->
-		map = 
-			nc: 'North'
-			sc: 'South'
-			ec: 'East'
-			wc: 'West'
-
-		return map[abbr]
 
 	region_type_map = (letters) ->
 		m = 

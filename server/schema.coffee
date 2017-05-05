@@ -4,6 +4,7 @@ module.exports = """
 	type Unit {
 		type: String
 		region: String
+		coast: String
 	}
 
 	type Country {
