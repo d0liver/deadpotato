@@ -5,7 +5,7 @@ map                     = require "./map"
 rgn                     = require "./rgn"
 slug                    = require 'slug'
 LineFeed                = require './LineFeed'
-{VariantParseException} = require './Exceptions'
+{VariantParseException} = require '../lib/Exceptions'
 through                 = require 'through2'
 Q                       = require 'q'
 

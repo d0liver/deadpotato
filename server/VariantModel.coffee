@@ -1,6 +1,6 @@
 co                                            = require 'co'
 through                                       = require 'through2'
-{S3UploadException, VariantValidateException} = require './Exceptions'
+{S3UploadException, VariantValidateException} = require '../lib/Exceptions'
 Zip64VariantExtractor                         = require './Zip64VariantExtractor'
 VariantAssetExtractor                         = require './VariantAssetExtractor'
 parseVariant                                  = require './parseVariant'

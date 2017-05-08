@@ -1,4 +1,4 @@
-{VariantParseException} = require './Exceptions'
+{VariantParseException} = require '../lib/Exceptions'
 {coastName} = require '../lib/parseUtils'
 
 map = (lfeed, variant_data) ->

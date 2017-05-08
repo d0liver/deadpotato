@@ -19,7 +19,7 @@ GoogleAuth = require './GoogleAuth'
 {graphqlExpress} = require 'graphql-server-express'
 SchemaBuilder    = require './SchemaBuilder'
 
-{UserException} = require './Exceptions'
+{UserException} = require '../lib/Exceptions'
 
 NODE_ENV = process.env.NODE_ENV
 DB_URI = "mongodb://localhost:27017/deadpotato"

@@ -8,7 +8,7 @@ schema                 = require './schema'
 through                = require 'through2'
 Game                   = require './Game'
 VariantModel           = require './VariantModel'
-{UserException}        = require './Exceptions'
+{UserException}        = require '../lib/Exceptions'
 
 SchemaBuilder = (db, user, S3) ->
 	game      = Game db.collection 'games'
