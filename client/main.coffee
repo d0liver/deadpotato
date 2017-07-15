@@ -13,9 +13,9 @@ UploadVariant = require './UploadVariant'
 View          = require './View'
 
 # Templates
-CreateGame     = require './CreateGame'
-Games          = require './Games'
-Game           = require './Game'
+CreateGame         = require './CreateGame'
+GameListController = require './GameListController'
+GameController     = require './GameController'
 
 $(document).ready () ->
 	$container = $ '.container'
@@ -27,10 +27,10 @@ $(document).ready () ->
 		CreateGame view
 
 	router.get '/games', ->
-		Games view
+		GameListController view
 
 	router.get '/game/:_id', ({_id}) ->
-		Game _id, view
+		GameController _id, view
 
 	router.get '/upload-variant', ->
 		UploadVariant(view).display()

@@ -10,6 +10,7 @@ MapController            = require './MapController'
 MapIcon                  = require '../lib/MapIcon'
 RegionTexture            = require './RegionTexture'
 HorizLinesTextureBuilder = require './HorizLinesTextureBuilder'
+GameData = require '../lib/GameData'
 
 player_country = null
 
@@ -89,6 +90,7 @@ Game = (_id, view) ->
 			icon: getContext 'icon'
 
 		console.log "Variant info: ", variant_data
+		console.log "Modified variant info: ", GameData(variant_data).modified()
 		# New Map constructor that only takes the regions - needed for map
 		# creation in the controller (it's better to have the business logic
 		# for the regions there).

@@ -1,0 +1,34 @@
+
+coffee test/DATC.coffee
+	self.countries = ->
+		for country in variant_data.countries
+			deepCopy country
+
+	self.units = ->
+		result = []
+		for country in variant_data.countries
+			result.push for unit in country.units
+				Unit unit
+
+		return result
+
+	self.supplyCenters = ->
+		result = []
+
+		for country in variant_data.countries
+			result.push for center in country.supply_centers
+				center = deepCopy center
+				center.country = country.name
+				center
+
+		return result
+
+	self.regions = ->
+		for region in variant_data.regions
+			region = deepCopy region
+			region.country = self.supplyCenters().find((c) -> c.region is region.name).country
+			region.unit = self.units().find((u) -> u.region is region.name).type
+			region
+
+	deepCopy = (object) ->
+		return JSON.parse JSON.stringify object
