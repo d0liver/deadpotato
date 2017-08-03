@@ -47,11 +47,8 @@ map = (lfeed, variant_data) ->
 		region.coasts ?= {}
 
 		for adj in adj_abbrs.split(/\s+/).filter((i) -> not /^\s+$/.test i)
+			result = {}
 			adj = l(adj)
-
-			result =
-				type: adj_type
-				region: abbr_map[adj]
 
 			# Regions that are adjacent to a coast are designated by
 			# region/(nc|sc|ec|wc).
@@ -62,6 +59,11 @@ map = (lfeed, variant_data) ->
 				else
 					msg = "Invalid coastal adjacency type: #{coast}"
 					throw new VariantParseException(msg)
+
+			# Important that this go below the if statement above so that the
+			# abbreviations are mapped through correctly (without the slash)
+			result.type = adj_type
+			result.region = abbr_map[adj]
 
 			if adj_type in ['nc', 'sc', 'ec', 'wc']
 				coast = (region.coasts[coastName(adj_type)] ?= adjacencies: [])
