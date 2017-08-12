@@ -7,7 +7,7 @@ VariantImages = require './VariantImages'
 Games = (view) ->
 	self = {}
 	init = co.wrap ->
-		{data: {games}} = yield gqlQuery """
+		{data: {listGames: games}} = yield gqlQuery """
 			{
 				listGames {
 					_id
@@ -38,6 +38,7 @@ Games = (view) ->
 		# window.location.replace "/game/#{_id}"
 
 	self.display = (games) ->
+		console.log "Attempting to display games: ", games
 		view.display h '.root', [
 			h 'ul.games-list',
 				for game in games

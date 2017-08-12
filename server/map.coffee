@@ -13,11 +13,12 @@ map = (lfeed, variant_data) ->
 
 		if letters in Object.keys m
 			return m[letters]
-		# This is how home supply centers are designated. We don't actually
-		# need to know which country this center is for - we can get that
-		# from the .gam file. These centers are assumed to be land.
-		else if /^[A-Z]$/.test letters
-			return 'Land'
+
+		# Everything not addressed above is a supply center. We don't actually
+		# need to know which country this center is for (indicated by
+		# __letters__) - we can get that from the .gam file. These centers are
+		# always land (no Atlantis so far).
+		return 'Supply Center'
 
 	# This is used to iterate over each of the following sections in the file.
 	# Loop through lines until -1 is encountered calling our function argument,
@@ -40,7 +41,11 @@ map = (lfeed, variant_data) ->
 			\s+(\w+) # Region type letters (mapped to Land, Water, or Coast)
 			(.+)$    # Abbreviations for the region
 		///
-		regions[full_name] = type: regionType type_letters
+		type = regionType type_letters
+		regions[full_name] = if type is 'Supply Center'
+			type: 'Land'
+			supply_center: true
+		else {type, supply_center: false}
 
 		# Build a reverse map that goes from a region's abbreviations to its
 		# name for fast lookup.
@@ -97,7 +102,7 @@ map = (lfeed, variant_data) ->
 			for abbr in matches[3].trim().split /\s+/
 				parseAdjacency abbr, matches[2]
 
-		region.coasts ?= {}
+		region.coasts ?= {}; region.adjacencies ?= []
 
 		# If these adjacencies apply only to units coming from one of our
 		# coasts then we deal with that here.

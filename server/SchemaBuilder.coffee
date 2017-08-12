@@ -11,7 +11,7 @@ VariantModel           = require './VariantModel'
 {UserException}        = require '../lib/Exceptions'
 
 SchemaBuilder = (db, user, S3) ->
-	game      = Game db.collection 'games'
+	game      = Game db
 	variantm  = VariantModel db.collection('variants'), S3
 	variants = db.collection 'variants'
 

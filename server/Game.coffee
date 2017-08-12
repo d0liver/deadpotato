@@ -1,7 +1,10 @@
-co = require 'co'
+{ObjectID} = require 'mongodb'
+co         = require 'co'
 
-Game = (games) ->
+Game = (db) ->
 	self = {}
+	games = db.collection 'games'
+	variants = db.collection 'variants'
 
 	self.find = co.wrap (_id) ->
 		game = yield games.findOne({_id})
@@ -16,10 +19,19 @@ Game = (games) ->
 			yield games.update {_id}, $push: players: {country, pid: user.id}
 
 	self.create = co.wrap (data) ->
-		{insertedId} = yield games.insertOne data
-		return insertedId
+		try
+			data.variant = ObjectID data.variant
+			{insertedId} = yield games.insertOne data
+			return insertedId
+		catch
+		# TODO: What's the best thing to do here?
 
-	self.list = co.wrap -> yield games.find().toArray()
+	self.list = co.wrap ->
+		games = yield games.find().toArray()
+		for game in games
+			game.variant = yield variants.findOne _id: game.variant
+		console.log "Results: ", games
+		return games
 
 	return self
 

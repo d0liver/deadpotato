@@ -3,7 +3,7 @@ h                        = require 'virtual-dom/h'
 gqlQuery                 = require './gqlQuery'
 Q                        = require 'q'
 co                       = require 'co'
-Engine                   = require '../lib/Engine'
+Gavel                    = require '/home/david/gavel'
 Icons                    = require './Icons'
 Map                      = require './Map'
 MapController            = require './MapController'
@@ -94,9 +94,9 @@ Game = (_id, view) ->
 		# New Map constructor that only takes the regions - needed for map
 		# creation in the controller (it's better to have the business logic
 		# for the regions there).
-		engine = Engine variant_data, player_country
+		gavel = Gavel variant_data, player_country
 		map = Map ctx, MapIcon.bind null, variant_data.slug, variant_data.assets
-		map_controller = MapController engine, map, variant_data
+		map_controller = MapController gavel, map, variant_data
 
 	display = (variant_data) ->
 		S3_BUCKET = "https://s3.us-east-2.amazonaws.com/deadpotato/"

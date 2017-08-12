@@ -20,6 +20,7 @@ GoogleAuth = require './GoogleAuth'
 SchemaBuilder    = require './SchemaBuilder'
 
 {UserException} = require '../lib/Exceptions'
+Gavel           = require '/home/david/gavel'
 
 NODE_ENV = process.env.NODE_ENV
 DB_URI = "mongodb://localhost:27017/deadpotato"
