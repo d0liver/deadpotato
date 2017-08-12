@@ -27,22 +27,21 @@ SchemaBuilder = (db, user, S3) ->
 	resolvers =
 		ObjectID: MongoObjectID
 		Mutation:
-			'createVariant': (obj, {variant: b64}) -> variantm.create(b64)
-
-
-			'createGame': (obj, {game: data}) -> game.create(data)
-			'joinGame': (obj, {game: _id, country}) -> game.join _id, country
+			createVariant: (obj, {variant: b64}) -> variantm.create(b64)
+			createGame: (obj, {game: data}) -> game.create(data)
+			joinGame: (obj, {game: _id, country}) -> game.join _id, country
 
 		Query:
-			'findVariant': (obj, {slug}) -> variantm.find(slug)
-			'listVariants': variantm.list
-			'findGame': (obj, {_id}) -> game.find(_id)
-
-			'listGames': game.list
+			findVariant: (obj, {slug}) -> variantm.find(slug)
+			listVariants: variantm.list
+			findGame: (obj, {_id}) -> game.find(_id)
+			listGames: game.list
+			isAuthed: -> return Q user?
 
 		Game:
 			variant: ({variant: _id}) ->
 				console.log "Variant ID: ", _id
+				_id = ObjectID _id
 				co ->
 					result = yield variants.findOne {_id}
 

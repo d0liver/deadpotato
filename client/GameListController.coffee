@@ -6,6 +6,8 @@ VariantImages = require './VariantImages'
 
 Games = (view) ->
 	self = {}
+	authed = false
+
 	init = co.wrap ->
 		{data: {listGames: games}} = yield gqlQuery """
 			{
@@ -24,6 +26,12 @@ Games = (view) ->
 				}
 			}
 		"""
+		console.log "FETCHED GAMES: ", games
+		{data: {isAuthed: authed}} = yield gqlQuery "
+			{
+				isAuthed
+			}
+		"
 		self.display games
 
 	joinGame = ->
@@ -64,7 +72,8 @@ Games = (view) ->
 							name not in player_countries
 								h 'option', name
 						h 'input#_id', type: 'hidden', value: game._id
-						h 'a.join-game', id: 'join-game', onclick: joinGame, 'Join Game'
+						h 'a.join-game', id: 'join-game', onclick: joinGame, do ->
+							if authed then 'Join Game' else ''
 					]
 		]
 

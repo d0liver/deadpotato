@@ -28,9 +28,8 @@ Game = (db) ->
 
 	self.list = co.wrap ->
 		games = yield games.find().toArray()
-		for game in games
-			game.variant = yield variants.findOne _id: game.variant
-		console.log "Results: ", games
+		# for game in games
+		# 	game.variant = yield variants.findOne _id: game.variant
 		return games
 
 	return self

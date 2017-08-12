@@ -50,6 +50,7 @@ module.exports = """
 		listVariants: [Variant]
 		findGame(_id: ObjectID!): Game
 		listGames: [Game]
+		isAuthed: Boolean
 	}
 
 	type Mutation {
