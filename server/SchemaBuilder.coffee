@@ -12,7 +12,7 @@ VariantModel           = require './VariantModel'
 
 SchemaBuilder = (db, user, S3) ->
 	game      = Game db
-	variantm  = VariantModel db.collection('variants'), S3
+	variantm  = VariantModel db, S3
 	variants = db.collection 'variants'
 
 	MongoObjectID = new GraphQLScalarType

@@ -11,6 +11,7 @@ UploadVariant = (view) ->
 	files = []
 
 	self.display = ({status = 'Select a file'} = {}) ->
+		console.log "Display kickoff"
 		view.display h '.root', [
 			h '.status', status
 			h 'input', type: 'file', onchange: (e) ->

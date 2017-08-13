@@ -21,9 +21,17 @@ Game = (db) ->
 
 	self.create = co.wrap (data) ->
 		try
-			data.variant = ObjectID data.variant
-			{insertedId} = yield games.insertOne data
-			return insertedId
+			console.log "ABOVE"
+			# Find a template for this game (starting units and season)
+			if template = yield games.findOne(variant: data.variant)
+				delete template._id
+				console.log "Template? ", template
+				console.log "Data: ", data
+				console.log "Type of id? ", typeof data.variant
+				Object.assign data, template
+				{insertedId} = yield games.insertOne data
+				console.log "After error?"
+				return insertedId
 		catch
 		# TODO: What's the best thing to do here?
 

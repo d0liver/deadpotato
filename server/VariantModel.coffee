@@ -8,8 +8,10 @@ AWS                                           = require 'aws-sdk'
 Q                                             = require 'q'
 path                                          = require 'path'
 
-VariantModel = (variants, S3) ->
+VariantModel = (db, S3) ->
 	self = {}
+	variants = db.collection 'variants'
+	games = db.collection 'games'
 
 	self.create = co.wrap (b64) ->
 		s3 = new AWS.S3
@@ -56,7 +58,25 @@ VariantModel = (variants, S3) ->
 
 		yield def.promise
 
-		{insertedId} = yield variants.insertOne variant_data
+		# Split out the stuff that's actually variant data and doesn't change
+		# from the stuff that should be part of the game state. Then insert
+		# both.
+		vdata =
+			name: variant_data.name
+			map_data: variant_data.map_data
+			slug: variant_data.slug
+			asset: variant_data.assets
+
+		{insertedId} = yield variants.insertOne vdata
+
+		game_data =
+			countries: variant_data.countries
+			season_year: variant_data.season_year
+			template: true
+			variant: insertedId
+			title: variant_data.game_name
+
+		{insertedId} = yield games.insertOne game_data
 
 		return insertedId
 
@@ -65,7 +85,6 @@ VariantModel = (variants, S3) ->
 	# Get a list of available variants
 	self.list = co.wrap ->
 		results = yield variants.find({}, {name: 1, _id: 1}).toArray()
-		console.log "RESULTS: ", results
 		return results
 
 	return self

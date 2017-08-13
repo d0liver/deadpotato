@@ -3,15 +3,15 @@ Q                        = require 'q'
 co                       = require 'co'
 h                        = require 'virtual-dom/h'
 
-gqlQuery                 = require './gqlQuery'
-{Gavel, Board}           = require '/home/david/gavel/index'
-Map                      = require './Map'
-MapController            = require './MapController'
-HorizLinesTextureBuilder = require './HorizLinesTextureBuilder'
-Icons                    = require './Icons'
-MapIcon                  = require '../lib/MapIcon'
-RegionTexture            = require './RegionTexture'
-Color                    = require '../lib/Color'
+gqlQuery                   = require './gqlQuery'
+{Gavel, Board, PathFinder} = require '/home/david/gavel/'
+Map                        = require './Map'
+MapController              = require './MapController'
+HorizLinesTextureBuilder   = require './HorizLinesTextureBuilder'
+Icons                      = require './Icons'
+MapIcon                    = require '../lib/MapIcon'
+RegionTexture              = require './RegionTexture'
+Color                      = require '../lib/Color'
 
 player_country = null
 
@@ -102,9 +102,10 @@ Game = (_id, view) ->
 		# creation in the controller (it's better to have the business logic
 		# for the regions there).
 		board = Board vdata
+		pfinder = PathFinder board
 		gavel = Gavel board
 		map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
-		map_controller = MapController board, map, vdata
+		map_controller = MapController board, pfinder, map, vdata
 
 	init()
 	return self

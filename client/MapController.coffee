@@ -2,10 +2,11 @@ $            = require 'jquery'
 {parseOrder} = require '/home/david/gavel'
 _            = require 'underscore'
 
+utils                                                = require '../lib/utils'
 {enums: {english, outcomes, orders: eorders, paths}} = require '/home/david/gavel/'
 {MOVE, SUPPORT, CONVOY, HOLD}                        = eorders
 
-MapController = (board, map, vdata) ->
+MapController = (board, pfinder, map, vdata) ->
 	self = {}
 	shift_down = false; ctrl_down = false
 
@@ -66,18 +67,22 @@ MapController = (board, map, vdata) ->
 				showOrders()
 		# Either support or convoy active[0] depending on if a modifier key has
 		# been pressed.
-		else if active.length is 2
+		else if active.length is 2 and (
+			(shift_down or ctrl_down)
+			# and board.canConvoy({actor: selected, to: active[1], utype})
+		) or board.canSupport({actor: selected, to: active[1], utype})
 			utype = board.region(selected).unit.type
 			country = board.region(selected).unit.country.name
 			dest_utype = utypeAbbrev board.region(active[0]).unit.type
-			if board.canSupport {actor: selected, to: active[1], utype}
-				order = "
-					#{country}: #{utypeAbbrev utype} #{selected} Supports
-					#{dest_utype} #{active[0]} - #{active[1]}
-				"
-				setOrder parseOrder order
-				map.select selected
-				showOrders()
+			otype = (shift_down or ctrl_down) and 'Convoys' or 'Supports'
+			order = "
+				#{country}: #{utypeAbbrev utype} #{selected} #{otype}
+				#{dest_utype} #{active[0]} - #{active[1]}
+			"
+			console.log "ORDER: ", order
+			setOrder parseOrder order
+			map.select selected
+			showOrders()
 
 	utypeAbbrev = (type) -> type[0]
 
@@ -98,6 +103,8 @@ MapController = (board, map, vdata) ->
 					map.arrow order.from, order.to
 				when SUPPORT
 					map.bind order.from, order.to, order.actor
+				when CONVOY
+					map.convoy order.from, order.to, order.actor
 
 	return self
 

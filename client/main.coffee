@@ -18,7 +18,7 @@ GameListController = require './GameListController'
 GameController     = require './GameController'
 
 $(document).ready () ->
-	$container = $ '.container'
+	$container = $ '.content'
 	# upload_variant = UploadVariant cnt, gam, map, rgn
 	router = Router()
 	view = View $container
