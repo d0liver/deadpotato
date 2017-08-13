@@ -1,6 +1,15 @@
-MapController = (engine, map, {countries, regions}) ->
+{parseOrder} = require '/home/david/gavel'
+
+{enums: {english, outcomes, orders: eorders, paths}} = require '/home/david/gavel/'
+{MOVE, SUPPORT, CONVOY, HOLD}                        = eorders
+
+MapController = (board, map, vdata) ->
 	self = {}
 
+	countries = vdata.countries; regions = vdata.map_data.regions
+	orders = []
+
+	console.log "Countries: ", countries, "Regions: ", regions
 	# Shallow copy all of the regions so that our modifications for the Map
 	# don't become global.
 	for rname,region of regions
@@ -36,34 +45,44 @@ MapController = (engine, map, {countries, regions}) ->
 
 		#  Select a unit to support. Okay to select a region that we don't own.
 		if active.length is 1 and
-		engine.regionUnit(selected) and
+		board.region(selected).unit? and
 		selected isnt active[0]
 			map.select selected
 		# Select where to support the unit to
-		else if active.length is 2 and engine.canSupport active[0], selected
-			engine.addSupport active[0], active[1], selected
+		else if active.length is 2 and board.canSupport active[0], selected
+			board.addSupport active[0], active[1], selected
 			map.clearActive()
 			showOrders()
 		# Move
-		else if active.length is 1 and engine.canMove active[0], selected
-			engine.addMove active[0], selected
-			map.clearActive()
-			showOrders()
+		else if active.length is 1
+			utype = board.region(active[0]).unit.type
+			country = board.region(active[0]).unit.country.name
+			if board.canMove {utype, from: active[0], to: selected}
+				order = "#{country}: #{utypeAbbrev utype} #{active[0]} - #{selected}"
+				orders.push order
+				map.clearActive()
+				showOrders()
 		# Initial selection
-		else if engine.playerOwns(selected) and active.length is 0
+		else if active.length is 0
 			map.select selected
 		else
 			map.clearActive()
 
-	showOrders = ->
-		map.clearArrows()
+	utypeAbbrev = (type) -> type[0]
 
-		for order in engine.orders()
-			console.log "ORDER: ", order
+	showOrders = ->
+		console.log "BOOP"
+		map.clearArrows()
+		console.log "BOBOOP"
+
+		for order in orders
+			order = parseOrder order
 			switch order.type
-				when 'MOVE' then map.arrow order.from, order.to
-				when 'SUPPORT'
-					map.bind order.from, order.to, order.supporter
+				when MOVE
+					console.log "Caught a move order"
+					map.arrow order.from, order.to
+				# when 'SUPPORT'
+				# 	map.bind order.from, order.to, order.supporter
 
 	return self
 

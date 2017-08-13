@@ -4,7 +4,7 @@ co                       = require 'co'
 h                        = require 'virtual-dom/h'
 
 gqlQuery                 = require './gqlQuery'
-Gavel                    = require '/home/david/gavel'
+{Gavel, Board}           = require '/home/david/gavel/index'
 Map                      = require './Map'
 MapController            = require './MapController'
 HorizLinesTextureBuilder = require './HorizLinesTextureBuilder'
@@ -59,7 +59,7 @@ Game = (_id, view) ->
 			stylizeTabs()
 			player_country = game.player_country
 			console.log "Player country: ", game.player_country
-			Object.assign vdata, JSON.parse vdata.map_data
+			vdata.map_data = JSON.parse vdata.map_data
 			mapSetup.call $('.root')[0], vdata
 
 	# Stylize the tabs representing the countries. This needs to be done here
@@ -101,9 +101,10 @@ Game = (_id, view) ->
 		# New Map constructor that only takes the regions - needed for map
 		# creation in the controller (it's better to have the business logic
 		# for the regions there).
-		gavel = Gavel vdata
+		board = Board vdata
+		gavel = Gavel board
 		map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
-		map_controller = MapController gavel, map, vdata
+		map_controller = MapController board, map, vdata
 
 	init()
 	return self
