@@ -9,7 +9,7 @@ Emitter                  = require '../lib/Emitter'
 Map = (ctx, MapIcon) ->
 	self = {}
 	# Used to scale up and down arrows and binds
-	scale = 6
+	scale = 4
 	emitter = Emitter()
 	active = []
 	regions = {}
@@ -84,7 +84,6 @@ Map = (ctx, MapIcon) ->
 	# Draw an arrow from one region1 to region2
 	self.arrow = (id1, id2) ->
 		triangle_side = 10
-		console.log "Region 1: ", regions[id1]
 		r1_coords = regions[id1].unit_pos
 		r2_coords = regions[id2].unit_pos
 		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = regions[id1].color.css('hex')

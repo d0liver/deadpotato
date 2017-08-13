@@ -1,5 +1,6 @@
 $            = require 'jquery'
 {parseOrder} = require '/home/david/gavel'
+_            = require 'underscore'
 
 {enums: {english, outcomes, orders: eorders, paths}} = require '/home/david/gavel/'
 {MOVE, SUPPORT, CONVOY, HOLD}                        = eorders
@@ -19,7 +20,6 @@ MapController = (board, map, vdata) ->
 	countries = vdata.countries; regions = vdata.map_data.regions
 	orders = []
 
-	console.log "Countries: ", countries, "Regions: ", regions
 	# Shallow copy all of the regions so that our modifications for the Map
 	# don't become global.
 	for rname,region of regions
@@ -52,7 +52,6 @@ MapController = (board, map, vdata) ->
 		# Get a list of the active ids.
 		active = map.active()
 
-		console.log "ACTIVE: ", active
 		# Initial selection
 		if active.length is 0
 			map.select selected
@@ -62,7 +61,7 @@ MapController = (board, map, vdata) ->
 			country = board.region(active[0]).unit.country.name
 			if board.canMove {utype, from: active[0], to: selected}
 				order = "#{country}: #{utypeAbbrev utype} #{active[0]} - #{selected}"
-				orders.push order
+				setOrder parseOrder order
 				map.select selected
 				showOrders()
 		# Either support or convoy active[0] depending on if a modifier key has
@@ -70,23 +69,30 @@ MapController = (board, map, vdata) ->
 		else if active.length is 2
 			utype = board.region(selected).unit.type
 			country = board.region(selected).unit.country.name
-			console.log "selected: ", selected, "to: ", active[0]
-			console.log "Can support? ", board.canSupport {actor: selected, to: active[1], utype}
 			dest_utype = utypeAbbrev board.region(active[0]).unit.type
 			if board.canSupport {actor: selected, to: active[1], utype}
-				order = "#{country}: #{utypeAbbrev utype} #{selected} Supports #{dest_utype} #{active[0]} - #{active[1]}"
-				console.log "Adding support order: ", order
-				orders.push order
+				order = "
+					#{country}: #{utypeAbbrev utype} #{selected} Supports
+					#{dest_utype} #{active[0]} - #{active[1]}
+				"
+				setOrder parseOrder order
 				map.select selected
 				showOrders()
 
 	utypeAbbrev = (type) -> type[0]
 
+	setOrder = (order) ->
+		old_order = orders.find (o) -> o.actor is order.actor
+		orders = orders.filter (o) ->
+			order.type is MOVE and o.from isnt old_order?.from or
+			o.actor isnt order.actor
+
+		orders.push order
+
 	showOrders = ->
 		map.clearArrows()
 
 		for order in orders
-			order = parseOrder order
 			switch order.type
 				when MOVE
 					map.arrow order.from, order.to
