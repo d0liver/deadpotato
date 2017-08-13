@@ -2,7 +2,6 @@ html
 	head
 		title Dead Potato
 		//FOSS CDN Hosted
-		link(rel="stylesheet" href="/master.css")
 		link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.8.0/jquery.modal.min.css")
 		link(rel="shortcut icon" href="/images/deadpotato.png")
 		link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css')
@@ -36,4 +35,5 @@ html
 					a.navigate.nav-link(href='/auth/google') Login
 				li
 					a.navigate.nav-link(href='/about') About
-		.container
+		.content
+			block content

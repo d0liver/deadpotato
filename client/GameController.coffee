@@ -1,41 +1,23 @@
 $                        = require 'jquery'
-h                        = require 'virtual-dom/h'
-gqlQuery                 = require './gqlQuery'
 Q                        = require 'q'
 co                       = require 'co'
+h                        = require 'virtual-dom/h'
+
+gqlQuery                 = require './gqlQuery'
 Gavel                    = require '/home/david/gavel'
-Icons                    = require './Icons'
 Map                      = require './Map'
 MapController            = require './MapController'
+HorizLinesTextureBuilder = require './HorizLinesTextureBuilder'
+Icons                    = require './Icons'
 MapIcon                  = require '../lib/MapIcon'
 RegionTexture            = require './RegionTexture'
-HorizLinesTextureBuilder = require './HorizLinesTextureBuilder'
+Color                    = require '../lib/Color'
 
 player_country = null
 
-showInteractions = (gam_info, color_map) ->
-	countries = gam_info.countries()
-
-	for country in countries
-		hex_color = color_map.map country.color
-		color = darken hex_color, 50
-		gradient_dark = darken hex_color, 70
-		text_color = darken hex_color, -20
-		$(".interactions ul").append \
-			"<li style='
-				border-color: #{color};
-				border-bottom: solid black 1px;
-				background: linear-gradient(90deg, #{rgbaCssFromHex(gradient_dark, 1)}, #{rgbaCssFromHex(color, 0.7)});
-			'>
-			<span style='color: white;' class='label'>
-				#{country.name}
-			</span>
-			<span class='interaction-icon'><i class='fa fa-envelope'></i></span>
-			<span class='interaction-icon'><i class='fa fa-flag'></i></span>
-			<span class='interaction-icon'><i class='fa fa-gears'></i></span>"
-
 Game = (_id, view) ->
 	self = {}
+	vdata = null
 	console.log "Initializing game..."
 
 	init = ->
@@ -73,11 +55,29 @@ Game = (_id, view) ->
 				}
 			""", {_id}
 			console.log "Game: ", game
-			variant_data = game.variant
+			vdata = game.variant
+			stylizeTabs()
 			player_country = game.player_country
 			console.log "Player country: ", game.player_country
-			Object.assign variant_data, JSON.parse variant_data.map_data
-			display variant_data
+			Object.assign vdata, JSON.parse vdata.map_data
+			mapSetup.call $('.root')[0], vdata
+
+	# Stylize the tabs representing the countries. This needs to be done here
+	# because I don't want to inline the styles in the html (nasty to build)
+	# and the colors are dynamic so we can't just represent them with SASS.
+	stylizeTabs = ->
+		$('.tab').each (i) ->
+			# These were generated on the other side by iterating them so the
+			# order will be the same.
+			country = vdata.countries[i]
+			# Start at 100% opaque and fade to 70%
+			color = Color(country.color.toLowerCase())
+			lighter = color.copy().darken(50).css()
+			console.log "LIGHTER: ", lighter
+			darker = color.copy().darken(70).opacity(0.7).css()
+			$(this).css
+				background: "linear-gradient(90deg,#{darker},#{lighter})"
+				'border-color': lighter
 
 	mapSetup = (variant_data) ->
 		$this = $(@)
@@ -88,41 +88,13 @@ Game = (_id, view) ->
 			arrow: getContext 'arrow'
 			icon: getContext 'icon'
 
-		console.log "Variant info: ", variant_data
+		console.log "Variant info: ", vdata
 		# New Map constructor that only takes the regions - needed for map
 		# creation in the controller (it's better to have the business logic
 		# for the regions there).
-		gavel = Gavel variant_data, player_country
-		map = Map ctx, MapIcon.bind null, variant_data.slug, variant_data.assets
-		map_controller = MapController gavel, map, variant_data
-
-	display = (variant_data) ->
-		S3_BUCKET = "https://s3.us-east-2.amazonaws.com/deadpotato/"
-		canvas_dims = width: 1150, height: 847
-
-		view.display h '.root', style: 'position: relative', [
-			h 'img#map-image', src: "#{S3_BUCKET}#{variant_data.slug}/map.bmp"
-			h 'canvas',
-				id: 'map'
-				width: canvas_dims.width
-				height: canvas_dims.height
-				style: 'position: absolute; top: 0; left: 0'
-			h 'canvas',
-				id: 'arrow'
-				style: 'position: absolute; top: 0; left: 0'
-				width: canvas_dims.width
-				height: canvas_dims.height
-			h 'canvas',
-				id: 'icon'
-				style: 'position: absolute; top: 0; left: 0'
-				width: canvas_dims.width
-				height: canvas_dims.height
-			h 'button.submit-orders',
-				id: 'submit-orders'
-			, 'Submit Orders'
-		]
-
-		mapSetup.call $('.root')[0], variant_data
+		gavel = Gavel vdata
+		map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
+		map_controller = MapController gavel, map, vdata
 
 	init()
 	return self

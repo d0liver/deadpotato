@@ -10,7 +10,7 @@ session    = require 'express-session'
 {Server}   = require 'http'
 
 # Mongo
-{MongoClient} = require 'mongodb'
+{MongoClient, ObjectID} = require 'mongodb'
 
 # Passport
 GoogleAuth = require './GoogleAuth'
@@ -50,7 +50,15 @@ GoogleAuth app, passport
 
 MongoClient.connect DB_URI, (err, db) ->
 
-	# All of the routing is done on the front end.
+	app.get '/game/:_id', (req, res, next) ->
+		co ->
+			_id = ObjectID req.params._id
+			game = yield db.collection('games').findOne({_id})
+			vid = game.variant
+			{countries, slug} = yield db.collection('variants').findOne _id: vid
+			res.render 'war-room', {countries, slug}
+
+	# Fallback is the index
 	app.get '/*', (req, res, next) ->
 		res.render 'index'
 

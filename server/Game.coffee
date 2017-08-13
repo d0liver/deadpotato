@@ -7,7 +7,8 @@ Game = (db) ->
 	variants = db.collection 'variants'
 
 	self.find = co.wrap (_id) ->
-		game = yield games.findOne({_id})
+		game = yield games.findOne {_id}
+		# console.log "Found variant? ", variant
 		# playerIsCurrentUser = ({pid}) -> pid is user?.id
 		# game.player_country = game.players.find(playerIsCurrentUser).country
 		return game

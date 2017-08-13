@@ -1,4 +1,6 @@
 @import 'reset'
+@import 'war-room'
+
 $default-font: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 
 $deep-blue: #1D3B55
@@ -14,6 +16,10 @@ $nav-active-border-color: #60903C
 
 *
 	box-sizing: border-box
+
+html
+    background-image: url(/images/free-paper-texture-6.jpg)
+    background-size: cover
 
 body
 	font-family: $default-font
@@ -165,7 +171,7 @@ $games-container-half: ($games-container-width - $info-margin-left - $info-margi
 		font-family: league-script
 		font-size: 30px
 		margin-left: 15px
-		line-height: 80px
+		line-height: 78px
 
 .container
 	margin: 0 auto
@@ -329,6 +335,7 @@ body
 	color: red
 
 .submit-orders
+	background-color: white !important
 	margin: 10px 0
 	width: 1150px
 

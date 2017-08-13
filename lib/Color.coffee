@@ -1,7 +1,8 @@
 # Can accept a color name like 'forest' or a hex value to initialize.
 Color = (str) ->
 	self = {}
-	rgba = null; value = null
+	# The color is represented internally as an rgba array
+	rgba = null
 	map =
 		black: "#000000"
 		blue: "#0000ff"
@@ -23,21 +24,25 @@ Color = (str) ->
 		yellow: "#ffff00"
 
 	init = ->
-		rgba = colorsToArray if str[0] is '#'
+		# Grab the rgba value from the hex representation (as an array)
+		rgba = hexToRgba if str[0] is '#'
 			str
 		else
 			# We assume that we were given the name of a color and run it through
 			# our map
 			map[str]
 
-	self.value = -> arrayToColors rgba
+		# If we're given a hex value then the opacity is assumed to be 1.
+		rgba.push 1
+
+	self.rgba = -> [rgba...]
 
 	self.name = ->
-		value = arrayToColors rgba
+		value = rgbaToHex rgba
 		for name,val of map when val is value
 			return name
 
-	colorsToArray = (css_hex) ->
+	hexToRgba = (css_hex) ->
 		colors = []
 		# Remove the leading '#'
 		css_hex = css_hex.slice 1
@@ -50,7 +55,7 @@ Color = (str) ->
 
 		colors
 
-	arrayToColors = (colors) ->
+	rgbaToHex = (colors) ->
 		result = ""
 
 		for color in colors
@@ -59,16 +64,25 @@ Color = (str) ->
 
 		"#"+result
 
-	rgbaCssFromHex = (css_hex, alpha) ->
-		colors = colorsToArray css_hex
-		"rgba("+colors.join(",")+","+alpha+")"
+	self.css = (fmt) ->
+		if !fmt? or fmt is 'rgba'
+			"rgba(#{rgba.join ','})"
+		else if fmt is 'hex'
+			rgbaToHex rgba
 
 	self.darken = (pct) ->
-		rgba = (darken c, pct for c in rgba)
+		# Element 4 is the opacity - we don't mess with that here. This is an
+		# actual color burn.
+		rgba[0..2] = (darken c, pct for c in rgba[0..2])
 		return self
 
-	self.copy = ->
-		return Color self.value()
+	self.opacity = (dec) ->
+		rgba[3] = dec
+		return self
+
+	# TODO: This should actually be fixed. We should be able to initialize with
+	# an rgba value.
+	self.copy = -> Color self.css 'hex'
 
 	# Darken an rgba component
 	darken = (color, pct) ->

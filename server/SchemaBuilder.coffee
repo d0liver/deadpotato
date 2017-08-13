@@ -34,7 +34,7 @@ SchemaBuilder = (db, user, S3) ->
 		Query:
 			findVariant: (obj, {slug}) -> variantm.find(slug)
 			listVariants: variantm.list
-			findGame: (obj, {_id}) -> game.find(_id)
+			findGame: (obj, {_id}) -> game.find _id
 			listGames: game.list
 			isAuthed: -> return Q user?
 

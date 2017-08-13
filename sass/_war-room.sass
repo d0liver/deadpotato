@@ -1,0 +1,57 @@
+// Styles for each of the countries' tabs
+
+.content
+	width: 1200px
+	margin: 0 auto
+
+.left
+	width: 315px
+	float: left
+
+.right
+    float: right
+    width: 1200-315
+
+.root
+    // Set a positioning context for the canvases
+    position: relative
+
+#map, #icon, #arrow
+    position: absolute
+    top: 0
+    left: 0
+    width: 1150px
+    height: 847px
+
+.tab
+	border-left: solid black 20px
+	border-bottom: solid black 1px !important
+	display: block
+	height: 5em
+
+.tab:first-child
+	border-top: solid black 1px !important
+
+.tab .light
+	box-sizing: border-box
+	border: solid black 3px
+	width: 30px
+	height: 30px
+	margin-top: 25px
+	margin-right: 25px
+	float: right
+	border-radius: 15px
+
+.tab .icon, .tab .chat
+	box-sizing: border-box
+	padding: 5px
+	float: right
+	height: 100%
+
+.tab-label
+	color: white
+	float: right
+	font-family: league-script
+	font-size: 30px
+	margin-right: 15px
+	line-height: 78px

@@ -4,7 +4,7 @@ HorizLinesTextureBuilder = ({color, byy = 4})->
 		canvas.width = width
 		canvas.height = height
 		ctx = canvas.getContext "2d"
-		ctx.strokeStyle = color.value()
+		ctx.strokeStyle = color.css('hex')
 
 		for i in [0...height] by byy
 			ctx.beginPath()

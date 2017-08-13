@@ -1,0 +1,16 @@
+extends index
+
+block content
+	.left
+		each country in countries
+			li.tab
+				span.tab-label=country.name
+
+	.right
+		.root
+			- var S3_BUCKET = "https://s3.us-east-2.amazonaws.com/deadpotato/"
+			img#map-image(src=S3_BUCKET+slug+"/map.bmp")
+			canvas#map
+			canvas#arrow
+			canvas#icon
+			button.submit-orders#submit-orders Submit Orders
