@@ -1,3 +1,4 @@
+$            = require 'jquery'
 {parseOrder} = require '/home/david/gavel'
 
 {enums: {english, outcomes, orders: eorders, paths}} = require '/home/david/gavel/'
@@ -5,6 +6,15 @@
 
 MapController = (board, map, vdata) ->
 	self = {}
+	shift_down = false; ctrl_down = false
+
+	$(document).on 'keydown', (e) ->
+		if e.which is 16
+			shift_down = true
+		else if e.which is 17
+			ctrl_down = true
+		else if e.which is 27
+			map.clearActive()
 
 	countries = vdata.countries; regions = vdata.map_data.regions
 	orders = []
@@ -39,50 +49,49 @@ MapController = (board, map, vdata) ->
 
 	map.on 'select', ->
 		selected = this.id
-		# Get a list of the active ids. Under normal rules there will never be
-		# more than two (in the case of convoy or support).
+		# Get a list of the active ids.
 		active = map.active()
 
-		#  Select a unit to support. Okay to select a region that we don't own.
-		if active.length is 1 and
-		board.region(selected).unit? and
-		selected isnt active[0]
+		console.log "ACTIVE: ", active
+		# Initial selection
+		if active.length is 0
 			map.select selected
-		# Select where to support the unit to
-		else if active.length is 2 and board.canSupport active[0], selected
-			board.addSupport active[0], active[1], selected
-			map.clearActive()
-			showOrders()
-		# Move
-		else if active.length is 1
+		# Select a destination region for the move
+		else if active.length is 1 and selected isnt active[0]
 			utype = board.region(active[0]).unit.type
 			country = board.region(active[0]).unit.country.name
 			if board.canMove {utype, from: active[0], to: selected}
 				order = "#{country}: #{utypeAbbrev utype} #{active[0]} - #{selected}"
 				orders.push order
-				map.clearActive()
+				map.select selected
 				showOrders()
-		# Initial selection
-		else if active.length is 0
-			map.select selected
-		else
-			map.clearActive()
+		# Either support or convoy active[0] depending on if a modifier key has
+		# been pressed.
+		else if active.length is 2
+			utype = board.region(selected).unit.type
+			country = board.region(selected).unit.country.name
+			console.log "selected: ", selected, "to: ", active[0]
+			console.log "Can support? ", board.canSupport {actor: selected, to: active[1], utype}
+			dest_utype = utypeAbbrev board.region(active[0]).unit.type
+			if board.canSupport {actor: selected, to: active[1], utype}
+				order = "#{country}: #{utypeAbbrev utype} #{selected} Supports #{dest_utype} #{active[0]} - #{active[1]}"
+				console.log "Adding support order: ", order
+				orders.push order
+				map.select selected
+				showOrders()
 
 	utypeAbbrev = (type) -> type[0]
 
 	showOrders = ->
-		console.log "BOOP"
 		map.clearArrows()
-		console.log "BOBOOP"
 
 		for order in orders
 			order = parseOrder order
 			switch order.type
 				when MOVE
-					console.log "Caught a move order"
 					map.arrow order.from, order.to
-				# when 'SUPPORT'
-				# 	map.bind order.from, order.to, order.supporter
+				when SUPPORT
+					map.bind order.from, order.to, order.actor
 
 	return self
 
