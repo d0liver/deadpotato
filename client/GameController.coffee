@@ -73,13 +73,12 @@ Game = (_id, view) ->
 			# Start at 100% opaque and fade to 70%
 			color = Color(country.color.toLowerCase())
 			lighter = color.copy().darken(50).css()
-			console.log "LIGHTER: ", lighter
 			darker = color.copy().darken(70).opacity(0.7).css()
 			$(this).css
 				background: "linear-gradient(90deg,#{darker},#{lighter})"
 				'border-color': lighter
 
-	mapSetup = (variant_data) ->
+	mapSetup = ->
 		$this = $(@)
 		getContext = (id) -> $this.find("##{id}")[0].getContext '2d'
 
@@ -87,6 +86,16 @@ Game = (_id, view) ->
 			map: getContext 'map'
 			arrow: getContext 'arrow'
 			icon: getContext 'icon'
+
+		# THIS MUST EXIST. The browser is not smart enough to use the CSS width
+		# and height for the canvas (it will scale it like an image rather than
+		# actually setting the canvas dimensions). So, if you want to size it
+		# with css (which seems reasonable) then you must dig up the CSS
+		# properties and manually set them on the canvas.
+		for k,c of ctx
+			width = parseInt $(c.canvas).css 'width'
+			height = parseInt $(c.canvas).css 'height'
+			c.canvas.width = width; c.canvas.height = height
 
 		console.log "Variant info: ", vdata
 		# New Map constructor that only takes the regions - needed for map

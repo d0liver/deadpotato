@@ -55,6 +55,7 @@ Map = (ctx, MapIcon) ->
 	self.refresh = (clear = true)->
 		clearCanvas ctx.map if clear
 		for id,region of regions when region.color?
+			console.log "Drawing region: ", region
 			# Draw the fill first
 			state =
 				if region.id in active then 'active'
@@ -86,7 +87,7 @@ Map = (ctx, MapIcon) ->
 		triangle_side = 10
 		r1_coords = regions[id1].unit_pos
 		r2_coords = regions[id2].unit_pos
-		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = regions[id1].color.value()
+		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = regions[id1].color.css('hex')
 
 		# First draw the line connecting the regions
 		ctx.arrow.beginPath()
@@ -121,7 +122,7 @@ Map = (ctx, MapIcon) ->
 		r2_coords = regions[id2].unit_pos
 		r3_coords = regions[id3].unit_pos
 		midpoint = [(r1_coords[0] + r2_coords[0])/2, (r1_coords[1] + r2_coords[1])/2]
-		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = regions[id3].color.value()
+		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = regions[id3].color.css('hex')
 
 		# Draw a line from to the midpoint
 		ctx.arrow.beginPath()

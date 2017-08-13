@@ -38,7 +38,7 @@ Color = (str) ->
 	self.rgba = -> [rgba...]
 
 	self.name = ->
-		value = rgbaToHex rgba
+		value = rgbToHex rgba[0..2]
 		for name,val of map when val is value
 			return name
 
@@ -55,7 +55,7 @@ Color = (str) ->
 
 		colors
 
-	rgbaToHex = (colors) ->
+	rgbToHex = (colors) ->
 		result = ""
 
 		for color in colors
@@ -68,7 +68,7 @@ Color = (str) ->
 		if !fmt? or fmt is 'rgba'
 			"rgba(#{rgba.join ','})"
 		else if fmt is 'hex'
-			rgbaToHex rgba
+			rgbToHex rgba[0..2]
 
 	self.darken = (pct) ->
 		# Element 4 is the opacity - we don't mess with that here. This is an
