@@ -65,7 +65,7 @@ VariantModel = (db, S3) ->
 			name: variant_data.name
 			map_data: variant_data.map_data
 			slug: variant_data.slug
-			asset: variant_data.assets
+			assets: variant_data.assets
 
 		{insertedId} = yield variants.insertOne vdata
 

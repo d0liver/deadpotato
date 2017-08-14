@@ -17,11 +17,11 @@ Games = (view) ->
 					players {
 						country
 					}
+					countries {
+						name
+					}
 					variant {
 						slug
-						countries {
-							name
-						}
 					}
 				}
 			}
@@ -58,7 +58,7 @@ Games = (view) ->
 							h 'strong.countries-list-title', 'Countries'
 							do ->
 								str = ""
-								for {name} in game.variant.countries
+								for {name} in game.countries
 									comma = ("," if str isnt '') ? ''
 									str = "#{str}#{comma} #{name}"
 
@@ -68,7 +68,7 @@ Games = (view) ->
 						h 'select', id: 'select-country', do ->
 							game.variant.players ?= []
 							player_countries = (player.country for player in game.variant.players)
-							for {name} in game.variant.countries when \
+							for {name} in game.countries when \
 							name not in player_countries
 								h 'option', name
 						h 'input#_id', type: 'hidden', value: game._id

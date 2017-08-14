@@ -6,7 +6,7 @@ utils                                                = require '../lib/utils'
 {enums: {english, outcomes, orders: eorders, paths}} = require '/home/david/gavel/'
 {MOVE, SUPPORT, CONVOY, HOLD}                        = eorders
 
-MapController = (board, pfinder, map, vdata) ->
+MapController = (board, pfinder, map, gdata, vdata) ->
 	self = {}
 	shift_down = false; ctrl_down = false
 
@@ -18,7 +18,7 @@ MapController = (board, pfinder, map, vdata) ->
 		else if e.which is 27
 			map.clearActive()
 
-	countries = vdata.countries; regions = vdata.map_data.regions
+	countries = gdata.countries; regions = vdata.map_data.regions
 	orders = []
 
 	# Shallow copy all of the regions so that our modifications for the Map

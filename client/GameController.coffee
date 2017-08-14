@@ -17,48 +17,48 @@ player_country = null
 
 Game = (_id, view) ->
 	self = {}
-	vdata = null
+	vdata = null; gdata = null
 	console.log "Initializing game..."
 
 	init = ->
 		co ->
-			{data: {findGame: game}} = yield Q gqlQuery """
+			{data: {findGame: gdata}} = yield Q gqlQuery """
 				query findGame($_id: ObjectID!) {
 					findGame(_id: $_id) {
 						_id
 						title
 						player_country
+						season_year
 						players {
 							pid
 							country
 						}
-						variant {
-							countries {
-								adjective
-								color
-								name
-								pattern
-								supply_centers
-								units {
-									type
-									region
-									coast
-								}
+						countries {
+							adjective
+							color
+							name
+							pattern
+							supply_centers
+							units {
+								type
+								region
+								coast
 							}
+						}
+						variant {
 							map_data
 							name
-							season_year
 							slug
 							assets
 						}
 					}
 				}
 			""", {_id}
-			console.log "Game: ", game
-			vdata = game.variant
+			console.log "Game: ", gdata
+			vdata = gdata.variant
 			stylizeTabs()
-			player_country = game.player_country
-			console.log "Player country: ", game.player_country
+			player_country = gdata.player_country
+			console.log "Player country: ", gdata.player_country
 			vdata.map_data = JSON.parse vdata.map_data
 			mapSetup.call $('.root')[0], vdata
 
@@ -69,7 +69,7 @@ Game = (_id, view) ->
 		$('.tab').each (i) ->
 			# These were generated on the other side by iterating them so the
 			# order will be the same.
-			country = vdata.countries[i]
+			country = gdata.countries[i]
 			# Start at 100% opaque and fade to 70%
 			color = Color(country.color.toLowerCase())
 			lighter = color.copy().darken(50).css()
@@ -101,11 +101,11 @@ Game = (_id, view) ->
 		# New Map constructor that only takes the regions - needed for map
 		# creation in the controller (it's better to have the business logic
 		# for the regions there).
-		board = Board vdata
+		board = Board gdata, vdata
 		pfinder = PathFinder board
 		gavel = Gavel board
 		map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
-		map_controller = MapController board, pfinder, map, vdata
+		map_controller = MapController board, pfinder, map, gdata, vdata
 
 	init()
 	return self

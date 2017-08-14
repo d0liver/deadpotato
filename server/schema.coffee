@@ -19,10 +19,8 @@ module.exports = """
 
 	type Variant {
 		_id: ObjectID!
-		countries: [Country]
 		name: String!
 		map_data: String!
-		season_year: String!
 		slug: String!
 		assets: [String]!
 	}
@@ -43,6 +41,8 @@ module.exports = """
 		variant: Variant
 		player_country: String
 		players: [Player]
+		season_year: String!
+		countries: [Country]
 	}
 
 	type Query {

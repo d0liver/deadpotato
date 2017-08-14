@@ -7,6 +7,7 @@ Game = (db) ->
 	variants = db.collection 'variants'
 
 	self.find = co.wrap (_id) ->
+		console.log "FIND GAME WITH ID: ", _id
 		game = yield games.findOne {_id}
 		# console.log "Found variant? ", variant
 		# playerIsCurrentUser = ({pid}) -> pid is user?.id
@@ -21,22 +22,18 @@ Game = (db) ->
 
 	self.create = co.wrap (data) ->
 		try
-			console.log "ABOVE"
 			# Find a template for this game (starting units and season)
 			if template = yield games.findOne(variant: data.variant)
 				delete template._id
-				console.log "Template? ", template
-				console.log "Data: ", data
-				console.log "Type of id? ", typeof data.variant
-				Object.assign data, template
+				data = Object.assign {}, template, data
+				data.template = false
 				{insertedId} = yield games.insertOne data
-				console.log "After error?"
 				return insertedId
 		catch
 		# TODO: What's the best thing to do here?
 
 	self.list = co.wrap ->
-		games = yield games.find().toArray()
+		games = yield games.find(template: false).toArray()
 		# for game in games
 		# 	game.variant = yield variants.findOne _id: game.variant
 		return games

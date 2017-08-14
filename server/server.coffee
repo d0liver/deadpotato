@@ -55,8 +55,8 @@ MongoClient.connect DB_URI, (err, db) ->
 			_id = ObjectID req.params._id
 			game = yield db.collection('games').findOne({_id})
 			vid = game.variant
-			{countries, slug} = yield db.collection('variants').findOne _id: vid
-			res.render 'war-room', {countries, slug}
+			{slug} = yield db.collection('variants').findOne _id: vid
+			res.render 'war-room', countries: game.countries, slug: slug
 
 	# Fallback is the index
 	app.get '/*', (req, res, next) ->

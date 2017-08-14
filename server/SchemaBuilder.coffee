@@ -41,7 +41,6 @@ SchemaBuilder = (db, user, S3) ->
 		Game:
 			variant: ({variant: _id}) ->
 				console.log "Variant ID: ", _id
-				_id = ObjectID _id
 				co ->
 					result = yield variants.findOne {_id}
 

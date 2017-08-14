@@ -1,11 +1,12 @@
 VariantUtils = require '../lib/VariantUtils'
 
-Icons = (ctx, variant_data) ->
+Icons = (ctx, gdata, variant_data) ->
 	vutils = VariantUtils variant_data
 	# An array of canvases with the icons drawn on them
 	icons = []
 
-	{countries, regions} = variant_data
+	regions = variant_data.regions
+	countries = gdata.countries
 
 	for country in variant_data.countries
 		bounds =
