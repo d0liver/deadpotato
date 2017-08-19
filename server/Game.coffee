@@ -1,3 +1,4 @@
+{Gavel, Board, PathFinder} = require '/home/david/gavel/'
 {ObjectID} = require 'mongodb'
 co         = require 'co'
 
@@ -7,7 +8,6 @@ Game = (db) ->
 	variants = db.collection 'variants'
 
 	self.find = co.wrap (_id) ->
-		console.log "FIND GAME WITH ID: ", _id
 		game = yield games.findOne {_id}
 		# console.log "Found variant? ", variant
 		# playerIsCurrentUser = ({pid}) -> pid is user?.id
@@ -37,6 +37,30 @@ Game = (db) ->
 		# for game in games
 		# 	game.variant = yield variants.findOne _id: game.variant
 		return games
+
+	# Do the things necessary to roll the game to the next phase
+	self.roll = co.wrap (_id) ->
+		gdata = yield games.findOne {_id}
+
+		vdata = yield variants.findOne {_id: gdata.variant}
+		vdata.map_data = JSON.parse vdata.map_data
+		
+		board   = Board gdata, vdata
+		pfinder = PathFinder board
+		gavel  = Gavel board, pfinder
+
+		[phase, year] = gdata.season_year.split /\s+/
+		gavel.setPhase phase; gavel.setYear year
+		# Resolve and apply the result to the board
+		gavel.apply gdata.orders
+
+		# Update the game state. Clear out the orders and then update with the
+		# game state after the board updates it.
+		gdata.orders = []
+		console.log "SAVE GDATA AFter: ", JSON.stringify gdata, null, 4
+		yield games.updateOne {_id}, gdata
+
+		return true
 
 	return self
 

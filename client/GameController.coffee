@@ -17,7 +17,7 @@ player_country = null
 
 Game = (_id, view) ->
 	self = {}
-	vdata = null; gdata = null
+	vdata = null; gdata = null; map_controller = null
 	console.log "Initializing game..."
 
 	init = ->
@@ -62,6 +62,15 @@ Game = (_id, view) ->
 			vdata.map_data = JSON.parse vdata.map_data
 			mapSetup.call $('.root')[0], vdata
 
+			$('#submit-orders').click ->
+				console.log "Submit orders: ", map_controller.orders()
+				gqlQuery """
+					mutation submitOrders($_id: ObjectID, $orders: [String]) {
+						submitOrders(_id: $_id, orders: $orders)
+					}
+				""", orders: map_controller.orders(), _id: gdata._id
+
+
 	# Stylize the tabs representing the countries. This needs to be done here
 	# because I don't want to inline the styles in the html (nasty to build)
 	# and the colors are dynamic so we can't just represent them with SASS.
@@ -93,8 +102,10 @@ Game = (_id, view) ->
 		# with css (which seems reasonable) then you must dig up the CSS
 		# properties and manually set them on the canvas.
 		for k,c of ctx
-			width = parseInt $(c.canvas).css 'width'
-			height = parseInt $(c.canvas).css 'height'
+			$map_image = $ '#map-image'
+			width = $map_image.innerWidth()
+			height = $map_image.innerHeight()
+			$(c.canvas).css 'width', width; $(c.canvas).css 'height', height
 			c.canvas.width = width; c.canvas.height = height
 
 		console.log "Variant info: ", vdata

@@ -35,13 +35,12 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 	# up to this module to determine _what_ to display and hand that off to the
 	# map in a generic way. We are guaranteed by Map's API that adding a region
 	# that already exists will overwrite the previous one.
-	for country in countries
-		for center in country.supply_centers
-			region = regions[center]
-			regions[center].color = country.color
-
-		for unit in country.units
-			regions[unit.region].icon = unit.type
+	for {name, units, color, supply_centers} in countries
+		for unit in units
+			region = regions[unit.region]
+			region.fill = unit.region in supply_centers
+			region.icon = unit.type
+			region.color = color
 
 	# Once modifications have been done (above) we add all regions.
 	map.addRegion n,region for n,region of regions
@@ -62,7 +61,7 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 			country = board.region(active[0]).unit.country.name
 			if board.canMove {utype, from: active[0], to: selected}
 				order = "#{country}: #{utypeAbbrev utype} #{active[0]} - #{selected}"
-				setOrder parseOrder order
+				setOrder order
 				map.select selected
 				showOrders()
 		# Either support or convoy active[0] depending on if a modifier key has
@@ -79,14 +78,14 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 				#{country}: #{utypeAbbrev utype} #{selected} #{otype}
 				#{dest_utype} #{active[0]} - #{active[1]}
 			"
-			console.log "ORDER: ", order
-			setOrder parseOrder order
+			setOrder order
 			map.select selected
 			showOrders()
 
 	utypeAbbrev = (type) -> type[0]
 
 	setOrder = (order) ->
+		order = Object.assign {}, text: order, parseOrder(order)
 		old_order = orders.find (o) -> o.actor is order.actor
 		orders = orders.filter (o) ->
 			order.type is MOVE and o.from isnt old_order?.from or
@@ -105,6 +104,9 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 					map.bind order.from, order.to, order.actor
 				when CONVOY
 					map.convoy order.from, order.to, order.actor
+
+	# TODO: Good design decisions happening here?
+	self.orders = -> utils.copy orders.map (o) -> o.text
 
 	return self
 

@@ -54,7 +54,7 @@ Map = (ctx, MapIcon) ->
 	# skip the initial canvas clear (i.e. display instead of refresh).
 	self.refresh = (clear = true)->
 		clearCanvas ctx.map if clear
-		for id,region of regions when region.color?
+		for id,region of regions when region.icon?
 			# Draw the fill first
 			state =
 				if region.id in active then 'active'
@@ -64,12 +64,13 @@ Map = (ctx, MapIcon) ->
 		return self
 
 	self.showRegion = (region, {state = 'normal', refresh = true}) ->
-		unless region.texture[state]
-			{scanlines, color} = region
-			tb = HorizLinesTextureBuilder color: state_colors[state] color
-			region.texture[state] = RegionTexture scanlines, tb
+		if region.fill
+			unless region.texture[state]?
+				{scanlines, color} = region
+				tb = HorizLinesTextureBuilder color: state_colors[state] color
+				region.texture[state] = RegionTexture scanlines, tb
 
-		region.texture[state].draw ctx.map
+			region.texture[state].draw ctx.map
 		self.showIcon region
 
 	self.showIcon = co.wrap (region) ->

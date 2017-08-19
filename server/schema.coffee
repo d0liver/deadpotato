@@ -57,5 +57,6 @@ module.exports = """
 		createVariant(variant: String!): ObjectID
 		createGame(game: GameArg): ObjectID
 		joinGame(country: String!, game: ObjectID!): String
+		submitOrders(_id: ObjectID, orders: [String]): ObjectID
 	}
 """
