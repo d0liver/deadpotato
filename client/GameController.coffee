@@ -105,8 +105,9 @@ Game = (_id, view) ->
 			$map_image = $ '#map-image'
 			width = $map_image.innerWidth()
 			height = $map_image.innerHeight()
-			$(c.canvas).css 'width', width; $(c.canvas).css 'height', height
+			$(c.canvas).css {width, height}
 			c.canvas.width = width; c.canvas.height = height
+			$('.root').css {width}
 
 		console.log "Variant info: ", vdata
 		# New Map constructor that only takes the regions - needed for map

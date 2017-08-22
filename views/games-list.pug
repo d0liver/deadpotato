@@ -1,0 +1,24 @@
+extends index
+
+block content
+	ul.games-list
+		each game in games
+			li
+				h2.games-list-title=title
+				img.map(src=game.map_src)
+				p
+					strong.countries-list-title Countries
+					p
+						- var str = ''
+						each country in game.countries
+							if str == ''
+								- str = country
+							else
+								- str = str + ', ' + country
+						=str
+				strong.countries-list-title Select Country
+				select#select-country
+					each country in game.available_countries
+						option=country
+
+				a.join-game(href='/game/'+game._id) Join Game
