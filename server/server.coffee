@@ -52,6 +52,10 @@ GoogleAuth app, passport
 
 MongoClient.connect DB_URI, (err, db) ->
 
+	if err
+		console.log "Unable to connect to the database. Is it running?"
+		throw err
+
 	app.get '/game/:_id', (req, res, next) ->
 		co ->
 			_id = ObjectID req.params._id
