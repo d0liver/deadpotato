@@ -15,9 +15,11 @@ View          = require './View'
 # Templates
 CreateGame         = require './CreateGame'
 GameListController = require './GameListController'
-GameController     = require './GameController'
+WarRoomController  = require './WarRoomController'
+mapWidgetSetup     = require './mapWidgetSetup'
 
 $(document).ready () ->
+
 	$container = $ '.content'
 	# upload_variant = UploadVariant cnt, gam, map, rgn
 	router = Router()
@@ -30,9 +32,12 @@ $(document).ready () ->
 		GameListController view
 
 	router.get '/game/:_id', ({_id}) ->
-		GameController _id, view
+		mapWidgetSetup()
+		WarRoomController _id, view
 
 	router.get '/upload-variant', ->
 		UploadVariant(view).display()
+
+	router.get '/map-test', ->
 
 	router.route()

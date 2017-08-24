@@ -40,7 +40,7 @@ gulp.task 'dev-bundle', ->
 	b = browserify opts
 		.transform require 'coffeeify', {bare: true, header: false}
 		.transform require 'jadeify'
-		.transform "babelify", presets: ["es2015"]
+		# .transform "babelify", presets: ["es2015"]
 		.transform require 'jadeify'
 		.on 'log', log
 		.on 'update', bundle
