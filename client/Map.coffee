@@ -123,7 +123,7 @@ Map = (ctx, MapIcon) ->
 	self.convoy = (id1, id2) ->
 		r1_coords = regions[id1].unit_pos
 		r2_coords = regions[id2].unit_pos
-		color = regions[id2].color ? '#000000'
+		color = regions[id2].color.css() ? '#000000'
 		# Dimensions in pixels. TODO: Relate this to the scale
 		width = scale*3
 		radius =0.8*width/2
@@ -158,6 +158,7 @@ Map = (ctx, MapIcon) ->
 			(r1_coords[0] + r2_coords[0] - width)/2
 			(r1_coords[1] + r2_coords[1] - width)/2
 		)
+		ctx.arrow.strokeStyle = color
 		ctx.arrow.beginPath()
 		ctx.arrow.moveTo r1_coords[0], r1_coords[1]
 		ctx.arrow.lineTo r2_coords[0], r2_coords[1]

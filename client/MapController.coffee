@@ -59,17 +59,13 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 		else if active.length is 1 and selected isnt active[0]
 			utype = board.region(active[0]).unit.type
 			country = board.region(active[0]).unit.country.name
-			if board.canMove {utype, from: active[0], to: selected}
-				order = "#{country}: #{utypeAbbrev utype} #{active[0]} - #{selected}"
-				setOrder order
-				map.select selected
-				showOrders()
+			order = "#{country}: #{utypeAbbrev utype} #{active[0]} - #{selected}"
+			setOrder order
+			map.select selected
+			showOrders()
 		# Either support or convoy active[0] depending on if a modifier key has
 		# been pressed.
-		else if active.length is 2 and (
-			(shift_down or ctrl_down)
-			# and board.canConvoy({actor: selected, to: active[1], utype})
-		) or board.canSupport({actor: selected, to: active[1], utype})
+		else if active.length > 1
 			utype = board.region(selected).unit.type
 			country = board.region(selected).unit.country.name
 			dest_utype = utypeAbbrev board.region(active[0]).unit.type
@@ -96,6 +92,8 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 	showOrders = ->
 		map.clearArrows()
 
+		console.log "ORDERS: ", orders
+
 		for order in orders
 			switch order.type
 				when MOVE
@@ -103,7 +101,40 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 				when SUPPORT
 					map.bind order.from, order.to, order.actor
 
+		# Keep a list of the convoy segments that have already been drawn to
+		# keep from overdrawing.
+		shown_segs = []
+		cunits = for order in orders when order.type is CONVOY
+			board.region(order.actor).unit
 
+		for order in orders when order.type is MOVE
+			path = pfinder.convoyPath order, cunits
+
+			for branch in path
+				# Draw the first segment from the source region to the first
+				# convoying fleet
+				map.convoy order.from, branch[0].region
+
+				for i in [0...branch.length]
+					unit = branch[i]; next_unit = branch[i+1]
+					if next_unit?
+						map.convoy unit.region, next_unit.region
+
+				console.log branch[branch.length - 1].region, order.to
+				# Draw the last convoy segment to the destination
+				# map.arrow 
+				map.arrow branch[branch.length - 1].region, order.to
+
+			# Get a list of the path regions. We don't want to draw any of
+			# those with the regular triangle stuff because they can be drawn
+			# sensibly by the logic above.
+			pregions = _.flatten(path).map (u) -> u.region
+
+			for cunit in cunits when cunit.region not in pregions
+				map.convoy order.from, cunit.region
+				map.arrow cunit.region, order.to
+
+			console.log "PATH: ", path
 
 	# TODO: Good design decisions happening here?
 	self.orders = -> utils.copy orders.map (o) -> o.text
