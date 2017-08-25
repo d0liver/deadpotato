@@ -102,8 +102,8 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 					map.arrow order.from, order.to
 				when SUPPORT
 					map.bind order.from, order.to, order.actor
-				when CONVOY
-					map.convoy order.from, order.to, order.actor
+
+
 
 	# TODO: Good design decisions happening here?
 	self.orders = -> utils.copy orders.map (o) -> o.text

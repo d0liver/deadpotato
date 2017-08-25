@@ -26,7 +26,7 @@ Games = (view) ->
 				}
 			}
 		"""
-		console.log "FETCHED GAMES: ", games
+
 		{data: {isAuthed: authed}} = yield gqlQuery "
 			{
 				isAuthed

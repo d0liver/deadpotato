@@ -17,7 +17,7 @@ Map = (ctx, MapIcon) ->
 	# state
 	state_colors =
 		normal: (color) -> color
-		active: (color) -> color.copy().darken 70
+		active: (color) -> color.copy().darken 30
 
 	self.on = emitter.on
 
@@ -64,10 +64,15 @@ Map = (ctx, MapIcon) ->
 		return self
 
 	self.showRegion = (region, {state = 'normal', refresh = true}) ->
-		if region.fill
+		if region.fill or region.id in active
 			unless region.texture[state]?
 				{scanlines, color} = region
-				tb = HorizLinesTextureBuilder color: state_colors[state] color
+				tb = if state is 'normal'
+					HorizLinesTextureBuilder color: state_colors[state] color
+				else if state is 'active'
+					# Fill completely for the active selection
+					HorizLinesTextureBuilder color: state_colors[state](color), byy: 1
+
 				region.texture[state] = RegionTexture scanlines, tb
 
 			region.texture[state].draw ctx.map
@@ -114,6 +119,49 @@ Map = (ctx, MapIcon) ->
 		ctx.arrow.setTransform 1, 0, 0, 1, 0, 0
 
 		return self
+
+	self.convoy = (id1, id2) ->
+		r1_coords = regions[id1].unit_pos
+		r2_coords = regions[id2].unit_pos
+		color = regions[id2].color ? '#000000'
+		# Dimensions in pixels. TODO: Relate this to the scale
+		width = scale*3
+		radius =0.8*width/2
+
+		imgctx = document.createElement('canvas').getContext '2d'
+		imgctx.canvas.width = width; imgctx.canvas.height = width
+		imgctx.globalAlpha = 0.87
+		# Border circle
+		imgctx.strokeStyle = color
+		imgctx.fillStyle = '#ffffff'
+		imgctx.lineWidth = .2*width
+		imgctx.beginPath()
+		imgctx.arc width/2, width/2, radius, 0, 2* Math.PI
+		imgctx.closePath()
+		# Border for the circle
+		imgctx.stroke()
+
+		# Fill for the circle
+		imgctx.fill()
+
+		# Draw the 'c' in the center
+		font_size = radius*2*0.9
+		# TODO: Relate this to the scale
+		imgctx.fillStyle = color
+		imgctx.textBaseline = 'middle'
+		imgctx.font = "bold #{font_size}px serif"
+
+		text = imgctx.measureText 'C'
+		imgctx.fillText 'C', (width - text.width)/2, width/2
+		ctx.icon.drawImage(
+			imgctx.canvas
+			(r1_coords[0] + r2_coords[0] - width)/2
+			(r1_coords[1] + r2_coords[1] - width)/2
+		)
+		ctx.arrow.beginPath()
+		ctx.arrow.moveTo r1_coords[0], r1_coords[1]
+		ctx.arrow.lineTo r2_coords[0], r2_coords[1]
+		ctx.arrow.stroke()
 
 	# Draw a line from a unit to intersect with the line of another arrow. Used
 	# to indicate support
