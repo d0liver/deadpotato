@@ -64,15 +64,21 @@ WarRoomController = (_id, view) ->
 			# 	""", orders: map_controller.orders(), _id: gdata._id
 
 
-			# Stylize the tabs representing the countries. This needs to be done here
-			# because I don't want to inline the styles in the html (nasty to build)
-			# and the colors are dynamic so we can't just represent them with SASS.
+			# Stylize the tabs representing the countries. This needs to be
+			# done here because I don't want to inline the styles in the html
+			# (nasty to build) and the colors are dynamic so we can't just
+			# represent them with SASS.
 			$('.tab').each (i) ->
-				# These were generated on the other side by iterating them so the
-				# order will be the same.
-				country = gdata.countries[i]
+				# These were generated on the other side by iterating them so
+				# the order will be the same except that we also have a news
+				# tab that comes first, hence i-1
+				country = gdata.countries[i-1]
 				# Start at 100% opaque and fade to 70%
-				color = Color(country.color.toLowerCase())
+				if country?.color?
+					color = Color(country.color.toLowerCase())
+				else
+					color = Color 'black'
+
 				lighter = color.copy().darken(50).css()
 				darker = color.copy().darken(70).opacity(0.7).css()
 				$(this).css
