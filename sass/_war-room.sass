@@ -15,9 +15,14 @@
 
 .root
 	// Set a positioning context for the canvases
-	position: relative
+	border-radius: 5px
+	border: solid #aaa 1px
 	margin: 20px auto
+	padding: 8px
+	position: relative
 	text-align: center
+	box-sizing: content-box
+	background-color: white
 
 canvas
 	position: absolute
@@ -58,6 +63,7 @@ canvas
 	line-height: 78px
 
 .submit-orders
+	display: block
 	background-color: white !important
 	margin: 10px auto
 	width: calc(100% - 40px)

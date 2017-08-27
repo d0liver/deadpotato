@@ -18,8 +18,14 @@ module.exports = ->
 			'
 			vdata = this.options.vdata; gdata = this.options.gdata
 
-			this.element
+			header = $ '<h1>'
+			header.html gdata.season_year
+			this.element.append header
 			this.element.addClass 'root'
+
+			wrapper = $ '<div>'
+			wrapper.css position: 'relative'
+			this.element.append wrapper
 
 			map   = document.createElement 'canvas'
 			arrow = document.createElement 'canvas'
@@ -34,12 +40,13 @@ module.exports = ->
 			map_img.src = "#{S3_BUCKET}#{vdata.slug}/map.bmp"
 			$map_img    = $ map_img
 
-			this.element.append map_img
+			wrapper.append map_img
 
 			$map_img.on 'load', =>
 				width = $map_img.innerWidth(); height = $map_img.innerHeight()
 
-				this.element.css {width}
+				wrapper.css {width}
+				this.element.css width: width
 
 				# THIS MUST EXIST. The browser is not smart enough to use the CSS width
 				# and height for the canvas (it will scale it like an image rather than
@@ -49,7 +56,7 @@ module.exports = ->
 				for c in Object.values ctx
 					$(c.canvas).css {width, height}
 					c.canvas.width = width; c.canvas.height = height
-					this.element.append c.canvas
+					wrapper.append c.canvas
 
 				# New Map constructor that only takes the regions - needed for map
 				# creation in the controller (it's better to have the business logic
