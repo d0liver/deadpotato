@@ -18,7 +18,7 @@ session    = require 'express-session'
 GoogleAuth = require './GoogleAuth'
 
 # GraphQL
-{graphqlExpress} = require 'graphql-server-express'
+{graphqlExpress, graphiqlExpress} = require 'apollo-server-express'
 SchemaBuilder    = require './SchemaBuilder'
 
 {UserException} = require '../lib/Exceptions'
@@ -56,42 +56,17 @@ MongoClient.connect DB_URI, (err, db) ->
 		console.log "Unable to connect to the database. Is it running?"
 		throw err
 
-	app.get '/game/:_id', (req, res, next) ->
-		co ->
-			_id = ObjectID req.params._id
-			game = yield db.collection('games').findOne({_id})
-			vid = game.variant
-			{slug} = yield db.collection('variants').findOne _id: vid
-			res.render 'war-room', countries: game.countries, slug: slug
-
-	app.get '/games', (req, res, next) ->
-		co ->
-			S3_BUCKET = "https://s3.us-east-2.amazonaws.com/deadpotato/"
-			games = yield db.collection('games').find(template: false).toArray()
-			players = []
-			# We go through and attach the available countries to each game.
-			# This feels somewhat hacky - like maybe it should be in the view
-			# but this is much easier.
-			for game in games
-				pcountries = (player.country for player in players)
-				gcountries = (country.name for country in game.countries)
-				game.available_countries = _.difference gcountries, pcountries
-				game.countries = gcountries
-				{slug} = yield db.collection('variants').findOne _id: game.variant
-				game.map_src = "#{S3_BUCKET}#{slug}/map.bmp"
-
-			res.render 'games-list', {games}
-		.catch (err) ->
-			console.log "An error occurred while fetching the game list.", err
-
-	# Fallback is the index
-	app.get '/*', (req, res, next) ->
-		res.render 'index'
-
 	app.use '/graphql', graphqlExpress (req) ->
 		obj = schema: SchemaBuilder db, req.user
 
 		return obj
+
+	app.use '/graphiql', graphiqlExpress
+	  endpointURL: '/graphql'
+
+	# Fallback is the index
+	app.get '/*', (req, res, next) ->
+		res.render 'index'
 
 	ser_deser = (user, done) -> done null, user
 	passport.serializeUser ser_deser

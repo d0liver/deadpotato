@@ -4,3 +4,4 @@ exports.VariantValidateException = class VariantValidateException extends UserEx
 exports.S3UploadException        = class S3UploadException extends UserException
 exports.ResolverException        = class ResolverException extends UserException
 exports.EngineException          = class EngineException extends UserException
+exports.GraphQLException         = class GraphQLException extends UserException

@@ -25,12 +25,16 @@ module.exports = """
 		assets: [String]!
 	}
 
+	type VariantMutations {
+		create(variant: String!): ObjectID
+	}
+
 	type Player {
 		pid: ID
 		country: String
 	}
 
-	input GameArg {
+	input GameInput {
 		title: String!
 		variant: ObjectID!
 	}
@@ -45,18 +49,24 @@ module.exports = """
 		countries: [Country]
 	}
 
+	type GameMutations {
+		create(variant: String!): ObjectID
+		join(country: String!, game: ObjectID!): ObjectID
+	}
+
+	type OrdersMutations {
+		submit(_id: ObjectID, orders: [String]): String
+	}
+
 	type Query {
-		findVariant(slug: String!): Variant
-		listVariants: [Variant]
-		findGame(_id: ObjectID!): Game
-		listGames: [Game]
+		variants(slug: String!): [Variant]
+		games(_id: ObjectID): [Game]
 		isAuthed: Boolean
+		s3Bucket: String
 	}
 
 	type Mutation {
-		createVariant(variant: String!): ObjectID
-		createGame(game: GameArg): ObjectID
-		joinGame(country: String!, game: ObjectID!): String
-		submitOrders(_id: ObjectID, orders: [String]): ObjectID
+		game: GameMutations
+		variant(variant: String!): VariantMutations
 	}
 """

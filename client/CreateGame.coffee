@@ -10,7 +10,7 @@ CreateGame = (view)->
 		co ->
 			{data: {listVariants: variants}} = yield gqlQuery """
 				{
-					listVariants {
+					variants {
 						_id
 						name
 					}
@@ -25,8 +25,10 @@ CreateGame = (view)->
 
 	createGame = co.wrap (game) ->
 		{data: createGame: _id} = yield gqlQuery """
-			mutation createGame($game: GameArg) {
-				createGame(game: $game)
+			mutation game($game: GameInput) {
+				game {
+					create(game: $game)
+				}
 			}
 		""", {game}
 		window.location.replace "/game/#{_id}"

@@ -4,6 +4,7 @@
   "description": "Deadpotato online gaming web app.",
   "main": "server.js",
   "dependencies": {
+    "apollo-server-express": "^1.1.2",
     "aws-sdk": "^2.45.0",
     "babelify": "^7.3.0",
     "body-parser": "^1.15.0",
@@ -43,6 +44,7 @@
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-beta.12",
+    "pugify": "^2.0.1",
     "q": "^1.4.1",
     "slug": "^0.9.1",
     "through2": "^2.0.3",

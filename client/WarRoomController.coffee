@@ -9,49 +9,22 @@ Icons                      = require './Icons'
 RegionTexture              = require './RegionTexture'
 Color                      = require '../lib/Color'
 
+{GAME_Q} = require './gqlQueries'
+
+template = require '../views/war-room.pug'
+
 player_country = null
 
-WarRoomController = (_id, view) ->
+WarRoomController = (_id, $el) ->
 	self = {}
 
 	init = ->
 		co ->
-			{data: {findGame: gdata}} = yield Q gqlQuery """
-				query findGame($_id: ObjectID!) {
-					findGame(_id: $_id) {
-						_id
-						title
-						player_country
-						season_year
-						players {
-							pid
-							country
-						}
-						countries {
-							adjective
-							color
-							name
-							pattern
-							supply_centers
-							units {
-								type
-								region
-								coast
-							}
-						}
-						variant {
-							map_data
-							name
-							slug
-							assets
-						}
-					}
-				}
-			""", {_id}
-			console.log "Game: ", gdata
+			{games: [gdata]} = yield gqlQuery GAME_Q, {_id}
 			vdata = gdata.variant
 			# player_country = gdata.player_country
 			vdata.map_data = JSON.parse vdata.map_data
+			$el.html template countries: gdata.countries
 
 			$('<div>').prependTo('.right').gameMap {gdata, vdata}
 

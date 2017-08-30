@@ -1,8 +1,10 @@
 $ = require "jquery"
 
+{GraphQLException} = require '../lib/Exceptions'
+
 gqlQuery = (query, variables) ->
 
-	$.ajax
+	result = yield $.ajax
 		url: '/graphql'
 		type: 'POST'
 		data: JSON.stringify
@@ -10,5 +12,10 @@ gqlQuery = (query, variables) ->
 			variables: variables
 		contentType: 'application/json; charset=utf-8'
 		dataType: 'json'
+
+	if result.data?
+		return result.data
+	else
+		throw new GraphQLException data.errors
 
 module.exports = gqlQuery

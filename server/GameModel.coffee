@@ -2,7 +2,7 @@
 {ObjectID} = require 'mongodb'
 co         = require 'co'
 
-Game = (db) ->
+GameModel = (db) ->
 	self = {}
 	games = db.collection 'games'
 	variants = db.collection 'variants'
@@ -32,11 +32,15 @@ Game = (db) ->
 		catch
 		# TODO: What's the best thing to do here?
 
-	self.list = co.wrap ->
-		games = yield games.find(template: false).toArray()
-		# for game in games
-		# 	game.variant = yield variants.findOne _id: game.variant
-		return games
+	self.list = (obj, {_id})->
+		co ->
+			unless _id?
+				yield games.find(template: false).toArray()
+			else
+				console.log "HERE? "
+				yield games.find({_id}).toArray()
+		.catch (err) ->
+			console.log "Could not retrieve games list."
 
 	# Do the things necessary to roll the game to the next phase
 	self.roll = co.wrap (_id) ->
@@ -64,4 +68,4 @@ Game = (db) ->
 
 	return self
 
-module.exports = Game
+module.exports = GameModel

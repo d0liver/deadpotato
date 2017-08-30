@@ -1,14 +1,11 @@
-extends index
+.left
 
-block content
-	.left
+	li.tab.news-tab
+		span.tab-label News
 
-		li.tab.news-tab
-			span.tab-label News
+	each country in countries
+		li.tab
+			span.tab-label=country.name
 
-		each country in countries
-			li.tab
-				span.tab-label=country.name
-
-	.right
-		button.submit-orders#submit-orders Submit Orders
+.right
+	button.submit-orders#submit-orders Submit Orders

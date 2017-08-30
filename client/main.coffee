@@ -29,11 +29,11 @@ $(document).ready () ->
 		CreateGame view
 
 	router.get '/games', ->
-		GameListController view
+		GameListController $container
 
 	router.get '/game/:_id', ({_id}) ->
 		mapWidgetSetup()
-		WarRoomController _id, view
+		WarRoomController _id, $container
 
 	router.get '/upload-variant', ->
 		UploadVariant(view).display()
