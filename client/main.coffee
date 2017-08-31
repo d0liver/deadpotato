@@ -6,11 +6,11 @@ diff           = require 'virtual-dom/diff'
 patch          = require 'virtual-dom/patch'
 
 # Our stuff
-Icons         = require './Icons'
-Map           = require './Map'
-Router        = require './Router'
-UploadVariant = require './UploadVariant'
-View          = require './View'
+Icons                   = require './Icons'
+Map                     = require './Map'
+Router                  = require './Router'
+UploadVariantController = require './UploadVariantController'
+View                    = require './View'
 
 # Templates
 CreateGame         = require './CreateGame'
@@ -21,7 +21,7 @@ mapWidgetSetup     = require './mapWidgetSetup'
 $(document).ready () ->
 
 	$container = $ '.content'
-	# upload_variant = UploadVariant cnt, gam, map, rgn
+	# upload_variant = UploadVariantController cnt, gam, map, rgn
 	router = Router()
 	view = View $container
 
@@ -36,7 +36,7 @@ $(document).ready () ->
 		WarRoomController _id, $container
 
 	router.get '/upload-variant', ->
-		UploadVariant(view).display()
+		UploadVariantController $container
 
 	router.get '/map-test', ->
 		mapWidgetSetup()

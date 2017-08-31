@@ -32,8 +32,8 @@ SchemaBuilder = (db, user, S3) ->
 	resolvers =
 		ObjectID: MongoObjectID
 		Mutation:
-			game: -> null
-			variant: -> null
+			game: -> Q {}
+			variant: -> Q {}
 
 		Query:
 			variants: variantm.list
@@ -44,17 +44,21 @@ SchemaBuilder = (db, user, S3) ->
 			variant: ({variant: _id}) ->
 				co ->
 					yield variants.findOne {_id}
+				.catch (err) ->
+					console.log 'Could not find variant: ', err
 
 			countries: ({_id}) ->
 				co ->
 					(yield phase.current _id).countries
+				.catch (err) ->
+					console.log 'Could not find country: ', err
 
 		VariantMutations:
 			create: (obj, {variant: b64}) -> variantm.create(b64)
 
 		GameMutations:
-			join: (obj, {game: _id, country}) -> game.join _id, country
-			create: (obj, {game: data}) -> game.create(data)
+			join: (obj, {game: _id, country}) -> from game.join _id, country
+			create: (obj, {game: data}) -> game.create data
 
 		OrdersMutations:
 			submit: (obj, {_id, orders}) ->

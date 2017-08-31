@@ -30,6 +30,14 @@ exports.JOIN_GAME_Q = """
 	}
 """
 
+exports.CREATE_VARIANT_Q = """
+	mutation create($variant: String!) {
+		variant {
+			create(variant: $variant)
+		}
+	}
+"""
+
 exports.GAME_Q = """
 	query games($_id: ObjectID!) {
 		games(_id: $_id) {

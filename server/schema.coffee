@@ -67,6 +67,6 @@ module.exports = """
 
 	type Mutation {
 		game: GameMutations
-		variant(variant: String!): VariantMutations
+		variant: VariantMutations
 	}
 """

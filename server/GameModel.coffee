@@ -23,21 +23,28 @@ GameModel = (db) ->
 	self.create = co.wrap (data) ->
 		try
 			# Find a template for this game (starting units and season)
-			if template = yield games.findOne(variant: data.variant)
-				delete template._id
-				data = Object.assign {}, template, data
-				data.template = false
+			if phase_template = yield phases.findOne(variant: data.variant)
+
+				# Create the first phase from the template
+				phase = phase_template
+				# We want to generate a new id, not use the one from the template
+				delete phase._id
+				phase.template = false
+				yield phases.insertOne phase
+
+				game = title: data.title
 				{insertedId} = yield games.insertOne data
+
 				return insertedId
 		catch
-		# TODO: What's the best thing to do here?
+			console.log "An error occurred when creating the game: ", err
+			return null
 
 	self.list = (obj, {_id})->
 		co ->
 			unless _id?
 				yield games.find(template: false).toArray()
 			else
-				console.log "HERE? "
 				yield games.find({_id}).toArray()
 		.catch (err) ->
 			console.log "Could not retrieve games list."
