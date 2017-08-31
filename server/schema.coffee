@@ -59,7 +59,7 @@ module.exports = """
 	}
 
 	type Query {
-		variants(slug: String!): [Variant]
+		variants(slug: String): [Variant]
 		games(_id: ObjectID): [Game]
 		isAuthed: Boolean
 		s3Bucket: String

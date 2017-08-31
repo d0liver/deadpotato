@@ -1,0 +1,14 @@
+.root
+	form.create-game
+		.row
+			.six.columns
+				label(for='title') Game Title
+				input#title.u-full-width(type='text' name='title')
+			.four.columns
+				label(for='which-variant') Variant
+				select#which-variant.u-full-width
+					each variant in variants
+						option(value=_id)=variant.name
+			.two.columns
+				label &nbsp;
+				input.button-primary(type='submit' value='Start')

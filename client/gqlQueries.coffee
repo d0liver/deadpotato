@@ -16,28 +16,6 @@ exports.GAMES_Q = """
 	}
 """
 
-exports.IS_AUTHED_Q	= "
-	{
-		isAuthed
-	}
-"
-
-exports.JOIN_GAME_Q = """
-	mutation join($country: String!, $game: ObjectID!) {
-		game {
-			join(country: $country, game: $game)
-		}
-	}
-"""
-
-exports.CREATE_VARIANT_Q = """
-	mutation create($variant: String!) {
-		variant {
-			create(variant: $variant)
-		}
-	}
-"""
-
 exports.GAME_Q = """
 	query games($_id: ObjectID!) {
 		games(_id: $_id) {
@@ -70,3 +48,42 @@ exports.GAME_Q = """
 		}
 	}
 """
+
+exports.CREATE_GAME_Q = """
+	mutation game($game: GameInput) {
+		game {
+			create(game: $game)
+		}
+	}
+"""
+
+exports.JOIN_GAME_Q = """
+	mutation join($country: String!, $game: ObjectID!) {
+		game {
+			join(country: $country, game: $game)
+		}
+	}
+"""
+
+exports.CREATE_VARIANT_Q = """
+	mutation create($variant: String!) {
+		variant {
+			create(variant: $variant)
+		}
+	}
+"""
+
+exports.VARIANTS_Q = """
+	{
+		variants {
+			_id
+			name
+		}
+	}
+"""
+
+exports.IS_AUTHED_Q	= "
+	{
+		isAuthed
+	}
+"

@@ -40,7 +40,7 @@ GameModel = (db) ->
 			console.log "An error occurred when creating the game: ", err
 			return null
 
-	self.list = (obj, {_id})->
+	self.list = (obj, {_id}) ->
 		co ->
 			unless _id?
 				yield games.find(template: false).toArray()
