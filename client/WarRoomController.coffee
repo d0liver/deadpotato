@@ -1,8 +1,6 @@
 $                        = require 'jquery'
 Q                        = require 'q'
 co                       = require 'co'
-h                        = require 'virtual-dom/h'
-
 gqlQuery                   = require './gqlQuery'
 HorizLinesTextureBuilder   = require './HorizLinesTextureBuilder'
 Icons                      = require './Icons'

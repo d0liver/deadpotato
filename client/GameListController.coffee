@@ -1,5 +1,4 @@
 _             = require 'underscore'
-h             = require 'virtual-dom/h'
 co            = require 'co'
 gqlQuery      = require './gqlQuery'
 $             = require 'jquery'

@@ -1,6 +1,5 @@
 gqlQuery = require './gqlQuery'
 
-h  = require 'virtual-dom/h'
 Q  = require 'q'
 co = require 'co'
 

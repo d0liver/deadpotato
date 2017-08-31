@@ -1,16 +1,10 @@
 $              = require 'jquery'
 
-# Virtual DOM
-createElement  = require 'virtual-dom/create-element'
-diff           = require 'virtual-dom/diff'
-patch          = require 'virtual-dom/patch'
-
 # Our stuff
 Icons                   = require './Icons'
 Map                     = require './Map'
 Router                  = require './Router'
 UploadVariantController = require './UploadVariantController'
-View                    = require './View'
 
 # Templates
 CreateGameController = require './CreateGameController'
