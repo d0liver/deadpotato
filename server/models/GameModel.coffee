@@ -1,4 +1,4 @@
-{Gavel, Board, PathFinder} = require '/home/david/gavel/'
+{Gavel, Board, PathFinder} = require process.env.HOME + '/gavel/'
 {ObjectID} = require 'mongodb'
 
 GameModel = (db) ->

@@ -1,9 +1,9 @@
 $            = require 'jquery'
-{parseOrder} = require '/home/david/gavel'
+{parseOrder} = require process.env.HOME + '/gavel'
 _            = require 'underscore'
 
 utils                                                = require '../lib/utils'
-{enums: {english, outcomes, orders: eorders, paths}} = require '/home/david/gavel/'
+{enums: {english, outcomes, orders: eorders, paths}} = require process.env.HOME + '/gavel/'
 {MOVE, SUPPORT, CONVOY, HOLD}                        = eorders
 
 MapController = (board, pfinder, map, gdata, vdata) ->

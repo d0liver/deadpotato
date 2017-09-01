@@ -1,7 +1,7 @@
 window.jQuery = $ = require 'jquery'
 require 'jquery-ui'
 
-{Gavel, Board, PathFinder} = require '/home/david/gavel/'
+{Gavel, Board, PathFinder} = require process.env.HOME + '/gavel/'
 Map                        = require './Map'
 MapController              = require './MapController'
 MapIcon                    = require '../lib/MapIcon'
