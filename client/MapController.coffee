@@ -52,6 +52,17 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 		# Get a list of the active ids.
 		active = map.active()
 
+		# It's not valid for the first selection to be a region without a unit.
+		# The second selection is, in fact, the only selection that it's valid
+		# to do on a region without a unit (since it's the destination of a
+		# move)
+		# TODO: It might make sense to move the active selection stuff into the
+		# controller and out of the map. This way we wouldn't have to back out
+		# of an action that never should have happened in the first place.
+		if not board.region(selected).unit? and active.length isnt 1
+			map.clearActive()
+			return
+
 		# Initial selection
 		if active.length is 0
 			map.select selected
