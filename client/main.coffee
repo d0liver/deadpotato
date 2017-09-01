@@ -17,10 +17,9 @@ $(document).ready () ->
 	$container = $ '.content'
 	# upload_variant = UploadVariantController cnt, gam, map, rgn
 	router = Router()
-	view = View $container
 
 	router.get '/new-game', ->
-		CreateGameController $container
+		new CreateGameController $container
 
 	router.get '/games', ->
 		GameListController $container

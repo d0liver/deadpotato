@@ -8,7 +8,7 @@
 				label(for='which-variant') Variant
 				select#which-variant.u-full-width
 					each variant in variants
-						option(value=_id)=variant.name
+						option(value=variant._id)=variant.name
 			.two.columns
 				label &nbsp;
 				input.button-primary(type='submit' value='Start')

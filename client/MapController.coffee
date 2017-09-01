@@ -18,7 +18,7 @@ MapController = (board, pfinder, map, gdata, vdata) ->
 		else if e.which is 27
 			map.clearActive()
 
-	countries = gdata.countries; regions = vdata.map_data.regions
+	countries = gdata.phase.countries; regions = vdata.map_data.regions
 	orders = []
 
 	# Shallow copy all of the regions so that our modifications for the Map

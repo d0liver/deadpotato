@@ -1,9 +1,5 @@
 _ = require 'underscore'
 
-# Async
-co = require 'co'
-q  = require 'q'
-
 # Express
 bodyParser = require 'body-parser'
 express    = require 'express'
@@ -62,7 +58,7 @@ MongoClient.connect DB_URI, (err, db) ->
 		return obj
 
 	app.use '/graphiql', graphiqlExpress
-	  endpointURL: '/graphql'
+		endpointURL: '/graphql'
 
 	# Fallback is the index
 	app.get '/*', (req, res, next) ->

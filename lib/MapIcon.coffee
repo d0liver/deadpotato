@@ -1,4 +1,3 @@
-Q = require 'q'
 {capitalize} = require '../lib/utils'
 
 MapIcon = (slug, assets, color, type) ->
@@ -18,10 +17,9 @@ MapIcon = (slug, assets, color, type) ->
 	self.img = ->
 		img = new Image()
 		img.src = self.uri()
-		d = Q.defer()
-		img.addEventListener 'load', -> d.resolve img
 
-		return d.promise
+		new Promise (resolve, reject) ->
+			img.addEventListener 'load', -> resolve img
 
 	self.name = -> "#{capitalize(color.name())}#{type}"
 

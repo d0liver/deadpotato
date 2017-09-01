@@ -19,7 +19,7 @@ module.exports = ->
 			vdata = this.options.vdata; gdata = this.options.gdata
 
 			header = $ '<h1>'
-			header.html gdata.season_year
+			header.html gdata.phase.season_year
 			this.element.append header
 			this.element.addClass 'root'
 

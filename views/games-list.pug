@@ -7,7 +7,7 @@ ul.games-list
 				strong.countries-list-title Countries
 				p
 					- var str = ''
-					each country in game.countries
+					each country in game.phase.countries
 						if str == ''
 							- str = country
 						else

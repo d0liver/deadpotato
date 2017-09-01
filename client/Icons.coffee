@@ -6,7 +6,7 @@ Icons = (ctx, gdata, variant_data) ->
 	icons = []
 
 	regions = variant_data.regions
-	countries = gdata.countries
+	countries = gdata.phase.countries
 
 	for country in variant_data.countries
 		bounds =

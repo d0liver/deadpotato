@@ -45,12 +45,16 @@ module.exports = """
 		variant: Variant
 		player_country: String
 		players: [Player]
+		phase: Phase
+	}
+
+	type Phase {
 		season_year: String!
 		countries: [Country]
 	}
 
 	type GameMutations {
-		create(variant: String!): ObjectID
+		create(game: GameInput!): ObjectID
 		join(country: String!, game: ObjectID!): ObjectID
 	}
 

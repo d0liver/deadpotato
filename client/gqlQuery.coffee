@@ -4,18 +4,16 @@ $ = require "jquery"
 
 gqlQuery = (query, variables) ->
 
-	result = yield $.ajax
-		url: '/graphql'
-		type: 'POST'
-		data: JSON.stringify
-			query: query
-			variables: variables
-		contentType: 'application/json; charset=utf-8'
-		dataType: 'json'
-
-	if result.data?
-		return result.data
-	else
-		throw new GraphQLException data.errors
+	new Promise (resolve, reject) ->
+		$.ajax
+			url: '/graphql'
+			type: 'POST'
+			data: JSON.stringify
+				query: query
+				variables: variables
+			contentType: 'application/json; charset=utf-8'
+			dataType: 'json'
+		.done (result) -> resolve result.data
+		.fail (..., err) -> throw err 
 
 module.exports = gqlQuery

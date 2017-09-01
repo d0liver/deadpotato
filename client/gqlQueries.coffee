@@ -6,11 +6,13 @@ exports.GAMES_Q = """
 			players {
 				country
 			}
-			countries {
-				name
-			}
 			variant {
 				slug
+			}
+			phase {
+				countries {
+					name
+				}
 			}
 		}
 	}
@@ -22,22 +24,24 @@ exports.GAME_Q = """
 			_id
 			title
 			player_country
-			season_year
 			players {
 				pid
 				country
 			}
-			countries {
-				adjective
-				color
-				name
-				pattern
-				supply_centers
-				units {
-					type
-					region
-					coast
+			phase {
+				countries {
+					adjective
+					color
+					name
+					pattern
+					supply_centers
+					units {
+						type
+						region
+						coast
+					}
 				}
+				season_year
 			}
 			variant {
 				map_data
@@ -50,7 +54,7 @@ exports.GAME_Q = """
 """
 
 exports.CREATE_GAME_Q = """
-	mutation game($game: GameInput) {
+	mutation game($game: GameInput!) {
 		game {
 			create(game: $game)
 		}

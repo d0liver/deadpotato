@@ -1,8 +1,5 @@
 gqlQuery = require './gqlQuery'
 
-Q  = require 'q'
-co = require 'co'
-
 template = require '../views/upload-variant.pug'
 
 {CREATE_VARIANT_Q} = require './gqlQueries'
@@ -23,16 +20,12 @@ UploadVariantController = ($el) ->
 		reader.addEventListener 'load', ->
 			$status.html 'Uploading variant files...'
 			b64 = reader.result.replace 'data:application/zip;base64,', ''
-			co ->
-				result = yield gqlQuery CREATE_VARIANT_Q, variant: b64
-				$status.html \
-					if result.errors
-						"Error: #{result.errors[0].message}"
-					else
-						'Variant was uploaded successfully and is ready to use.'
-
-			.catch (err) ->
-				console.log 'An error occurred while attempting to upload the variant: ', err
+			result = await gqlQuery CREATE_VARIANT_Q, variant: b64
+			$status.html \
+				if result.errors
+					"Error: #{result.errors[0].message}"
+				else
+					'Variant was uploaded successfully and is ready to use.'
 
 		if this.files.length isnt 0
 			reader.readAsDataURL this.files[0]

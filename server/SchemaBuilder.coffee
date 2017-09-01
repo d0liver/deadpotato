@@ -1,8 +1,6 @@
 {ObjectID}             = require 'mongodb'
 {GraphQLScalarType}    = require 'graphql'
 {makeExecutableSchema} = require 'graphql-tools'
-Q                      = require 'q'
-co                     = require 'co'
 AWS                    = require 'aws-sdk'
 schema                 = require './schema'
 through                = require 'through2'
@@ -32,8 +30,8 @@ SchemaBuilder = (db, user, S3) ->
 	resolvers =
 		ObjectID: MongoObjectID
 		Mutation:
-			game: -> Q {}
-			variant: -> Q {}
+			game: -> {}
+			variant: -> {}
 
 		Query:
 			variants: variantm.list
@@ -41,17 +39,8 @@ SchemaBuilder = (db, user, S3) ->
 			isAuthed: -> return Q user?
 
 		Game:
-			variant: ({variant: _id}) ->
-				co ->
-					yield variants.findOne {_id}
-				.catch (err) ->
-					console.log 'Could not find variant: ', err
-
-			countries: ({_id}) ->
-				co ->
-					(yield phase.current _id).countries
-				.catch (err) ->
-					console.log 'Could not find country: ', err
+			variant: ({variant: _id}) -> variants.findOne {_id}
+			phase: ({_id}) -> phase.current _id
 
 		VariantMutations:
 			create: (obj, {variant: b64}) -> variantm.create(b64)
@@ -63,10 +52,10 @@ SchemaBuilder = (db, user, S3) ->
 		OrdersMutations:
 			submit: (obj, {_id, orders}) ->
 				# TODO: Need a way to overwrite submitted orders.
-				yield db.collection('games').updateOne {_id},
+				await db.collection('games').updateOne {_id},
 					'$push': orders: '$each': orders
 
-				{orders, countries} = yield db.collection('games').findOne {_id}, orders: 1, countries: 1
+				{orders, countries} = await db.collection('games').findOne {_id}, orders: 1, countries: 1
 				countries = countries.map (c) -> c.name
 				orders = (parseOrder order for order in orders)
 
@@ -74,26 +63,11 @@ SchemaBuilder = (db, user, S3) ->
 					orders.find (order) -> order.country is country
 
 				if all_countries_have_orders
-					yield game.roll _id
+					await game.roll _id
 				else
 					console.log "Missing orders"
 
 				Q null
-
-	# Wrap each of our resolvers with error handling logic (format an
-	# appropriate response)
-	for type,val of resolvers when val not instanceof GraphQLScalarType
-		for name,fu of resolvers[type]
-			do (fu) ->
-				resolvers[type][name] = co.wrap (args...) ->
-					try
-						return yield fu(args...)
-					catch err
-						console.log err
-						if err instanceof UserException
-							throw err
-						else
-							throw new Error('Internal server error.')
 
 	return makeExecutableSchema {typeDefs: schema, resolvers}
 
