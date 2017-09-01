@@ -1,4 +1,4 @@
-{Gavel, Board, PathFinder} = require process.env.HOME + '/gavel/'
+{Gavel, Board, PathFinder} = require 'gavel.js'
 {ObjectID} = require 'mongodb'
 
 GameModel = (db) ->

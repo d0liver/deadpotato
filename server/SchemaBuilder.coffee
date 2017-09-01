@@ -10,7 +10,7 @@ VariantModel           = require './models/VariantModel'
 {UserException}        = require '../lib/Exceptions'
 _                      = require 'underscore'
 
-{parseOrder} = require process.env.HOME + '/gavel'
+{parseOrder} = require 'gavel.js'
 
 SchemaBuilder = (db, user, S3) ->
 	phase     = PhaseModel db

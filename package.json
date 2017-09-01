@@ -16,6 +16,7 @@
     "express": "^4.15.4",
     "express-passport": "^0.1.0",
     "express-session": "^1.15.5",
+    "gavel.js": "0.0.9",
     "graphql": "^0.9.6",
     "graphql-tools": "^0.11.0",
     "gulp": "^3.9.1",
