@@ -1,7 +1,27 @@
-exports.UserException            = class UserException extends Error then constructor: ->
-exports.VariantParseException    = class VariantParseException extends UserException
-exports.VariantValidateException = class VariantValidateException extends UserException
-exports.S3UploadException        = class S3UploadException extends UserException
-exports.ResolverException        = class ResolverException extends UserException
-exports.EngineException          = class EngineException extends UserException
-exports.GraphQLException         = class GraphQLException extends UserException
+UserException = ->
+UserException::            = Object.create Error
+exports.UserException = UserException
+
+VariantParseException = ->
+VariantParseException::    = Object.create Error
+exports.VariantParseException = VariantParseException
+
+VariantValidateException = ->
+VariantValidateException:: = Object.create Error
+exports.VariantValidateException = VariantValidateException
+
+S3UploadException = ->
+S3UploadException::        = Object.create Error
+exports.S3UploadException = S3UploadException
+
+ResolverException = ->
+ResolverException::        = Object.create Error
+exports.ResolverException = ResolverException
+
+EngineException = ->
+EngineException::          = Object.create Error
+exports.EngineException = EngineException
+
+GraphQLException = ->
+GraphQLException::         = Object.create Error
+exports.GraphQLException = GraphQLException
