@@ -30,7 +30,7 @@ parseVariant = (stream) ->
 			# the .cnt file.
 			for name,parse of {cnt, map, rgn, gam}
 				if not files[name]?
-					return def.reject new VariantParseException(".#{name} file was not found.")
+					return reject new VariantParseException(".#{name} file was not found.")
 				else
 					parse LineFeed(files[name].toString('utf8')), variant_data
 
