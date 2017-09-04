@@ -96,6 +96,6 @@ gulp.task 'coffee-lint', ->
 gulp.task 'server', ->
 	stream = nodemon
 		script: 'server/server.coffee'
-		watch: ['server/*.coffee', 'lib/*.coffee']
+		watch: ['server/**/*.coffee', 'lib/**/*.coffee']
 		ext: 'coffee'
 		env: 'NODE_ENV': 'development'
