@@ -35,5 +35,8 @@ html
 					a.navigate.nav-link(href='/auth/google') Login
 				li
 					a.navigate.nav-link(href='/about') About
+				if typeof gid !== 'undefined'
+					li
+						a.navigate.nav-link(href='/remove-game/'+gid) Remove Game
 		.content
 			block content

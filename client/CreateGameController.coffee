@@ -17,6 +17,6 @@ class CreateGameController
 			e.preventDefault()
 			title = $('#title').val(); variant = $('#which-variant').val()
 			{game: {create: _id}} = await gqlQuery CREATE_GAME_Q, game: {title, variant}
-			# window.location.replace "/game/#{_id}"
+			window.location.replace "/game/#{_id}"
 
 module.exports = CreateGameController
