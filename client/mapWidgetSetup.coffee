@@ -65,7 +65,10 @@ module.exports = ->
 				pfinder = PathFinder board
 				gavel = Gavel board
 				map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
-				map_controller = MapController board, pfinder, map, gdata, vdata
+				this._map_controller = MapController board, pfinder, map, gdata, vdata
+
+		orders: ->
+			this._map_controller.orders()
 
 		# _setOption: (key, value)
 		# 	if key is 'value'

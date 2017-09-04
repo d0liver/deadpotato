@@ -58,8 +58,8 @@ module.exports = """
 		join(country: String!, game: ObjectID!): ObjectID
 	}
 
-	type OrdersMutations {
-		submit(_id: ObjectID, orders: [String]): String
+	type OrderMutations {
+		submit(_id: ObjectID!, orders: [String!]!): String
 	}
 
 	type Query {
@@ -72,5 +72,6 @@ module.exports = """
 	type Mutation {
 		game: GameMutations
 		variant: VariantMutations
+		order: OrderMutations
 	}
 """

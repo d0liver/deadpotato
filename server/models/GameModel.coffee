@@ -1,3 +1,4 @@
+PhaseModel = require './PhaseModel'
 {Gavel, Board, PathFinder} = require 'gavel.js'
 {ObjectID} = require 'mongodb'
 
@@ -45,26 +46,37 @@ GameModel = (db) ->
 			await games.find().toArray()
 
 	# Do the things necessary to roll the game to the next phase
-	self.roll = (_id) ->
+	self.roll = (_id, orders) ->
 		gdata = await games.findOne {_id}
+		current_phase = await (new PhaseModel db).current()
+		# TODO: The Gavel stuff expects this all to be on the same object.
+		# Maybe it shouldn't?
+		gdata.phase = current_phase
+		gdata.orders = orders
+		console.log "GDATA: ", gdata
 
 		vdata = await variants.findOne {_id: gdata.variant}
 		vdata.map_data = JSON.parse vdata.map_data
 		
 		board   = Board gdata, vdata
 		pfinder = PathFinder board
-		gavel  = Gavel board, pfinder
+		gavel   = Gavel board, pfinder
 
-		[phase, year] = gdata.season_year.split /\s+/
+		[phase, year] = current_phase.season_year.split /\s+/
 		gavel.setPhase phase; gavel.setYear year
 		# Resolve and apply the result to the board
-		gavel.apply gdata.orders
+		gavel.apply orders
 
 		# Update the game state. Clear out the orders and then update with the
 		# game state after the board updates it.
 		gdata.orders = []
 		console.log "SAVE GDATA AFter: ", JSON.stringify gdata, null, 4
-		await games.updateOne {_id}, gdata
+		# Separate the phase data back out.
+		new_phase = {}
+		new_phase = {new_phase..., "#{key}": gdata[key]} for key of current_phase
+		new_phase.roll_time = new Date()
+		delete new_phase._id
+		await phases.insertOne new_phase
 
 		return true
 
