@@ -14,9 +14,9 @@ VariantModel = (db, S3) ->
 	self.create = (b64) ->
 		s3 = new AWS.S3
 		AWS.config.loadFromPath "#{process.env.HOME}/.deadpotato_s3.json"
-		s3put = ->
+		s3put = (obj) ->
 			new Promise (resolve, reject) ->
-				s3.putObject s3, (err, data) ->
+				s3.putObject obj, (err, data) ->
 					unless err? then resolve data
 					else reject err
 
@@ -28,7 +28,7 @@ VariantModel = (db, S3) ->
 		# Check if the variant exists already
 		if await variants.findOne(slug: variant_data.slug)
 			msg = "A variant with the same name already exists."
-			return new VariantValidateException msg
+			throw new VariantValidateException msg
 
 		# Upload all assets to s3 and store a list of these uploaded assets on
 		# the variant_data so that the frontend can fall back accordingly for
@@ -43,7 +43,7 @@ VariantModel = (db, S3) ->
 				ext = path.extname file.relative
 				console.log "Uploading file: ", file.relative
 				try
-					s3put 
+					await s3put 
 						Bucket: 'deadpotato'
 						Key: file.relative
 						Body: file.contents
