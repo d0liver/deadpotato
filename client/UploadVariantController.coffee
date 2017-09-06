@@ -19,7 +19,7 @@ UploadVariantController = ($el) ->
 		reader = new FileReader()
 		reader.addEventListener 'load', ->
 			$status.html 'Uploading variant files...'
-			b64 = reader.result.replace 'data:application/zip;base64,', ''
+			b64 = reader.result.replace /data\:[^,]+,/, ''
 			result = await gqlQuery CREATE_VARIANT_Q, variant: b64
 			$status.html \
 				if result.errors

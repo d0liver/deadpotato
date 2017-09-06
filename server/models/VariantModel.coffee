@@ -12,8 +12,8 @@ VariantModel = (db, S3) ->
 	phases = db.collection 'phases'
 
 	self.create = (b64) ->
-		s3 = new AWS.S3
 		AWS.config.loadFromPath "#{process.env.HOME}/.deadpotato_s3.json"
+		s3 = new AWS.S3
 		s3put = (obj) ->
 			new Promise (resolve, reject) ->
 				s3.putObject obj, (err, data) ->
