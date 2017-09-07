@@ -1,13 +1,13 @@
 _             = require 'underscore'
 co            = require 'co'
-gqlQuery      = require './gqlQuery'
+gqlQuery      = require '../gqlQuery'
 $             = require 'jquery'
-VariantImages = require './VariantImages'
+VariantImages = require '../VariantImages'
 
-{S3_BUCKET} = require '../lib/config'
-template      = require '../views/games-list.pug'
+{S3_BUCKET} = require '../../lib/config'
+template      = require '../../views/games-list.pug'
 
-{GAMES_Q, IS_AUTHED_Q, JOIN_GAME_Q} = require './gqlQueries'
+{GAMES_Q, IS_AUTHED_Q, JOIN_GAME_Q} = require '../gqlQueries'
 
 GamesListController = ($el) ->
 	self = {}

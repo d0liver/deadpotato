@@ -4,12 +4,12 @@ $              = require 'jquery'
 Icons                   = require './Icons'
 Map                     = require './Map'
 Router                  = require './Router'
-UploadVariantController = require './UploadVariantController'
+UploadVariantController = require './controllers/UploadVariantController'
 
 # Templates
-CreateGameController = require './CreateGameController'
-GameListController   = require './GameListController'
-WarRoomController    = require './WarRoomController'
+CreateGameController = require './controllers/CreateGameController'
+GameListController   = require './controllers/GameListController'
+WarRoomController    = require './controllers/WarRoomController'
 mapWidgetSetup       = require './mapWidgetSetup'
 
 $(document).ready () ->

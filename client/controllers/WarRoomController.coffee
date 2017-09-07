@@ -1,13 +1,13 @@
 $                        = require 'jquery'
-gqlQuery                 = require './gqlQuery'
-HorizLinesTextureBuilder = require './HorizLinesTextureBuilder'
-Icons                    = require './Icons'
-RegionTexture            = require './RegionTexture'
-Color                    = require '../lib/Color'
+gqlQuery                 = require '../gqlQuery'
+HorizLinesTextureBuilder = require '../HorizLinesTextureBuilder'
+Icons                    = require '../Icons'
+RegionTexture            = require '../RegionTexture'
+Color                    = require '../../lib/Color'
 
-{GAME_Q} = require './gqlQueries'
+{GAME_Q} = require '../gqlQueries'
 
-template = require '../views/war-room.pug'
+template = require '../../views/war-room.pug'
 
 player_country = null
 

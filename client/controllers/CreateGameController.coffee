@@ -1,9 +1,9 @@
 $        = require 'jquery'
 
-gqlQuery                    = require './gqlQuery'
-{CREATE_GAME_Q, VARIANTS_Q} = require './gqlQueries'
+gqlQuery                    = require '../gqlQuery'
+{CREATE_GAME_Q, VARIANTS_Q} = require '../gqlQueries'
 
-template = require '../views/create-game.pug'
+template = require '../../views/create-game.pug'
 
 class CreateGameController
 	constructor: (@$el) -> @render()

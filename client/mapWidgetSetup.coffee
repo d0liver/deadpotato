@@ -3,7 +3,7 @@ require 'jquery-ui'
 
 {Gavel, Board, PathFinder} = require 'gavel.js'
 Map                        = require './Map'
-MapController              = require './MapController'
+MapController              = require './controllers/MapController'
 MapIcon                    = require '../lib/MapIcon'
 
 S3_BUCKET = "https://s3.us-east-2.amazonaws.com/deadpotato/"

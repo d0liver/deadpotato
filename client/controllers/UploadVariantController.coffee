@@ -1,8 +1,8 @@
-gqlQuery = require './gqlQuery'
+gqlQuery = require '../gqlQuery'
 
-template = require '../views/upload-variant.pug'
+template = require '../../views/upload-variant.pug'
 
-{CREATE_VARIANT_Q} = require './gqlQueries'
+{CREATE_VARIANT_Q} = require '../gqlQueries'
 
 # Handles the workflow for uploading a variant. Kicks off parsers, persists
 # everything to the db, etc. Arguments are the parsers.

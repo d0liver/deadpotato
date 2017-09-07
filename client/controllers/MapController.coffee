@@ -2,7 +2,7 @@ $            = require 'jquery'
 {parseOrder} = require 'gavel.js'
 _            = require 'underscore'
 
-utils                                                = require '../lib/utils'
+utils                                                = require '../../lib/utils'
 {enums: {english, outcomes, orders: eorders, paths}} = require 'gavel.js'
 {MOVE, SUPPORT, CONVOY, HOLD}                        = eorders
 
