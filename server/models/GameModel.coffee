@@ -34,6 +34,7 @@ GameModel = (db) ->
 		# We want to generate a new id, not use the one from the template
 		delete phase._id
 		phase.template = false
+		phase.roll_time = new Date()
 		phase.game = gid
 		await phases.insertOne phase
 
@@ -48,7 +49,7 @@ GameModel = (db) ->
 	# Do the things necessary to roll the game to the next phase
 	self.roll = (_id, orders) ->
 		gdata = await games.findOne {_id}
-		current_phase = await (new PhaseModel db).current()
+		current_phase = await (new PhaseModel db).current _id
 		# TODO: The Gavel stuff expects this all to be on the same object.
 		# Maybe it shouldn't?
 		gdata.phase = current_phase
@@ -62,21 +63,18 @@ GameModel = (db) ->
 		pfinder = PathFinder board
 		gavel   = Gavel board, pfinder
 
-		[phase, year] = current_phase.season_year.split /\s+/
-		gavel.setPhase phase; gavel.setYear year
 		# Resolve and apply the result to the board
-		gavel.apply orders
+		gavel.roll orders
 
 		# Update the game state. Clear out the orders and then update with the
 		# game state after the board updates it.
 		gdata.orders = []
-		console.log "SAVE GDATA AFter: ", JSON.stringify gdata, null, 4
 		# Separate the phase data back out.
-		new_phase = {}
-		new_phase = {new_phase..., "#{key}": gdata[key]} for key of current_phase
-		new_phase.roll_time = new Date()
-		delete new_phase._id
-		await phases.insertOne new_phase
+		gdata.phase.roll_time = new Date()
+		gdata.phase.template = false
+		gdata.phase.season_year = gavel.phase
+		delete gdata.phase._id
+		await phases.insertOne gdata.phase
 
 		return true
 
