@@ -11,7 +11,7 @@
     "sass/_*.sass": {"type": "style"},
     "sass/master.sass": {"type": "style"},
     "server/*.coffee": {"type": "server"},
-    "server/models/*Model.coffee": {"type": "models"},
+    "server/models/*Model.coffee": {"type": "model"},
     "server/server.coffee": {"type": "server"},
     "views/*.pug": {"type": "template"},
     "views/index.pug": {"type": "template"}
