@@ -52,7 +52,10 @@
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.8.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "minimist": "^1.2.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -64,5 +67,25 @@
   "keywords": [],
   "author": "David Oliver",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/d0liver/deadpotato#readme"
+  "homepage": "https://bitbucket.org/d0liver/deadpotato#readme",
+  "browserify": {
+    "transform": [
+      [
+        "coffeeify",
+        {
+          "bare": true,
+          "header": false
+        }
+      ],
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ],
+      "pugify"
+    ]
+  }
 }

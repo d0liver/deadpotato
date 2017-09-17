@@ -1,18 +1,20 @@
-_           = require "underscore"
-ctags       = require 'gulp-ctags'
+# Node
+path = require 'path'
+
+# Gulp
 gulp        = require 'gulp'
 nodemon     = require 'gulp-nodemon'
-{exec}      = require 'child_process'
 {log}       = require 'gulp-util'
 
-# Browserify stuff
-_          = require 'underscore'
-browserify = require 'browserify'
+# Vinyl
 buffer     = require 'vinyl-buffer'
-coffee     = require 'gulp-coffee'
-rename     = require "gulp-rename"
-sass       = require "gulp-sass"
 source     = require 'vinyl-source-stream'
+
+# Browserify stuff
+browserify = require 'browserify'
+coffee     = require 'gulp-coffee'
+sass       = require "gulp-sass"
+# Used with sass
 sourcemaps = require 'gulp-sourcemaps'
 uglify     = require "gulp-uglify"
 watchify   = require 'watchify'
@@ -24,23 +26,25 @@ gulp.task 'dev-bundle', ->
 		.on 'error', log
 		.pipe source 'bundle.js'
 		.pipe buffer()
-		.pipe sourcemaps.init loadMaps: true, debug: true
-		# .pipe uglify debug: true, options: sourceMap: true
+		# Strip the source map (which will have been generated because debug:
+		# true is given in the options below) out and put it in an external
+		# file.
+		.pipe sourcemaps.init loadMaps: true
+		# Source maps are written relative to the destination given (which is
+		# public/) so they will end up in public/bundle.js.map
 		.pipe sourcemaps.write './'
+		# .pipe uglify debug: true, options: sourceMap: true
 		.pipe gulp.dest 'public/'
 
 	opts =
 		entries: ['client/main.coffee']
 		debug: true
-		cache: {},
-		packageCache: {},
-		plugin: [require "watchify"]
+		cache: {}
+		packageCache: {}
+		plugin: [require 'watchify']
 		extensions: ['.coffee']
 
 	b = browserify opts
-		.transform require 'coffeeify', {bare: true, header: false}
-		.transform require 'pugify', pretty: false
-		# .transform "babelify", presets: ["es2015"]
 		.on 'log', log
 		.on 'update', bundle
 	bundle()
@@ -51,9 +55,6 @@ gulp.task 'compile-client', ->
 		extensions: ['.coffee']
 
 	prod_b = browserify opts
-		.transform require "coffeeify", {bare: true, header: false}
-		.transform "babelify", presets: ["es2015"]
-		.transform require 'jadeify'
 		.on 'log', log
 
 	prod_b.bundle()
@@ -74,7 +75,6 @@ gulp.task 'sass', ->
 gulp.task 'default', ['sass', 'server', 'dev-bundle'], ->
 
 	gulp.watch 'sass/**/*.sass', ['sass']
-	gulp.watch '**/*.coffee', ['coffee-tags']
 	gulp.watch 'views/*.pug'
 	gulp.watch 'public/bundle.js'
 
@@ -84,9 +84,6 @@ gulp.task 'compile-server', ->
 	gulp.src './server/*.coffee'
 	.pipe coffee bare: true
 	.pipe gulp.dest './server'
-
-gulp.task 'coffee-tags', ->
-	exec 'coffeetags -R -f tags'
 
 gulp.task 'coffee-lint', ->
 	gulp.src ['client/**/*.coffee', 'server/**/*.coffee']
