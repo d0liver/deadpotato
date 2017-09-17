@@ -26,6 +26,8 @@ WarRoomController = (_id, $el) ->
 		$('#submit-orders').click ->
 			console.log "Submit orders: ", $map.orders()
 			gqlQuery SUBMIT_ORDERS_Q, _id: gdata._id, orders: $map.orders()
+			# Refresh the page so we can see the new moves
+			window.location.reload false
 
 
 		# Stylize the tabs representing the countries. This needs to be

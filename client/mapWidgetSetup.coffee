@@ -63,7 +63,7 @@ module.exports = ->
 				# for the regions there).
 				board = Board gdata, vdata
 				pfinder = PathFinder board
-				gavel = Gavel board
+				gavel = Gavel board, pfinder, gdata.phase.season_year
 				map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
 				this._map_controller = MapController board, pfinder, map, gdata, vdata
 
