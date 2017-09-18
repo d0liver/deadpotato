@@ -26,9 +26,11 @@ gulp.task 'dev-bundle', ->
 		.on 'error', log
 		.pipe source 'bundle.js'
 		.pipe buffer()
-		# Strip the source map (which will have been generated because debug:
-		# true is given in the options below) out and put it in an external
-		# file.
+		# XXX: Extract the source map (which will have been generated because
+		# debug: true is given in the options below) out and put it in an
+		# external file. It's important that these source maps are actually
+		# extracted otherwise Watchify will not rebuild correctly (I believe
+		# this is a bug with Watchify)
 		.pipe sourcemaps.init loadMaps: true
 		# Source maps are written relative to the destination given (which is
 		# public/) so they will end up in public/bundle.js.map
@@ -93,6 +95,13 @@ gulp.task 'coffee-lint', ->
 gulp.task 'server', ->
 	stream = nodemon
 		script: 'server/server.coffee'
-		watch: ['server/**/*.coffee', 'lib/**/*.coffee']
+		# XXX: We don't ignore anything by default. Instead we just make sure
+		# to only watch the things we're interested in.
+		ignoreRoot: []
+		watch: [
+			'node_modules/gavel.js/**/*.coffee'
+			'server/**/*.coffee'
+			'lib/**/*.coffee'
+		]
 		ext: 'coffee'
 		env: 'NODE_ENV': 'development'
