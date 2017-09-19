@@ -72,7 +72,7 @@ GameModel = (db) ->
 		# Separate the phase data back out.
 		gdata.phase.roll_time = new Date()
 		gdata.phase.template = false
-		gdata.phase.season_year = gavel.phase
+		gdata.phase.season_year = "#{gavel.phase}"
 		delete gdata.phase._id
 		await phases.insertOne gdata.phase
 
