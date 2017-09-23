@@ -197,6 +197,7 @@ Map = (ctx, MapIcon) ->
 
 	self.emitSelect = (e) ->
 		{id, region} = self.evtRegion e
+		console.log "Region: ", region, "id: ", id
 		emitter.trigger 'select', Object.assign({}, region), null
 
 	self.active = -> active

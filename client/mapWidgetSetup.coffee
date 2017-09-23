@@ -12,20 +12,20 @@ module.exports = ->
 
 	$.widget 'deadpotato.gameMap',
 		_create: ->
-			if not this.options.gdata? or not this.options.vdata?
+			if not @options.gdata? or not @options.vdata?
 				throw new Error '
 				Game and variant data must be defined for the map widget.
 			'
-			vdata = this.options.vdata; gdata = this.options.gdata
+			vdata = @options.vdata; gdata = @options.gdata
 
 			header = $ '<h1>'
 			header.html gdata.phase.season_year
-			this.element.append header
-			this.element.addClass 'root'
+			@element.append header
+			@element.addClass 'root'
 
 			wrapper = $ '<div>'
 			wrapper.css position: 'relative'
-			this.element.append wrapper
+			@element.append wrapper
 
 			map   = document.createElement 'canvas'
 			arrow = document.createElement 'canvas'
@@ -46,7 +46,7 @@ module.exports = ->
 				width = $map_img.innerWidth(); height = $map_img.innerHeight()
 
 				wrapper.css {width}
-				this.element.css width: width
+				@element.css width: width
 
 				# THIS MUST EXIST. The browser is not smart enough to use the CSS width
 				# and height for the canvas (it will scale it like an image rather than
@@ -65,19 +65,19 @@ module.exports = ->
 				pfinder = PathFinder board
 				gavel = Gavel board, pfinder, gdata.phase.season_year
 				map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
-				this._map_controller = MapController board, pfinder, map, gdata, vdata
+				@_map_controller = new MapController gavel, board, pfinder, map, gdata, vdata
 
 		orders: ->
-			this._map_controller.orders()
+			@_map_controller.orders()
 
 		# _setOption: (key, value)
 		# 	if key is 'value'
-		# 		value = this._constrain value
-		# 	this._super key, value
+		# 		value = @_constrain value
+		# 	@_super key, value
 
 		# _setOptions: (options) ->
-		# 	this._super options
-		# 	this.refresh()
+		# 	@_super options
+		# 	@refresh()
 
 		# _destroy: ->
-		# 	this.element.removeClass 'root'
+		# 	@element.removeClass 'root'
