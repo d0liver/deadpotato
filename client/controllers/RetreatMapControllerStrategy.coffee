@@ -1,0 +1,3 @@
+class RetreatMapControllerStrategy
+
+module.exports = RetreatMapControllerStrategy
