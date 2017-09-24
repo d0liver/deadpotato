@@ -51,8 +51,10 @@ class MapController
 
 		@_map.display()
 
+	orders: -> @_strat.orders
+
 	_initControls: ->
-		switch @_gavel.phase.season
+		@_strat = switch @_gavel.phase.season
 			when 'Fall', 'Spring'
 				new MoveMapControllerStrategy @, @_map, @_board
 			when 'Fall Retreat', 'Spring Retreat'

@@ -2,7 +2,7 @@ $                        = require 'jquery'
 VariantUtils             = require '../lib/VariantUtils'
 Color                    = require '../lib/Color'
 co                       = require 'co'
-RegionTexture            = require './RegionTexture'
+AreaTexture              = require './AreaTexture'
 HorizLinesTextureBuilder = require './HorizLinesTextureBuilder'
 Emitter                  = require '../lib/Emitter'
 
@@ -12,8 +12,8 @@ Map = (ctx, MapIcon) ->
 	scale = 4
 	emitter = Emitter()
 	active = []
-	regions = {}
-	# Map the normal region color to the one that we will use for a particular
+	areas = {}
+	# Map the normal area color to the one that we will use for a particular
 	# state
 	state_colors =
 		normal: (color) -> color
@@ -21,15 +21,15 @@ Map = (ctx, MapIcon) ->
 
 	self.on = emitter.on
 
-	self.addRegion = (id, region) ->
-		if region.color then region.color = Color region.color
-		region.texture = {}
-		# We also save the id on the region to make working with them
-		# internally easier (we can pass around regions by reference here but
+	self.addArea = (id, area) ->
+		if area.color then area.color = Color area.color
+		area.texture = {}
+		# We also save the id on the area to make working with them
+		# internally easier (we can pass around areas by reference here but
 		# don't have to do a lookup when getting the id for external
 		# interactions)
-		region.id = id
-		regions[id] = region
+		area.id = id
+		areas[id] = area
 
 	self.clearActive = ->
 		active = []
@@ -37,15 +37,15 @@ Map = (ctx, MapIcon) ->
 
 	self.clearArrows = -> clearCanvas ctx.arrow
 
-	# Get the region that the event is over or null if it's not over a region.
-	self.evtRegion = (e) ->
+	# Get the area that the event is over or null if it's not over an area.
+	self.evtArea = (e) ->
 		[x, y] = [e.pageX, e.pageY]
 
-		for id, region of regions
-			for scanline in region.scanlines
+		for id, area of areas
+			for scanline in area.scanlines
 				{x: sx, y: sy, len: slen} = scanline
 				if y is sy and sx < x < sx + slen
-					return {id, region}
+					return {id, area}
 		return
 
 	self.display = -> self.refresh false
@@ -54,47 +54,54 @@ Map = (ctx, MapIcon) ->
 	# skip the initial canvas clear (i.e. display instead of refresh).
 	self.refresh = (clear = true)->
 		clearCanvas ctx.map if clear
-		for id,region of regions when region.icon?
+		for id,area of areas
 			# Draw the fill first
 			state =
-				if region.id in active then 'active'
+				if area.id in active then 'active'
 				else 'normal'
-			self.showRegion region, state: state, refresh: false
+			self.showArea area, state: state, refresh: false
 
 		return self
 
-	self.showRegion = (region, {state = 'normal', refresh = true}) ->
-		if region.fill or region.id in active
-			unless region.texture[state]?
-				{scanlines, color} = region
+	self.showArea = (area, {state = 'normal', refresh = true}) ->
+		if area.fill or area.id in active
+			unless area.texture[state]?
+				{scanlines, color = Color 'black'} = area
 				tb = if state is 'normal'
 					HorizLinesTextureBuilder color: state_colors[state] color
 				else if state is 'active'
 					# Fill completely for the active selection
 					HorizLinesTextureBuilder color: state_colors[state](color), byy: 1
 
-				region.texture[state] = RegionTexture scanlines, tb
+				area.texture[state] = AreaTexture scanlines, tb
 
-			region.texture[state].draw ctx.map
-		self.showIcon region
+			area.texture[state].draw ctx.map
+		self.showIcon area if area.icon?
 
-	self.showIcon = co.wrap (region) ->
-		img = yield MapIcon(region.color, region.icon).img()
-		[x, y] = region.unit_pos
+	self.showIcon = (area) ->
+		img = await MapIcon(area.color, area.icon).img()
+		[x, y] = area.unit_pos
 		# The given positions are for the center of the image so we have to
 		# subtract half since our coords are for top left
 		ctx.icon.drawImage img, x - 16, y - 16, 32, 32
 
 		return self
 
-	# Draw an arrow from one region1 to region2
+	self.setIcon = (rid, icon) ->
+		area = areas[rid]
+		area.icon = icon
+		area.fill = false
+		area.color = Color 'black'
+		self.refresh()
+
+	# Draw an arrow from one area1 to area2
 	self.arrow = (id1, id2) ->
 		triangle_side = 10
-		r1_coords = regions[id1].unit_pos
-		r2_coords = regions[id2].unit_pos
-		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = regions[id1].color.css('hex')
+		r1_coords = areas[id1].unit_pos
+		r2_coords = areas[id2].unit_pos
+		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = areas[id1].color.css('hex')
 
-		# First draw the line connecting the regions
+		# First draw the line connecting the areas
 		ctx.arrow.beginPath()
 		ctx.arrow.moveTo r1_coords[0], r1_coords[1]
 		ctx.arrow.lineTo r2_coords[0], r2_coords[1]
@@ -121,9 +128,9 @@ Map = (ctx, MapIcon) ->
 		return self
 
 	self.convoy = (id1, id2) ->
-		r1_coords = regions[id1].unit_pos
-		r2_coords = regions[id2].unit_pos
-		color = regions[id2].color.css() ? '#000000'
+		r1_coords = areas[id1].unit_pos
+		r2_coords = areas[id2].unit_pos
+		color = areas[id2].color.css() ? '#000000'
 		# Dimensions in pixels. TODO: Relate this to the scale
 		width = scale*3
 		radius =0.8*width/2
@@ -167,11 +174,11 @@ Map = (ctx, MapIcon) ->
 	# Draw a line from a unit to intersect with the line of another arrow. Used
 	# to indicate support
 	self.bind = (id1, id2, id3) ->
-		r1_coords = regions[id1].unit_pos
-		r2_coords = regions[id2].unit_pos
-		r3_coords = regions[id3].unit_pos
+		r1_coords = areas[id1].unit_pos
+		r2_coords = areas[id2].unit_pos
+		r3_coords = areas[id3].unit_pos
 		midpoint = [(r1_coords[0] + r2_coords[0])/2, (r1_coords[1] + r2_coords[1])/2]
-		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = regions[id3].color.css('hex')
+		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = areas[id3].color.css('hex')
 
 		# Draw a line from to the midpoint
 		ctx.arrow.beginPath()
@@ -189,18 +196,17 @@ Map = (ctx, MapIcon) ->
 		ctx.clearRect 0, 0, ctx.canvas.width, ctx.canvas.height
 
 	self.select = (id) ->
-		region = regions[id]
+		area = areas[id]
 		active.push id
 		self.refresh()
 
 		return self
 
 	self.emitSelect = (e) ->
-		{id, region} = self.evtRegion e
-		console.log "Region: ", region, "id: ", id
-		emitter.trigger 'select', Object.assign({}, region), null
+		{id, area} = self.evtArea e
+		emitter.trigger 'select', area, null
 
-	self.active = -> active
+	Object.defineProperty self, 'active', get: -> active
 
 	relCoords = (evt_handler) ->
 		(e) ->

@@ -77,10 +77,10 @@ SchemaBuilder = (db, user, S3) ->
 				all_countries_have_orders = _.every countries, (country) ->
 					orders.find (order) -> parseOrder(order).country is country
 
-				if all_countries_have_orders
-					await game.roll _id, orders
-				else
-					console.log "Missing orders"
+				# if all_countries_have_orders
+				# 	await game.roll _id, orders
+				# else
+				# 	console.log "Missing orders"
 
 				return null
 

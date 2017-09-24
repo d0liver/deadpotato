@@ -2,14 +2,14 @@ VariantUtils = require '../lib/VariantUtils'
 Color        = require '../lib/Color'
 
 # Given a TextureBuilder (builds a texture with given dimensions), we will
-# generate textures that nicely correspond to the regions.  This way, we can
-# accommodate regions which are different colors and which have different
+# generate textures that nicely correspond to the areas.  This way, we can
+# accommodate areas which are different colors and which have different
 # patterns. This wouldn't be possible otherwise with compositing because we
 # would have to make multiple calls to draw to get the different
 # colors/patterns which would result in bad things happening after the first
 # call (It would apply the compositing to everything on the canvas including
 # the stuff that had already been composited in).
-RegionTexture = (scanlines, texture_builder) ->
+AreaTexture = (scanlines, texture_builder) ->
 	self = {}
 	texture = null
 	bnds = null
@@ -22,9 +22,9 @@ RegionTexture = (scanlines, texture_builder) ->
 		canvas.height = bnds[1].max - bnds[1].min
 
 		ctx.strokeStyle = "#000000"
-		# First, draw the region onto the canvas in black. This is so that
+		# First, draw the area onto the canvas in black. This is so that
 		# we can source-in the texture next
-		fillRegion ctx, scanlines, bnds
+		fillArea ctx, scanlines, bnds
 
 		ctx.globalCompositeOperation = 'source-in'
 		# Next, draw the light texture into the canvas
@@ -36,15 +36,15 @@ RegionTexture = (scanlines, texture_builder) ->
 
 		return
 
-	# Draw the texture for the region on the given canvas context
+	# Draw the texture for the area on the given canvas context
 	self.draw = (ctx, state = 'normal') ->
 		[dx, dy] = [bnds[0].min, bnds[1].min]
 		ctx.drawImage texture, dx, dy
 
-	# Given the scanlines for a region and the bounds of the scanlines, just
+	# Given the scanlines for a area and the bounds of the scanlines, just
 	# draw them on the canvas. We don't change any of the settings on the
 	# context here, we let the caller set them.
-	fillRegion = (ctx, scanlines, bnds) ->
+	fillArea = (ctx, scanlines, bnds) ->
 
 		for scanline in scanlines
 			{x, y, len} = scanline
@@ -60,7 +60,7 @@ RegionTexture = (scanlines, texture_builder) ->
 			ctx.lineTo rel_scanline.x2, rel_scanline.y
 			ctx.stroke()
 
-	# Given a set of scanlines for a region, figure out what the dimensions are
+	# Given a set of scanlines for a area, figure out what the dimensions are
 	# of the smallest rectangle that encloses them
 	bounds = (scanlines) ->
 		# We will use these to store the min and max for x and y
@@ -79,4 +79,4 @@ RegionTexture = (scanlines, texture_builder) ->
 	init()
 	self
 
-module.exports = RegionTexture
+module.exports = AreaTexture

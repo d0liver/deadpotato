@@ -9,7 +9,7 @@ class MoveMapControllerStrategy
 		@_map.on 'select', (id) =>
 			selected = id
 			# Get a list of the active ids.
-			active = @_map.active()
+			active = @_map.active
 
 			# It's not valid for the first selection to be a region without a
 			# unit. The second selection is, in fact, the only selection that

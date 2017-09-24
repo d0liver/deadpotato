@@ -1,5 +1,6 @@
-# Makes dealing with keystrokes a little easier
+$ = require 'jquery'
 
+# Makes dealing with keystrokes a little easier
 class KeyboardInputHandler
 	# Some useful keycodes
 	SHIFT = 16; CTRL = 17; ESC = 27
