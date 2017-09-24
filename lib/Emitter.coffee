@@ -6,9 +6,8 @@ Emitter = ->
 		handlers[evt] ?= []
 		handlers[evt].push handler
 
-	self.trigger = (name, _this, e) ->
-		for handler in handlers[name]
-			handler.call _this, e
+	self.trigger = (name, e) ->
+		handler e for handler in handlers[name]
 
 	return self
 

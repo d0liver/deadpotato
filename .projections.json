@@ -5,13 +5,14 @@
         "type": "client"
     },
     "client/controllers/*Controller.coffee": {"type": "controller"},
+    "client/controllers/*MapControllerStrategy.coffee": {"type": "mstrat"},
     "client/main.coffee": {"type": "client"},
     "lib/*.coffee": {"type": "lib"},
     "public/bundle.js": {"type": "bundle"},
     "sass/_*.sass": {"type": "style"},
     "sass/master.sass": {"type": "style"},
     "server/*.coffee": {"type": "server"},
-    "server/models/*Model.coffee": {"type": "models"},
+    "server/models/*Model.coffee": {"type": "model"},
     "server/server.coffee": {"type": "server"},
     "views/*.pug": {"type": "template"},
     "views/index.pug": {"type": "template"}

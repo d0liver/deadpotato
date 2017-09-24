@@ -27,8 +27,17 @@ html
 				li
 					a.navigate(href='/')
 						img.logo(src='/images/deadpotato.png')
-				li
+				li.dropdown
 					a.navigate.nav-link(href='/games') Games
+					ul.menu.hidden
+						li
+							a(href='/games') Join
+						li
+							a(href='/games/new') New
+						li
+							a(href='/games/delete') Edit
+						li
+							a(href='/games/delete') Quit
 				li
 					a.navigate.nav-link(href='/upload-variant') Upload
 				li

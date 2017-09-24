@@ -2,10 +2,10 @@ $                        = require 'jquery'
 gqlQuery                 = require '../gqlQuery'
 HorizLinesTextureBuilder = require '../HorizLinesTextureBuilder'
 Icons                    = require '../Icons'
-RegionTexture            = require '../RegionTexture'
+RegionTexture            = require '../AreaTexture'
 Color                    = require '../../lib/Color'
 
-{GAME_Q} = require '../gqlQueries'
+{GAME_Q, SUBMIT_ORDERS_Q} = require '../gqlQueries'
 
 template = require '../../views/war-room.pug'
 
@@ -21,15 +21,13 @@ WarRoomController = (_id, $el) ->
 		vdata.map_data = JSON.parse vdata.map_data
 		$el.html template countries: gdata.phase.countries
 
-		$('<div>').prependTo('.right').gameMap {gdata, vdata}
+		$map = $('<div>').prependTo('.right').gameMap({gdata, vdata}).data('deadpotatoGameMap')
 
-		# $('#submit-orders').click ->
-		# 	console.log "Submit orders: ", map_controller.orders()
-		# 	gqlQuery """
-		# 		mutation submitOrders($_id: ObjectID, $orders: [String]) {
-		# 			submitOrders(_id: $_id, orders: $orders)
-		# 		}
-		# 	""", orders: map_controller.orders(), _id: gdata._id
+		$('#submit-orders').click ->
+			console.log "Submit orders: ", $map.orders()
+			gqlQuery SUBMIT_ORDERS_Q, _id: gdata._id, orders: $map.orders()
+			# Refresh the page so we can see the new moves
+			window.location.reload false
 
 
 		# Stylize the tabs representing the countries. This needs to be

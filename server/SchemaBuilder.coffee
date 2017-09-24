@@ -13,7 +13,7 @@ _                      = require 'underscore'
 {parseOrder} = require 'gavel.js'
 
 SchemaBuilder = (db, user, S3) ->
-	phase     = PhaseModel db
+	phase     = new PhaseModel db
 	game      = GameModel db
 	variantm  = VariantModel db, S3
 	variants  = db.collection 'variants'
@@ -32,6 +32,7 @@ SchemaBuilder = (db, user, S3) ->
 		Mutation:
 			game: -> {}
 			variant: -> {}
+			order: -> {}
 
 		Query:
 			variants: variantm.list
@@ -49,25 +50,39 @@ SchemaBuilder = (db, user, S3) ->
 			join: (obj, {game: _id, country}) -> from game.join _id, country
 			create: (obj, {game: data}) -> game.create data
 
-		OrdersMutations:
+		OrderMutations:
 			submit: (obj, {_id, orders}) ->
-				# TODO: Need a way to overwrite submitted orders.
-				await db.collection('games').updateOne {_id},
-					'$push': orders: '$each': orders
 
-				{orders, countries} = await db.collection('games').findOne {_id}, orders: 1, countries: 1
-				countries = countries.map (c) -> c.name
-				orders = (parseOrder order for order in orders)
+				# Wrap the orders in an object so we can store some metadata on them.
+				orders = {orders}
+
+				# TODO: Remove any old orders for this country
+				# await db.collection('orders').remove ...
+
+				# Create and insert the new orders and attach them to the
+				# current phase
+				current_phase = await phase.current _id
+				orders.phase = current_phase._id
+				# Suggested orders will have a suggester and a suggestee
+				await db.collection('orders').insert orders
+
+				# Grab all of the orders for the current phase
+				orders = await db.collection('orders').find({phase: current_phase._id}).toArray()
+				# Pluck the orders out of the orders objects
+				orders = orders.map (o) -> o.orders
+				# Flatten and orders for easier traversal
+				orders = (order for order in Array::concat orders...)
+				countries = current_phase.countries.map (c) -> c.name
 
 				all_countries_have_orders = _.every countries, (country) ->
-					orders.find (order) -> order.country is country
+					orders.find (order) -> parseOrder(order).country is country
 
-				if all_countries_have_orders
-					await game.roll _id
-				else
-					console.log "Missing orders"
+				# if all_countries_have_orders
+				# 	await game.roll _id, orders
+				# else
+				# 	console.log "Missing orders"
 
-				Q null
+				return null
 
 	return makeExecutableSchema {typeDefs: schema, resolvers}
 

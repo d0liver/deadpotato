@@ -86,6 +86,14 @@ exports.VARIANTS_Q = """
 	}
 """
 
+exports.SUBMIT_ORDERS_Q = """
+	mutation submit($_id: ObjectID!, $orders: [String!]!) {
+		order {
+			submit (_id: $_id, orders: $orders)
+		}
+	}
+"""
+
 exports.IS_AUTHED_Q	= "
 	{
 		isAuthed
