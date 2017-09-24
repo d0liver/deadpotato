@@ -38,8 +38,9 @@ class MapController
 			{scanlines, unit_pos, name_pos, name: rname} = region
 			@_map.addArea {
 				id: rname
-				color: region.unit?.country.color ? 'black'
-				fill: region.unit?.region in (region.unit?.country.supply_centers ? [])
+				unit_color: region.unit?.country.color
+				color: @_board.countryOwns(rname)?.color
+				fill: @_board.countryOwns(rname)?
 				icon: region.unit?.type
 				name_pos
 				unit_pos

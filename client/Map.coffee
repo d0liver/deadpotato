@@ -24,6 +24,8 @@ Map = (ctx, MapIcon) ->
 
 	self.addArea = (area) ->
 		if area.color then area.color = Color area.color
+		if area.unit_color then area.unit_color = Color area.unit_color
+
 		area.texture = {}
 		areas[area.id] = area
 
@@ -75,7 +77,7 @@ Map = (ctx, MapIcon) ->
 		self.showIcon area if area.icon?
 
 	self.showIcon = (area) ->
-		img = await MapIcon(area.color, area.icon).img()
+		img = await MapIcon(area.unit_color, area.icon).img()
 		[x, y] = area.unit_pos
 		# The given positions are for the center of the image so we have to
 		# subtract half since our coords are for top left
