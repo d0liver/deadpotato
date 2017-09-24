@@ -41,7 +41,7 @@ Map = (ctx, MapIcon) ->
 			for scanline in area.scanlines
 				{x: sx, y: sy, len: slen} = scanline
 				if y is sy and sx < x < sx + slen
-					return {id, area}
+					return area
 		return
 
 	self.display = -> self.refresh false
@@ -199,7 +199,7 @@ Map = (ctx, MapIcon) ->
 		return self
 
 	self.emitSelect = (e) ->
-		{id, area} = self.evtArea e
+		area = self.evtArea e
 		emitter.trigger 'select', area, null
 
 	Object.defineProperty self, 'active', get: -> active

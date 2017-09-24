@@ -34,18 +34,17 @@ class MapController
 		# that off to the map in a generic way. We are guaranteed by Map's API
 		# that adding a region that already exists will overwrite the previous
 		# one.
-		for {name, units, color, supply_centers} in @_countries
-			for unit in units
-				{scanlines, unit_pos, name_pos} = @_regions[unit.region]
-				@_map.addArea {
-					id: unit.region
-					color: color
-					fill: unit.region in supply_centers
-					icon: unit.type
-					name_pos
-					unit_pos
-					scanlines
-				}
+		for region from @_board.regions()
+			{scanlines, unit_pos, name_pos, name: rname} = region
+			@_map.addArea {
+				id: rname
+				color: region.unit?.country.color ? 'black'
+				fill: region.unit?.region in (region.unit?.country.supply_centers ? [])
+				icon: region.unit?.type
+				name_pos
+				unit_pos
+				scanlines
+			}
 
 		@_map.display()
 
