@@ -73,9 +73,10 @@ SchemaBuilder = (db, user, S3) ->
 				# Flatten and orders for easier traversal
 				orders = (order for order in Array::concat orders...)
 				countries = current_phase.countries.map (c) -> c.name
+				await game.roll _id, orders
 
-				all_countries_have_orders = _.every countries, (country) ->
-					orders.find (order) -> parseOrder(order).country is country
+				# all_countries_have_orders = _.every countries, (country) ->
+				# 	orders.find (order) -> parseOrder(order).country is country
 
 				# if all_countries_have_orders
 				# 	await game.roll _id, orders
