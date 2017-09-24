@@ -23,11 +23,6 @@ class MapController
 
 	_initMap: ->
 
-		# Shallow copy all of the regions so that our modifications for the Map
-		# don't become global.
-		for rname,region of @_regions
-			@_regions[rname] = Object.assign {}, region
-
 		# Augment each country's region with the country's color and add it to the
 		# map.
 		# XXX: We do things this way instead of passing in the variant_data and
@@ -41,13 +36,16 @@ class MapController
 		# one.
 		for {name, units, color, supply_centers} in @_countries
 			for unit in units
-				region = @_regions[unit.region]
-				region.fill = unit.region in supply_centers
-				region.icon = unit.type
-				region.color = color
-
-		# Once modifications have been done (above) we add all regions.
-		@_map.addRegion n,region for n,region of @_regions
+				{scanlines, unit_pos, name_pos} = @_regions[unit.region]
+				@_map.addArea {
+					id: unit.region
+					color: color
+					fill: unit.region in supply_centers
+					icon: unit.type
+					name_pos
+					unit_pos
+					scanlines
+				}
 
 		@_map.display()
 

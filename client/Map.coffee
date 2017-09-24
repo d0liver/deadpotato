@@ -5,6 +5,7 @@ co                       = require 'co'
 AreaTexture              = require './AreaTexture'
 HorizLinesTextureBuilder = require './HorizLinesTextureBuilder'
 Emitter                  = require '../lib/Emitter'
+utils                    = require '../lib/utils'
 
 Map = (ctx, MapIcon) ->
 	self = {}
@@ -21,15 +22,10 @@ Map = (ctx, MapIcon) ->
 
 	self.on = emitter.on
 
-	self.addArea = (id, area) ->
+	self.addArea = (area) ->
 		if area.color then area.color = Color area.color
 		area.texture = {}
-		# We also save the id on the area to make working with them
-		# internally easier (we can pass around areas by reference here but
-		# don't have to do a lookup when getting the id for external
-		# interactions)
-		area.id = id
-		areas[id] = area
+		areas[area.id] = area
 
 	self.clearActive = ->
 		active = []

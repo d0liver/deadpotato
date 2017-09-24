@@ -2,7 +2,7 @@ $                        = require 'jquery'
 gqlQuery                 = require '../gqlQuery'
 HorizLinesTextureBuilder = require '../HorizLinesTextureBuilder'
 Icons                    = require '../Icons'
-RegionTexture            = require '../RegionTexture'
+RegionTexture            = require '../AreaTexture'
 Color                    = require '../../lib/Color'
 
 {GAME_Q, SUBMIT_ORDERS_Q} = require '../gqlQueries'
