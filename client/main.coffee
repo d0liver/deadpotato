@@ -10,6 +10,7 @@ UploadVariantController = require './controllers/UploadVariantController'
 CreateGameController = require './controllers/CreateGameController'
 GameListController   = require './controllers/GameListController'
 WarRoomController    = require './controllers/WarRoomController'
+NavMenuController    = require './controllers/NavMenuController'
 mapWidgetSetup       = require './mapWidgetSetup'
 
 $(document).ready () ->
@@ -17,6 +18,8 @@ $(document).ready () ->
 	$container = $ '.content'
 	# upload_variant = UploadVariantController cnt, gam, map, rgn
 	router = Router()
+
+	new NavMenuController
 
 	router.get '/new-game', ->
 		new CreateGameController $container
