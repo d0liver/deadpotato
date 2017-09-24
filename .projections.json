@@ -5,6 +5,7 @@
         "type": "client"
     },
     "client/controllers/*Controller.coffee": {"type": "controller"},
+    "client/controllers/*MapControllerStrategy.coffee": {"type": "mstrat"},
     "client/main.coffee": {"type": "client"},
     "lib/*.coffee": {"type": "lib"},
     "public/bundle.js": {"type": "bundle"},
