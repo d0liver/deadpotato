@@ -39,6 +39,7 @@ exports.GAME_Q = """
 						type
 						region
 						coast
+						dislodger
 					}
 				}
 				season_year

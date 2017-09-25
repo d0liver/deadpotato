@@ -5,6 +5,7 @@ module.exports = """
 		type: String
 		region: String
 		coast: String
+		dislodger: String
 	}
 
 	type Country {

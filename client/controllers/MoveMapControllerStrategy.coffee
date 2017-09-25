@@ -1,13 +1,21 @@
+_ = require 'underscore'
+$ = require 'jquery'
+
+{parseOrder}         = require 'gavel.js'
 KeyboardInputHandler = require '../KeyboardInputHandler'
+
+{enums: {english, outcomes, orders: eorders, paths}} = require 'gavel.js'
+{MOVE, SUPPORT, CONVOY, HOLD}                        = eorders
 
 # Input controls for the regular phases (Fall and Spring)
 class MoveMapControllerStrategy
 
-	constructor: (@_map_controller, @_map, @_board) ->
+	constructor: (@_map_controller, @_map, @_board, @_pfinder) ->
+		@_orders = []
+		Object.defineProperty @, 'orders', get: -> @_orders.map (o) -> o.text
 		kiph = new KeyboardInputHandler
 
-		@_map.on 'select', (id) =>
-			selected = id
+		@_map.on 'select', ({id: selected}) =>
 			# Get a list of the active ids.
 			active = @_map.active
 
@@ -47,6 +55,10 @@ class MoveMapControllerStrategy
 
 		@_utypeAbbrev = (type) -> type[0]
 
+		$(document).on 'keydown', =>
+			if kiph.escIsDown
+				@_map.clearActive()
+
 	_setOrder: (order) ->
 		order = Object.assign {}, text: order, parseOrder(order)
 		old_order = @_orders.find (o) -> o.actor is order.actor
@@ -58,8 +70,6 @@ class MoveMapControllerStrategy
 
 	_showOrders: ->
 		@_map.clearArrows()
-
-		console.log "ORDERS: ", @_orders
 
 		for order in @_orders
 			switch order.type
@@ -89,7 +99,7 @@ class MoveMapControllerStrategy
 
 				console.log branch[branch.length - 1].region, order.to
 				# Draw the last convoy segment to the destination
-				# @_map.arrow 
+				# @_map.arrow
 				@_map.arrow branch[branch.length - 1].region, order.to
 
 			# Get a list of the path regions. We don't want to draw any of

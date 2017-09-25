@@ -1,10 +1,4 @@
 $            = require 'jquery'
-{parseOrder} = require 'gavel.js'
-_            = require 'underscore'
-
-utils                                                = require '../../lib/utils'
-{enums: {english, outcomes, orders: eorders, paths}} = require 'gavel.js'
-{MOVE, SUPPORT, CONVOY, HOLD}                        = eorders
 
 # These determine what happens when user interacts with the map during
 # different phases.
@@ -39,9 +33,11 @@ class MapController
 			@_map.addArea {
 				id: rname
 				unit_color: region.unit?.country.color
+				dislodged_unit_color: region.dislodged_unit?.country.color
 				color: @_board.countryOwns(rname)?.color
 				fill: @_board.countryOwns(rname)?
 				icon: region.unit?.type
+				offset_icon: region.dislodged_unit?.type
 				name_pos
 				unit_pos
 				scanlines
@@ -54,7 +50,7 @@ class MapController
 	_initControls: ->
 		@_strat = switch @_gavel.phase.season
 			when 'Fall', 'Spring'
-				new MoveMapControllerStrategy @, @_map, @_board
+				new MoveMapControllerStrategy @, @_map, @_board, @_pfinder
 			when 'Fall Retreat', 'Spring Retreat'
 				new RetreatMapControllerStrategy #XXX
 			when 'Winter'

@@ -14,6 +14,7 @@ Map = (ctx, MapIcon) ->
 	emitter = Emitter()
 	active = []
 	areas = {}
+	OFFSET = 5
 	# Map the normal area color to the one that we will use for a particular
 	# state
 	state_colors =
@@ -23,8 +24,9 @@ Map = (ctx, MapIcon) ->
 	self.on = emitter.on
 
 	self.addArea = (area) ->
-		if area.color then area.color = Color area.color
-		if area.unit_color then area.unit_color = Color area.unit_color
+		# Initialize all our colors
+		for k in ['color', 'unit_color', 'dislodged_unit_color'] when area[k]?
+			area[k] = Color area[k]
 
 		area.texture = {}
 		areas[area.id] = area
@@ -77,8 +79,18 @@ Map = (ctx, MapIcon) ->
 		self.showIcon area if area.icon?
 
 	self.showIcon = (area) ->
-		img = await MapIcon(area.unit_color, area.icon).img()
 		[x, y] = area.unit_pos
+
+		if area.offset_icon?
+			console.log "HIT"
+			# Show the dislodged unit
+			img = await MapIcon(area.dislodged_unit_color, area.offset_icon).img()
+			# The given positions are for the center of the image so we have to
+			# subtract half since our coords are for top left
+			ctx.icon.drawImage img, x + OFFSET - 16, y - OFFSET - 16, 32, 32
+
+		# Show the occupying unit
+		img = await MapIcon(area.unit_color, area.icon).img()
 		# The given positions are for the center of the image so we have to
 		# subtract half since our coords are for top left
 		ctx.icon.drawImage img, x - 16, y - 16, 32, 32
@@ -97,7 +109,7 @@ Map = (ctx, MapIcon) ->
 		triangle_side = 10
 		r1_coords = areas[id1].unit_pos
 		r2_coords = areas[id2].unit_pos
-		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = areas[id1].color.css('hex')
+		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = areas[id1].unit_color.css('hex')
 
 		# First draw the line connecting the areas
 		ctx.arrow.beginPath()
@@ -128,7 +140,7 @@ Map = (ctx, MapIcon) ->
 	self.convoy = (id1, id2) ->
 		r1_coords = areas[id1].unit_pos
 		r2_coords = areas[id2].unit_pos
-		color = areas[id2].color.css() ? '#000000'
+		color = areas[id2].unit_color.css() ? '#000000'
 		# Dimensions in pixels. TODO: Relate this to the scale
 		width = scale*3
 		radius =0.8*width/2
@@ -176,7 +188,7 @@ Map = (ctx, MapIcon) ->
 		r2_coords = areas[id2].unit_pos
 		r3_coords = areas[id3].unit_pos
 		midpoint = [(r1_coords[0] + r2_coords[0])/2, (r1_coords[1] + r2_coords[1])/2]
-		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = areas[id3].color.css('hex')
+		ctx.arrow.strokeStyle = ctx.arrow.fillStyle = areas[id3].unit_color.css('hex')
 
 		# Draw a line from to the midpoint
 		ctx.arrow.beginPath()
