@@ -62,7 +62,7 @@ module.exports = ->
 				# creation in the controller (it's better to have the business logic
 				# for the regions there).
 				board = Board gdata, vdata
-				pfinder = PathFinder board
+				pfinder = new PathFinder board
 				gavel = Gavel board, pfinder, gdata.phase.season_year
 				map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
 				@_map_controller = new MapController gavel, board, pfinder, map, gdata, vdata

@@ -58,9 +58,9 @@ GameModel = (db) ->
 
 		vdata = await variants.findOne {_id: gdata.variant}
 		vdata.map_data = JSON.parse vdata.map_data
-		
+
 		board   = Board gdata, vdata
-		pfinder = PathFinder board
+		pfinder = new PathFinder board
 		gavel   = Gavel board, pfinder, gdata.phase.season_year
 
 		# Resolve and apply the result to the board
