@@ -8,7 +8,9 @@ class NavMenuController
 		console.log "Menu: ", $menu[0]
 
 		$drop.click (e) ->
-			e.preventDefault()
-			$menu.slideToggle DELAY
+			# Do not preventDefault() on menu items
+			if $(e.target).parent().hasClass 'dropdown'
+				e.preventDefault()
+				$menu.slideToggle DELAY
 
 module.exports = NavMenuController

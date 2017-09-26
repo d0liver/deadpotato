@@ -33,19 +33,19 @@ html
 						li
 							a(href='/games') Join
 						li
-							a(href='/games/new') New
+							a(href='/new-game') New
 						li
 							a(href='/games/delete') Edit
 						li
 							a(href='/games/delete') Quit
+						if typeof gid !== 'undefined'
+							li
+								a(href='/remove-game/'+gid) Delete
 				li
 					a.navigate.nav-link(href='/upload-variant') Upload
 				li
 					a.navigate.nav-link(href='/auth/google') Login
 				li
 					a.navigate.nav-link(href='/about') About
-				if typeof gid !== 'undefined'
-					li
-						a.navigate.nav-link(href='/remove-game/'+gid) Remove Game
 		.content
 			block content
