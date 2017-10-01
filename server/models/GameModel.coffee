@@ -61,7 +61,7 @@ GameModel = (db) ->
 
 		board   = Board gdata, vdata
 		pfinder = new PathFinder board
-		gavel   = Gavel board, pfinder, gdata.phase.season_year
+		gavel   = new Gavel board, pfinder, gdata.phase.season_year
 
 		# Resolve and apply the result to the board
 		gavel.roll orders
