@@ -1,5 +1,7 @@
 $              = require 'jquery'
 
+{Gavel} = require 'gavel.js'
+
 # Our stuff
 Icons                   = require './Icons'
 Map                     = require './Map'
@@ -13,9 +15,13 @@ WarRoomController    = require './controllers/WarRoomController'
 NavMenuController    = require './controllers/NavMenuController'
 mapWidgetSetup       = require './mapWidgetSetup'
 
+gqlQuery = require './gqlQuery'
+{GAME_Q} = require './gqlQueries'
+
 $(document).ready () ->
 
 	$container = $ '.content'
+
 	# upload_variant = UploadVariantController cnt, gam, map, rgn
 	router = Router()
 
@@ -28,8 +34,15 @@ $(document).ready () ->
 		new GameListController $container
 
 	router.get '/game/:_id', ({_id}) ->
-		mapWidgetSetup()
-		WarRoomController _id, $container
+		console.log "ID: ", _id
+		{games: [gdata]} = await gqlQuery GAME_Q, {_id}
+		console.log "GDATA: ", gdata
+		vdata = gdata.variant
+		vdata.map_data = JSON.parse vdata.map_data
+		gavel = new Gavel gdata, vdata
+		mapWidgetSetup gavel
+		wrc = new WarRoomController _id, $container
+		wrc.init()
 
 	router.get '/upload-variant', ->
 		UploadVariantController $container

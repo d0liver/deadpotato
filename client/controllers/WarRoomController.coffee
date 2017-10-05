@@ -12,16 +12,14 @@ template = require '../../views/war-room.pug'
 player_country = null
 
 class WarRoomController
-	self = {}
-
-	constructor: (@_id, @_$el) -> @_init()
+	constructor: (@_id, @_$el) ->
 
 	# Cannot await on the constructor
-	_init: ->
-		{games: [gdata]} = await gqlQuery GAME_Q, {@_id}
+	init: ->
+		{games: [gdata]} = await gqlQuery GAME_Q, {_id: @_id}
 		vdata = gdata.variant
 		vdata.map_data = JSON.parse vdata.map_data
-		$el.html template countries: gdata.phase.countries
+		@_$el.html template countries: gdata.phase.countries
 
 		$map = $('<div>').prependTo('.right').gameMap({gdata, vdata}).data('deadpotatoGameMap')
 

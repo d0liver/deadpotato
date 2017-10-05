@@ -17,8 +17,10 @@ GoogleAuth = require './GoogleAuth'
 {graphqlExpress, graphiqlExpress} = require 'apollo-server-express'
 SchemaBuilder    = require './SchemaBuilder'
 
+{Gavel} = require 'gavel.js'
+Logger  = require '../lib/Logger'
+
 {UserException} = require '../lib/Exceptions'
-Gavel           = require 'gavel.js'
 
 NODE_ENV = process.env.NODE_ENV
 DB_URI = "mongodb://localhost:27017/deadpotato"
@@ -72,8 +74,11 @@ MongoClient.connect DB_URI, (err, db) ->
 			catch e
 				console.log "Could not convert #{req.params.id} to an ObjectID"
 
-			{gdata, vdata} = await (GameModel db).joined id
-			res.render 'index', gid: req.params.id, countries: gdata.phase.countries
+			try
+				{gdata, vdata} = await (new GameModel id, db, Gavel).joined id
+				res.render 'index', gid: req.params.id, countries: gdata.phase.countries
+			catch
+				Logger.warn "Failed to create GameModel from id: #{id}"
 		else
 			next()
 

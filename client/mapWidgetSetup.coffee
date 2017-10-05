@@ -1,14 +1,13 @@
 window.jQuery = $ = require 'jquery'
 require 'jquery-ui'
 
-{Gavel, Board, PathFinder} = require 'gavel.js'
 Map                        = require './Map'
 MapController              = require './controllers/MapController'
 MapIcon                    = require '../lib/MapIcon'
 
 S3_BUCKET = "https://s3.us-east-2.amazonaws.com/deadpotato/"
 
-module.exports = ->
+module.exports = (gavel) ->
 
 	$.widget 'deadpotato.gameMap',
 		_create: ->
@@ -61,11 +60,8 @@ module.exports = ->
 				# New Map constructor that only takes the regions - needed for map
 				# creation in the controller (it's better to have the business logic
 				# for the regions there).
-				board = Board gdata, vdata
-				pfinder = new PathFinder board
-				gavel = new Gavel board, pfinder, gdata.phase.season_year
 				map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
-				@_map_controller = new MapController gavel, board, pfinder, map, gdata, vdata
+				@_map_controller = new MapController gavel, map, gdata, vdata
 
 		orders: ->
 			@_map_controller.orders()

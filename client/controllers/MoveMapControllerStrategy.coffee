@@ -10,7 +10,7 @@ KeyboardInputHandler = require '../KeyboardInputHandler'
 # Input controls for the regular phases (Fall and Spring)
 class MoveMapControllerStrategy
 
-	constructor: (@_map_controller, @_map, @_board, @_pfinder) ->
+	constructor: (@_map_controller, @_map, @_gavel) ->
 		@_orders = []
 		Object.defineProperty @, 'orders', get: -> @_orders.map (o) -> o.text
 		kiph = new KeyboardInputHandler
@@ -23,7 +23,7 @@ class MoveMapControllerStrategy
 			# unit. The second selection is, in fact, the only selection that
 			# it's valid to do on a region without a unit (since it's the
 			# destination of a move)
-			if not @_board.region(selected).unit? and active.length isnt 1
+			if not @_gavel.board.region(selected).unit? and active.length isnt 1
 				@_map.clearActive()
 				return
 
@@ -32,8 +32,8 @@ class MoveMapControllerStrategy
 				@_map.select selected
 			# Select a destination region for the move
 			else if active.length is 1 and selected isnt active[0]
-				utype = @_board.region(active[0]).unit.type
-				country = @_board.region(active[0]).unit.country.name
+				utype = @_gavel.board.region(active[0]).unit.type
+				country = @_gavel.board.region(active[0]).unit.country.name
 				order = "#{country}: #{@_utypeAbbrev utype} #{active[0]} - #{selected}"
 				@_setOrder order
 				@_map.select selected
@@ -41,9 +41,9 @@ class MoveMapControllerStrategy
 			# Either support or convoy active[0] depending on if a modifier key has
 			# been pressed.
 			else if active.length > 1
-				utype = @_board.region(selected).unit.type
-				country = @_board.region(selected).unit.country.name
-				dest_utype = @_utypeAbbrev @_board.region(active[0]).unit.type
+				utype = @_gavel.board.region(selected).unit.type
+				country = @_gavel.board.region(selected).unit.country.name
+				dest_utype = @_utypeAbbrev @_gavel.board.region(active[0]).unit.type
 				otype = (kiph.shiftIsDown or kiph.ctrlIsDown) and 'Convoys' or 'Supports'
 				order = "
 					#{country}: #{@_utypeAbbrev utype} #{selected} #{otype}
@@ -82,10 +82,10 @@ class MoveMapControllerStrategy
 		# keep from overdrawing.
 		shown_segs = []
 		cunits = for order in @_orders when order.type is CONVOY
-			@_board.region(order.actor).unit
+			@_gavel.board.region(order.actor).unit
 
 		for order in @_orders when order.type is MOVE
-			path = @_pfinder.convoyPath order, cunits
+			path = @_gavel.pfinder.convoyPath order, cunits
 
 			for branch in path
 				# Draw the first segment from the source region to the first

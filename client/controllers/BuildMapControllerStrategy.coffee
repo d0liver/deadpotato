@@ -2,7 +2,7 @@ KeyboardInputHandler = require '../KeyboardInputHandler'
 
 class BuildMapControllerStrategy
 
-	constructor: (@_map_controller, @_map, @_board) ->
+	constructor: (@_map_controller, @_map, @_gavel) ->
 		orders = []
 		Object.defineProperty @, 'orders', get: -> orders
 
@@ -19,7 +19,7 @@ class BuildMapControllerStrategy
 					else 'Army'
 
 				console.log "region: ", selected.id
-				console.log "r1: ", @_board.region selected.id
+				console.log "r1: ", @_gavel.board.region selected.id
 				# TODO: Hard coded for the time being but should be our current
 				# country.
 				country = "Germany"

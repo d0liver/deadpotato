@@ -8,7 +8,7 @@ RetreatMapControllerStrategy = require './RetreatMapControllerStrategy'
 
 class MapController
 
-	constructor: (@_gavel, @_board, @_pfinder, @_map, @_gdata, @_vdata) ->
+	constructor: (@_gavel, @_map, @_gdata, @_vdata) ->
 		orders = []
 		@_countries = @_gdata.phase.countries; @_regions = @_vdata.map_data.regions
 
@@ -28,14 +28,15 @@ class MapController
 		# that off to the map in a generic way. We are guaranteed by Map's API
 		# that adding a region that already exists will overwrite the previous
 		# one.
-		for region from @_board.regions()
+		console.log "Gavel board? ", @_gavel.board
+		for region from @_gavel.board.regions()
 			{scanlines, unit_pos, name_pos, name: rname} = region
 			@_map.addArea {
 				id: rname
 				unit_color: region.unit?.country.color
 				dislodged_unit_color: region.dislodged_unit?.country.color
-				color: @_board.countryOwns(rname)?.color
-				fill: @_board.countryOwns(rname)?
+				color: @_gavel.board.countryOwns(rname)?.color
+				fill: @_gavel.board.countryOwns(rname)?
 				icon: region.unit?.type
 				offset_icon: region.dislodged_unit?.type
 				name_pos
@@ -50,10 +51,10 @@ class MapController
 	_initControls: ->
 		@_strat = switch @_gavel.phase.season
 			when 'Fall', 'Spring'
-				new MoveMapControllerStrategy @, @_map, @_board, @_pfinder
+				new MoveMapControllerStrategy @, @_map, @_gavel
 			when 'Fall Retreat', 'Spring Retreat'
 				new RetreatMapControllerStrategy #XXX
 			when 'Winter'
-				new BuildMapControllerStrategy @, @_map, @_board
+				new BuildMapControllerStrategy @, @_map, @_gavel
 
 module.exports = MapController

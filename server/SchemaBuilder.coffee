@@ -9,12 +9,11 @@ PhaseModel             = require './models/PhaseModel'
 VariantModel           = require './models/VariantModel'
 {UserException}        = require '../lib/Exceptions'
 _                      = require 'underscore'
-
-{parseOrder} = require 'gavel.js'
+{parseOrder, Gavel} = require 'gavel.js'
 
 SchemaBuilder = (db, user, S3) ->
 	phase     = new PhaseModel db
-	game      = GameModel db
+
 	variantm  = VariantModel db, S3
 	variants  = db.collection 'variants'
 
@@ -36,7 +35,7 @@ SchemaBuilder = (db, user, S3) ->
 
 		Query:
 			variants: variantm.list
-			games: game.list
+			games: (o) -> GameModel.list db, o
 			isAuthed: -> return Q user?
 
 		Game:
@@ -47,8 +46,12 @@ SchemaBuilder = (db, user, S3) ->
 			create: (obj, {variant: b64}) -> variantm.create(b64)
 
 		GameMutations:
-			join: (obj, {game: _id, country}) -> from game.join _id, country
-			create: (obj, {game: data}) -> game.create data
+			join: (obj, {game: _id, country}) ->
+				gm = new GameModel _id, db, Gavel
+				await gm.init()
+				await gm.join country
+
+			create: (obj, {game: data}) -> GameModel.create data
 
 		OrderMutations:
 			submit: (obj, {_id, orders}) ->
@@ -73,7 +76,9 @@ SchemaBuilder = (db, user, S3) ->
 				# Flatten and orders for easier traversal
 				orders = (order for order in Array::concat orders...)
 				countries = current_phase.countries.map (c) -> c.name
-				await game.roll _id, orders
+				gm = new GameModel _id, db, Gavel
+				await gm.init()
+				await gm.roll orders
 
 				# all_countries_have_orders = _.every countries, (country) ->
 				# 	orders.find (order) -> parseOrder(order).country is country
