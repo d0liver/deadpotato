@@ -47,5 +47,15 @@ html
 					a.navigate.nav-link(href='/auth/google') Login
 				li
 					a.navigate.nav-link(href='/about') About
+				li.dropdown
+					a.navigate.nav-link(href='javascript:void(0)') Countries
+					ul.menu.hidden
+						if typeof countries !== 'undefined'
+							for country in countries
+								li
+									a(
+										class='select-country'
+										href='javascript:void(0)'
+									)=country.name
 		.content
 			block content

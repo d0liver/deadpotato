@@ -65,7 +65,15 @@ MongoClient.connect DB_URI, (err, db) ->
 	# Fallback is the index
 	app.get '/game/:id', (req, res, next) ->
 		if process.env.NODE_ENV is 'development'
-			res.render 'index', gid: req.params.id
+			GameModel = require './models/GameModel'
+
+			try
+				id = ObjectID req.params.id
+			catch e
+				console.log "Could not convert #{req.params.id} to an ObjectID"
+
+			{gdata, vdata} = await (GameModel db).joined id
+			res.render 'index', gid: req.params.id, countries: gdata.phase.countries
 		else
 			next()
 
@@ -78,7 +86,7 @@ MongoClient.connect DB_URI, (err, db) ->
 			_id = ObjectID req.params.id
 		catch err
 			console.log "
-				Failed to create mongo object id from the given id string: 
+				Failed to create mongo object id from the given id string:
 			", req.params.id
 			# If we couldn't create the ObjectID then bail. We're doing it this
 			# way rather than having all of the logic be in ONE catch block
