@@ -25,7 +25,7 @@ $(document).ready () ->
 		new CreateGameController $container
 
 	router.get '/games', ->
-		GameListController $container
+		new GameListController $container
 
 	router.get '/game/:_id', ({_id}) ->
 		mapWidgetSetup()
