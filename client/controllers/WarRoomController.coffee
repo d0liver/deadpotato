@@ -11,13 +11,15 @@ template = require '../../views/war-room.pug'
 
 player_country = null
 
-WarRoomController = (_id, $el) ->
+class WarRoomController
 	self = {}
 
-	init = ->
-		{games: [gdata]} = await gqlQuery GAME_Q, {_id}
+	constructor: (@_id, @_$el) -> @_init()
+
+	# Cannot await on the constructor
+	_init: ->
+		{games: [gdata]} = await gqlQuery GAME_Q, {@_id}
 		vdata = gdata.variant
-		# player_country = gdata.player_country
 		vdata.map_data = JSON.parse vdata.map_data
 		$el.html template countries: gdata.phase.countries
 
@@ -50,8 +52,5 @@ WarRoomController = (_id, $el) ->
 			$(this).css
 				background: "linear-gradient(90deg,#{darker},#{lighter})"
 				'border-color': lighter
-
-	init()
-	return self
 
 module.exports = WarRoomController
