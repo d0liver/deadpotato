@@ -15,42 +15,48 @@ class MoveMapControllerStrategy
 		Object.defineProperty @, 'orders', get: -> @_orders.map (o) -> o.text
 		kiph = new KeyboardInputHandler
 
-		@_map.on 'select', ({id: selected}) =>
-			# Get a list of the active ids.
+		@_map.on 'select', ({id: sel_id}) =>
+			region = (r) => @_gavel.board.region(r)
+			selected = region sel_id
+			# Get a list of the active ids
 			active = @_map.active
+			# Get the underlying regions for the active selections
+			a0 = region active[0]; a1 = region active[1]
 
 			# It's not valid for the first selection to be a region without a
 			# unit. The second selection is, in fact, the only selection that
 			# it's valid to do on a region without a unit (since it's the
 			# destination of a move)
-			if not @_gavel.board.region(selected).unit? and active.length isnt 1
+			# Furthermore, the initial selection must be on a unit that we own.
+			unless (selected.unit? or active.length is 1) and
+			(active.length isnt 0 or selected.unit?.country.name is @_gavel.country)
 				@_map.clearActive()
 				return
 
 			# Initial selection
 			if active.length is 0
-				@_map.select selected
+				@_map.select sel_id
 			# Select a destination region for the move
-			else if active.length is 1 and selected isnt active[0]
-				utype = @_gavel.board.region(active[0]).unit.type
-				country = @_gavel.board.region(active[0]).unit.country.name
-				order = "#{country}: #{@_utypeAbbrev utype} #{active[0]} - #{selected}"
+			else if active.length is 1 and sel_id isnt active[0]
+				utype = a0.unit.type
+				country = a0.unit.country.name
+				order = "#{country}: #{@_utypeAbbrev utype} #{active[0]} - #{sel_id}"
 				@_setOrder order
-				@_map.select selected
+				@_map.select sel_id
 				@_showOrders()
 			# Either support or convoy active[0] depending on if a modifier key has
 			# been pressed.
 			else if active.length > 1
-				utype = @_gavel.board.region(selected).unit.type
-				country = @_gavel.board.region(selected).unit.country.name
-				dest_utype = @_utypeAbbrev @_gavel.board.region(active[0]).unit.type
+				utype = selected.unit.type
+				country = selected.unit.country.name
+				dest_utype = @_utypeAbbrev a0.unit.type
 				otype = (kiph.shiftIsDown or kiph.ctrlIsDown) and 'Convoys' or 'Supports'
 				order = "
 					#{country}: #{@_utypeAbbrev utype} #{selected} #{otype}
 					#{dest_utype} #{active[0]} - #{active[1]}
 				"
 				@_setOrder order
-				@_map.select selected
+				@_map.select sel_id
 				@_showOrders()
 
 		@_utypeAbbrev = (type) -> type[0]
@@ -66,7 +72,14 @@ class MoveMapControllerStrategy
 			order.type is MOVE and o.from isnt old_order?.from or
 			o.actor isnt order.actor
 
-		@_orders.push order
+		console.log "Try to add order: ", order.text
+		if @_gavel.isLegal order.text
+			console.log "Adding order: ", order
+			@_orders.push order
+		# TODO: How should we handle attempts at inputting invalid orders?
+		# Currently nothing happens. Maybe there should be some kind of
+		# indicator that pops up?
+		# else
 
 	_showOrders: ->
 		@_map.clearArrows()

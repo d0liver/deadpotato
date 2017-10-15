@@ -40,6 +40,9 @@ $(document).ready () ->
 		vdata = gdata.variant
 		vdata.map_data = JSON.parse vdata.map_data
 		gavel = new Gavel gdata, vdata
+		# XXX: For testing
+		console.log "Bagels"
+		gavel.country = 'Germany'
 		mapWidgetSetup gavel
 		wrc = new WarRoomController _id, $container
 		wrc.init()
