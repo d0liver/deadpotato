@@ -5,7 +5,7 @@
 
 	each country in countries
 		li.tab
-			span.tab-label=country.name
+			span.tab-label(data-country=country.name)=country.name
 
 .right
 	button.submit-orders#submit-orders Submit Orders

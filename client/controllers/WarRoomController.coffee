@@ -7,9 +7,12 @@ Color                    = require '../../lib/Color'
 
 {GAME_Q, SUBMIT_ORDERS_Q} = require '../gqlQueries'
 
-template = require '../../views/war-room.pug'
+template       = require '../../views/war-room.pug'
+chat_template = require '../../views/war-room-chat.pug'
 
 player_country = null
+selected_country = null
+selected_country_color = null
 
 class WarRoomController
 	constructor: (@_id, @_$el) ->
@@ -47,8 +50,36 @@ class WarRoomController
 
 			lighter = color.copy().darken(50).css()
 			darker = color.copy().darken(70).opacity(0.7).css()
-			$(this).css
+			$(@).css
 				background: "linear-gradient(90deg,#{darker},#{lighter})"
 				'border-color': lighter
+				cursor: 'pointer'
+				position: 'relative'
+
+			$(@).click ->
+				return if @ is selected_country?[0]
+				lighter = color.copy().darken(30).css()
+				darker = color.copy().darken(50).opacity(0.7).css()
+				$(@).animate
+					background: "linear-gradient(90deg,#{darker},#{lighter})"
+					'border-color': lighter
+					width: '107%'
+					left: '-7%'
+				, 200
+				$('.right').html chat_template()
+
+				if selected_country?
+					lighter = selected_country_color.copy().darken(50).css()
+					darker = selected_country_color.copy().darken(70).opacity(0.7).css()
+					selected_country.animate
+						background: "linear-gradient(90deg,#{darker},#{lighter})"
+						'border-color': lighter
+						width: '100%'
+						position: 'relative'
+						left: '0%'
+					, 200
+
+				selected_country = $(@)
+				selected_country_color = color
 
 module.exports = WarRoomController
