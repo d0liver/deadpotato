@@ -61,7 +61,7 @@ module.exports = (gavel) ->
 				# creation in the controller (it's better to have the business logic
 				# for the regions there).
 				map = Map ctx, MapIcon.bind null, vdata.slug, vdata.assets
-				@_map_controller = new MapController gavel, map, gdata, vdata
+				@_map_controller = new MapController gavel, map
 
 		orders: ->
 			@_map_controller.orders()

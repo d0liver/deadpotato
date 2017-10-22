@@ -1,5 +1,3 @@
-$            = require 'jquery'
-
 # These determine what happens when user interacts with the map during
 # different phases.
 MoveMapControllerStrategy    = require './MoveMapControllerStrategy'
@@ -8,9 +6,8 @@ RetreatMapControllerStrategy = require './RetreatMapControllerStrategy'
 
 class MapController
 
-	constructor: (@_gavel, @_map, @_gdata, @_vdata) ->
+	constructor: (@_gavel, @_map) ->
 		orders = []
-		@_countries = @_gdata.phase.countries; @_regions = @_vdata.map_data.regions
 
 		@_initMap()
 		@_initControls()
@@ -28,9 +25,15 @@ class MapController
 		# that off to the map in a generic way. We are guaranteed by Map's API
 		# that adding a region that already exists will overwrite the previous
 		# one.
-		console.log "Gavel board? ", @_gavel.board
 		for region from @_gavel.board.regions()
 			{scanlines, unit_pos, name_pos, name: rname} = region
+			# Sub zones (e.g. coastal areas) can also be added to the map for
+			# sub selection.
+			zones = for name, coast of region.coasts
+				scanlines: coast.scanlines
+				unit_pos: coast.unit_pos
+				id: name
+
 			@_map.addArea {
 				id: rname
 				unit_color: region.unit?.country.color

@@ -72,7 +72,6 @@ class MoveMapControllerStrategy
 			order.type is MOVE and o.from isnt old_order?.from or
 			o.actor isnt order.actor
 
-		console.log "Try to add order: ", order.text
 		if @_gavel.isLegal order.text
 			console.log "Adding order: ", order
 			@_orders.push order
@@ -123,7 +122,5 @@ class MoveMapControllerStrategy
 			for cunit in cunits when cunit.region not in pregions
 				@_map.convoy order.from, cunit.region
 				@_map.arrow cunit.region, order.to
-
-			console.log "PATH: ", path
 
 module.exports = MoveMapControllerStrategy
