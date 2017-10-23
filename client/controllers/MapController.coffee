@@ -29,10 +29,13 @@ class MapController
 			{scanlines, unit_pos, name_pos, name: rname} = region
 			# Sub zones (e.g. coastal areas) can also be added to the map for
 			# sub selection.
-			zones = for name, coast of region.coasts
-				scanlines: coast.scanlines
-				unit_pos: coast.unit_pos
-				id: name
+			zones = {}
+
+			for name, coast of region.coasts
+				zones[name] =
+					scanlines: coast.scanlines
+					unit_pos: coast.unit_pos
+					id: name
 
 			@_map.addArea {
 				id: rname
@@ -45,6 +48,7 @@ class MapController
 				name_pos
 				unit_pos
 				scanlines
+				zones
 			}
 
 		@_map.display()

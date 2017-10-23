@@ -15,7 +15,8 @@ class MoveMapControllerStrategy
 		Object.defineProperty @, 'orders', get: -> @_orders.map (o) -> o.text
 		kiph = new KeyboardInputHandler
 
-		@_map.on 'select', ({id: sel_id}) =>
+		@_map.on 'select', ([{id: sel_id}, zone]) =>
+			{id: zone_id} = zone if zone?
 			region = (r) => @_gavel.board.region(r)
 			selected = region sel_id
 			# Get a list of the active ids
@@ -35,7 +36,12 @@ class MoveMapControllerStrategy
 
 			# Initial selection
 			if active.length is 0
-				@_map.select sel_id
+				console.log "Selected: ", selected
+				if selected.unit.coast?
+					@_map.select [sel_id, selected.unit.coast]
+				else
+					@_map.select sel_id
+
 			# Select a destination region for the move
 			else if active.length is 1 and sel_id isnt active[0]
 				utype = a0.unit.type

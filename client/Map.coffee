@@ -42,11 +42,26 @@ Map = (ctx, MapIcon) ->
 		[x, y] = [e.pageX, e.pageY]
 
 		for id, area of areas
-			for scanline in area.scanlines
-				{x: sx, y: sy, len: slen} = scanline
-				if y is sy and sx < x < sx + slen
-					return area
+
+			if coordsAreInbounds x, y, area.scanlines
+				# Check if the click was on the area - this is the normal case
+				# and usually means the corresponding region doesn't have
+				# coasts.
+				for zone in area.zones when coordsAreInbounds x, y, zone.scanlines
+					return [area, zone]
+				# The click was over our area but not a particular zone
+				return [area, null]
+
 		return
+
+	# Check if coords are in some set of scanlines
+	coordsAreInbounds = (x, y, scanlines) ->
+		for scanline in scanlines
+			{x: sx, y: sy, len: slen} = scanline
+			if y is sy and sx < x < sx + slen
+				return true
+
+		false
 
 	self.display = -> self.refresh false
 
@@ -55,18 +70,35 @@ Map = (ctx, MapIcon) ->
 	self.refresh = (clear = true)->
 		clearCanvas ctx.map if clear
 		for id,area of areas
-			# Draw the fill first
-			state =
-				if area.id in active then 'active'
-				else 'normal'
-			self.showArea area, state: state, refresh: false
+			if entry = findActive(id)
+				[..., zid] = entry
+				console.log "Zone id: ", zid
+				state = 'active'
+				zone = areas[id].zones[zid]
+				console.log "Area: ", areas[id]
+			else
+				state = 'normal'
+				zone = null
+
+			self.showArea area, zone, state: state, refresh: false
 
 		return self
 
-	self.showArea = (area, {state = 'normal', refresh = true}) ->
+	# Find an active area with the given area id (_aid_) if one exists and
+	# return [area id, zone id] for that area.
+	findActive = (aid) ->
+		for id in active when aid in [id?[0], id]
+			return id
+
+		return
+
+	self.showArea = (area, zone, {state = 'normal', refresh = true}) ->
+
 		if area.fill or area.id in active
 			unless area.texture[state]?
-				{scanlines, color = Color 'black'} = area
+				color = area.color ? Color 'black'
+				# Only fill in the zone if one is set
+				scanlines = if zone? then zone.scanlines else area.scanlines
 				tb = if state is 'normal'
 					HorizLinesTextureBuilder color: state_colors[state] color
 				else if state is 'active'
@@ -82,7 +114,6 @@ Map = (ctx, MapIcon) ->
 		[x, y] = area.unit_pos
 
 		if area.offset_icon?
-			console.log "HIT"
 			# Show the dislodged unit
 			img = await MapIcon(area.dislodged_unit_color, area.offset_icon).img()
 			# The given positions are for the center of the image so we have to
@@ -205,8 +236,9 @@ Map = (ctx, MapIcon) ->
 	clearCanvas = (ctx) ->
 		ctx.clearRect 0, 0, ctx.canvas.width, ctx.canvas.height
 
+	# _id_ could be an array in which case it indicates that a zone should be
+	# selected on the area.
 	self.select = (id) ->
-		area = areas[id]
 		active.push id
 		self.refresh()
 
