@@ -11,11 +11,11 @@ if you have problems.
 ### Install
 1. Clone the repo
 2. Run npm install as usual
-3. Add ~/.deadpotato\_s3.json in your $HOME directory
+3. Add `~/.deadpotato\_s3.json` in your `$HOME` directory
 	- This file contains the S3 credentials. If you're working with me, which
 	  seems likely, then contact me and I can get you my config file so you can
 	  use the test S3 bucket.
-4. Add ~/.auth\_credentials.json which should contain valid API credentials
+4. Add `~/.auth\_credentials.json` which should contain valid API credentials
    (client id and secret) for Google Open ID connect. Again, if you're working
    with me, which seems likely, then contact me and I can get you info for the
    test credentials.
@@ -25,7 +25,7 @@ if you have problems.
    where the generated npm link symlink is overwritten when npm updates packages
    so you may have to do this after updates also.
 6. Install Mongo and point the application to it (server.coffee). The current
-   setting for the DB\_URI is hard coded to mongodb://localhost:27017/deadpotato
+   setting for the `DB\_URI` is hard coded to `mongodb://localhost:27017/deadpotato`
    so if you intend on using something else then you'll have to change that
    (this should probably be extracted to a config file).
 7. Run Gulp. The default task is for development and should do the correct
@@ -43,8 +43,8 @@ the near future. The current procedure is
 
 1. Click on the unit that you want to issue a move order for
 2. Click a destination to move it to
-3. Ctrl+click other units to tell them to convoy that unit
-4. Shift+click other units to tell them to support that unit
+3. Ctrl+click other units to tell them to convoy the moving unit
+4. Shift+click other units to tell them to support the moving unit
 
 Here are some other things that might cause problems:
 
