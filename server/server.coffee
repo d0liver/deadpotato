@@ -1,5 +1,3 @@
-_ = require 'underscore'
-
 # Express
 bodyParser = require 'body-parser'
 express    = require 'express'
