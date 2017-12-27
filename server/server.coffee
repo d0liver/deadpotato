@@ -75,7 +75,8 @@ MongoClient.connect DB_URI, (err, db) ->
 			try
 				{gdata, vdata} = await (new GameModel id, db, Gavel).joined id
 				res.render 'index', gid: req.params.id, countries: gdata.phase.countries
-			catch
+			catch err
+				console.log "ERROR: ", err
 				Logger.warn "Failed to create GameModel from id: #{id}"
 		else
 			next()

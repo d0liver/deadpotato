@@ -19,15 +19,15 @@ class Logger
 			console.log args...
 
 	@fatal = (args...) ->
-		@_log args... if @_log_level >= FATAL
+		@_log args... if @_log_level >= log_levels.FATAL
 
 	@warn = (args...) ->
-		@_log args... if @_log_level >= WARN
+		@_log args... if @_log_level >= log_levels.WARN
 
 	@notice = (args...) ->
-		@_log args... if @_log_level >= WARN
+		@_log args... if @_log_level >= log_levels.WARN
 
 	@debug = ->
-		@_log args... if @_log_level >= DEBUG
+		@_log args... if @_log_level >= log_levels.DEBUG
 
 module.exports = Logger

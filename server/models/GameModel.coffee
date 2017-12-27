@@ -25,13 +25,13 @@ class GameModel
 		if available
 			await @_games.update {@_id}, $push: players: {country, pid: user.id}
 
-	@create = (data) ->
+	@create = (db, data) ->
 		# Insert the game first so we can reference the inserted id below
 		game = title: data.title
-		{insertedId: gid} = await @_games.insertOne data
+		{insertedId: gid} = await db.collection('games').insertOne data
 
 		# Find a template for this game (starting units and season)
-		phase_template = await @_phases.findOne(variant: data.variant)
+		phase_template = await db.collection('phases').findOne(variant: data.variant)
 
 		# Create the first phase from the template
 		phase = phase_template

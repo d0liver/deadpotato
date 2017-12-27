@@ -51,7 +51,7 @@ SchemaBuilder = (db, user, S3) ->
 				await gm.init()
 				await gm.join country
 
-			create: (obj, {game: data}) -> GameModel.create data
+			create: (obj, {game: data}) -> GameModel.create db, data
 
 		OrderMutations:
 			submit: (obj, {_id, orders}) ->
