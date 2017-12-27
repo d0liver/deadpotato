@@ -40,7 +40,7 @@ class GameModel
 		phase.template = false
 		phase.roll_time = new Date()
 		phase.game = gid
-		await @_phases.insertOne phase
+		await db.collection('phases').insertOne phase
 
 		return gid
 
